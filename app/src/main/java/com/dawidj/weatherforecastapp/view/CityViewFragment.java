@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dawidj.weatherforecastapp.R;
+import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityFragmentBinding;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 
@@ -37,8 +38,9 @@ public class CityViewFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.city_fragment, container, false);
         View view = binding.getRoot();
         ButterKnife.bind(this, view);
-        cityViewModel = new CityViewModel();
+        cityViewModel = new CityViewModel(getActivity());
         binding.setCity(cityViewModel);
+        App.getApplication().getWeatherComponent().inject(cityViewModel);
         return view;
     }
 

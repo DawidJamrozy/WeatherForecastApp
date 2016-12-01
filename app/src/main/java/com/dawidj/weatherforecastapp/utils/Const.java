@@ -5,4 +5,7 @@ package com.dawidj.weatherforecastapp.utils;
  */
 
 public class Const {
+
+    public static final String CELSIUS_DEGREE = "\u00b0";
+
 }
