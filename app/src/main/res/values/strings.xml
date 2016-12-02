@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">WeatherForecastApp</string>
     <string name="empty_city_name">Empty city name</string>
+    <string name="space">&#160;</string>
+    <string name="degree">&#176;</string>
 </resources>

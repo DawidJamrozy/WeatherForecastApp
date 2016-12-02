@@ -1,17 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-    <data>
-        <variable
-            name="city"
-            type="com.dawidj.weatherforecastapp.viewModel.CityViewModel"/>
-    </data>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:text="Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-</LinearLayout>
+    <data>
+
+        <variable
+            name="CityViewModel"
+            type="com.dawidj.weatherforecastapp.viewModel.CityViewModel" />
+    </data>
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/costsNestedScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:id="@+id/content_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:elevation="4dp">
+
+
+            <RelativeLayout
+                android:id="@+id/imageLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/main_background" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/cityEditText"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:ems="10"
+                    android:hint="City name"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:text="@={CityViewModel.cityName}"
+                    android:textColorHighlight="@android:color/white"
+                    android:textSize="16sp"
+                    app:met_floatingLabel="normal"
+                    app:met_floatingLabelTextSize="16dp"
+                    app:met_hideUnderline="true"
+                    app:met_textColor="@android:color/white"
+                    app:met_textColorHint="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cityEditText"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="30dp"
+                    android:text="temp" />
+
+                <TextView
+                    android:id="@+id/condition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/temp"
+                    android:layout_marginStart="5dp"
+                    android:text="condition" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/temp"
+                    android:layout_alignParentEnd="true"
+                    android:text="Load" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/dayListLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageLayout">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/day_recycler_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/chartsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_below="@+id/dayListLayout"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:id="@+id/chart_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Godzinowa" />
+
+                <View
+                    android:id="@+id/separator"
+                    style="@style/Divider"
+                    android:layout_below="@id/chart_description"
+                    android:layout_marginBottom="0dp" />
+
+                <HorizontalScrollView
+                    android:layout_width="1000dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/separator">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart"
+                        android:layout_width="1000dp"
+                        android:layout_height="250dp" />
+                </HorizontalScrollView>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
 </layout>

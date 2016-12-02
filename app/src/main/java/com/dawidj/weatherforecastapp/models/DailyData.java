@@ -1,5 +1,7 @@
 package com.dawidj.weatherforecastapp.models;
 
+import android.databinding.BaseObservable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Dawidj on 25.10.2016.
  */
 
-public class DailyData {
+public class DailyData extends BaseObservable {
 
 
     @SerializedName("time")

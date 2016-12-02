@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.components;
 
+import com.dawidj.weatherforecastapp.view.CityViewFragment;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 
 import javax.inject.Singleton;
@@ -13,4 +14,5 @@ import dagger.Component;
 @Component (modules=WeatherModule.class)
 public interface WeatherComponent {
     void inject(CityViewModel cityViewModel);
+    void inject(CityViewFragment cityViewFragment);
 }

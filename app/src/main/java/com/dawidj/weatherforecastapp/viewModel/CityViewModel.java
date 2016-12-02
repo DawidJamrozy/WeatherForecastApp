@@ -1,6 +1,7 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
 import android.content.Context;
+import android.databinding.ObservableField;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
@@ -10,14 +11,14 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.api.WeatherAPI;
 import com.dawidj.weatherforecastapp.models.City;
 import com.dawidj.weatherforecastapp.models.Daily;
-import com.dawidj.weatherforecastapp.utils.AxisValueFormatter;
+import com.dawidj.weatherforecastapp.utils.LineChartEvent;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
+import com.dawidj.weatherforecastapp.view.adapters.DisplayCityView;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -33,8 +34,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import timber.log.Timber;
 
-import static android.R.attr.name;
 import static android.content.ContentValues.TAG;
 
 /**
@@ -48,21 +49,36 @@ public class CityViewModel {
     private City city = new City();
     private ArrayList<Daily> daily = new ArrayList<>();
     public final static String[] hours = new String[25];
+    private ObservableField<String> cityName = new ObservableField<String>();
+    DisplayCityView displayCityView;
+    public ObservableField<String> getCityName() {
+        return cityName;
+    }
 
+    public void setDisplayCityView(DisplayCityView displayCityView) {
+        this.displayCityView = displayCityView;
+
+    }
+
+    @Inject
+    EventBus eventBus;
     @Inject
     Retrofit retrofit;
 
     public CityViewModel(Context context) {
-    this.context = context;
+        this.context = context;
     }
 
     public void getWeatherData() {
 
+        final String name = getCityName().get();
+        Timber.d("getWeatherData(): " + name);
+
+
         try {
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-            String cityName = name.get();
             try {
-                List<Address> addressList = geocoder.getFromLocationName(cityName, 1);
+                List<Address> addressList = geocoder.getFromLocationName(name, 1);
                 address = addressList.get(0);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -84,9 +100,10 @@ public class CityViewModel {
                 @Override
                 public void onResponse(Call<City> call, Response<City> response) {
                     Log.i(TAG, "onResponse: Success");
+
                     City data = response.body();
 
-                    city.setName(name.get());
+                    city.setName(name);
                     city.setLatitude(data.getLatitude());
                     city.setLongitude(data.getLongitude());
                     city.setTimezone(data.getTimezone());
@@ -96,6 +113,8 @@ public class CityViewModel {
                     city.setHourly(data.getHourly());
                     city.setCurrently(data.getCurrently());
 
+                    //context.getResources().getIdentifier("snow", "drawable", context.getPackageName());
+
                     if (daily.size() != 0) {
                         daily.clear();
                     }
@@ -104,8 +123,14 @@ public class CityViewModel {
                         daily.add(city.getDaily());
                     }
 
+//                    if (displayCityView != null) {
+//                        displayCityView.displayDailyList(city.getDaily());
+//                        displayCityView.displayCities(city);
+//                    }
+
                     //TODO use eventbus to notify view about recyclerViewadapter data change
-                    mRecycler.get().notifyDataSetChanged();
+                    //eventBus.post(new NotifyRecyclerAdapter());
+
                     //setDetailsData();
                     setDayChart();
                 }
@@ -147,30 +172,10 @@ public class CityViewModel {
             hours[i] = hour;
         }
 
-        YAxis leftAxis = cityFragment.getLineChart().getAxisLeft();
-        leftAxis.setDrawLabels(false);
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(0f);
-
-        YAxis rightAxis = cityFragment.getLineChart().getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setDrawLabels(false);
-        rightAxis.setAxisMinimum(0f);
-
-        XAxis downAxis = cityFragment.getLineChart().getXAxis();
-        downAxis.setLabelCount(25);
-        downAxis.setDrawGridLines(false);
-        downAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        downAxis.setValueFormatter(new AxisValueFormatter());
-
         Description description = new Description();
         description.setText("");
-        LineData lineData = new LineData(lineDataSet);
-        cityFragment.getLineChart().setData(lineData);
-        cityFragment.getLineChart().getLegend().setEnabled(false);
-        cityFragment.getLineChart().setTouchEnabled(false);
-        cityFragment.getLineChart().setDescription(description);
-        cityFragment.getLineChart().canScrollHorizontally(1);
-        cityFragment.getLineChart().invalidate();
+        EventBus.getDefault().post(new LineChartEvent(description, lineDataSet));
+
+        //eventBus.post(new LineChartEvent(description, lineDataSet));
     }
 }

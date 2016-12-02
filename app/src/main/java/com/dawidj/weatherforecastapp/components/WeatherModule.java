@@ -1,5 +1,7 @@
 package com.dawidj.weatherforecastapp.components;
 
+import org.greenrobot.eventbus.EventBus;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -21,4 +23,12 @@ public class WeatherModule {
                 .baseUrl("https://api.darksky.net/forecast/555119929f4837cddd4ce3f097bf63f1/")
                 .build();
     }
+
+    @Provides
+    @Singleton
+    EventBus eventBus() {
+        return new EventBus().getDefault();
+
+    }
+
 }

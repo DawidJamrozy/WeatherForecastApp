@@ -7,7 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 /**
- * Created by Dawidj on 01.12.2016.
+ * Created by djamrozy on 02.12.2016.
  */
 
 public interface WeatherAPI {
@@ -15,4 +15,5 @@ public interface WeatherAPI {
     @GET("{lat},{lng}?lang=pl&exclude=flags,alerts&units=ca")
     Call<City> getCity(@Path("lat") String lat,
                        @Path("lng") String lng);
+
 }
