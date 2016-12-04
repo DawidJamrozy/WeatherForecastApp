@@ -5,16 +5,17 @@ import android.databinding.ObservableField;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.api.WeatherAPI;
 import com.dawidj.weatherforecastapp.models.City;
-import com.dawidj.weatherforecastapp.models.Daily;
+import com.dawidj.weatherforecastapp.models.DailyData;
+import com.dawidj.weatherforecastapp.models.DayData;
+import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.LineChartEvent;
+import com.dawidj.weatherforecastapp.utils.NotifyRecyclerAdapter;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
-import com.dawidj.weatherforecastapp.view.adapters.DisplayCityView;
-import com.github.mikephil.charting.components.Description;
+import com.dawidj.weatherforecastapp.view.adapters.DisplayDayView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 
@@ -23,6 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -34,7 +36,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import timber.log.Timber;
 
 import static android.content.ContentValues.TAG;
 
@@ -47,17 +48,21 @@ public class CityViewModel {
     private Context context;
     private Address address;
     private City city = new City();
-    private ArrayList<Daily> daily = new ArrayList<>();
     public final static String[] hours = new String[25];
-    private ObservableField<String> cityName = new ObservableField<String>();
-    DisplayCityView displayCityView;
-    public ObservableField<String> getCityName() {
-        return cityName;
+    private ObservableField<String> cityName = new ObservableField<>();
+    private DisplayDayView displayDayView;
+    private List<DayData> day = new ArrayList<>();
+
+    public void setDisplayDayView(DisplayDayView displayDayView) {
+        this.displayDayView = displayDayView;
     }
 
-    public void setDisplayCityView(DisplayCityView displayCityView) {
-        this.displayCityView = displayCityView;
+    public City getCity() {
+        return city;
+    }
 
+    public ObservableField<String> getCityName() {
+        return cityName;
     }
 
     @Inject
@@ -72,22 +77,13 @@ public class CityViewModel {
     public void getWeatherData() {
 
         final String name = getCityName().get();
-        Timber.d("getWeatherData(): " + name);
-
 
         try {
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-            try {
-                List<Address> addressList = geocoder.getFromLocationName(name, 1);
-                address = addressList.get(0);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(context, R.string.empty_city_name, Toast.LENGTH_SHORT).show();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+            List<Address> addressList = geocoder.getFromLocationName(name, 1);
+            address = addressList.get(0);
+
 
             String lat = Double.toString(address.getLatitude());
             String lng = Double.toString(address.getLongitude());
@@ -107,29 +103,29 @@ public class CityViewModel {
                     city.setLatitude(data.getLatitude());
                     city.setLongitude(data.getLongitude());
                     city.setTimezone(data.getTimezone());
-                    city.setOffset(data.getOffset());
-                    city.setFlags(data.getFlags());
                     city.setDaily(data.getDaily());
                     city.setHourly(data.getHourly());
                     city.setCurrently(data.getCurrently());
 
-                    //context.getResources().getIdentifier("snow", "drawable", context.getPackageName());
-
-                    if (daily.size() != 0) {
-                        daily.clear();
+                    if(!day.isEmpty()) {
+                        day.clear();
                     }
-
                     for (int i = 0; i < 7; i++) {
-                        daily.add(city.getDaily());
+                        DayData dayData = new DayData();
+                        dayData.setIcon(asd(i).getIcon());
+                        dayData.setTempMin(asd(i).getTemperatureMin().intValue());
+                        dayData.setTempMax(asd(i).getTemperatureMax().intValue());
+                        dayData.setTime(asd(i).getTime());
+                        day.add(dayData);
                     }
 
-//                    if (displayCityView != null) {
-//                        displayCityView.displayDailyList(city.getDaily());
-//                        displayCityView.displayCities(city);
-//                    }
+                    if (displayDayView != null) {
+                        displayDayView.displayDayList(day);
+                    }
+
 
                     //TODO use eventbus to notify view about recyclerViewadapter data change
-                    //eventBus.post(new NotifyRecyclerAdapter());
+                    eventBus.post(new NotifyRecyclerAdapter());
 
                     //setDetailsData();
                     setDayChart();
@@ -140,6 +136,10 @@ public class CityViewModel {
                     Log.i(TAG, "onFailure: " + t.toString());
                 }
             });
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -147,12 +147,22 @@ public class CityViewModel {
 
     public void setDayChart() {
 
-        List<Entry> entries = new ArrayList<Entry>();
+        List<Entry> entries = new ArrayList<>();
+        ArrayList<Integer> temp = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat(Const.HOUR_MINUTE);
+        sdf.setTimeZone(TimeZone.getTimeZone(city.getTimezone()));
 
+        //temp - add data to calculate min temperature for chart axis
+        //entries - add data to display temp for every hour
+        //hours - add data to display time in chart
         for (int i = 0; i < 25; i++) {
-            Double a = city.getHourly().getData().get(i).getTemperature();
-            entries.add(new Entry(i, a.intValue()));
+            temp.add(city.getHourly().getData().get(i).getTemperature().intValue());
+            entries.add(new Entry(i, city.getHourly().getData().get(i).getTemperature().intValue()));
+            hours[i] = sdf.format(new Date(city.getHourly().getData().get(i).getTime() * 1000L));
         }
+
+        int minTemp = Collections.min(temp) - 2;
+        int maxTemp = Collections.max(temp) + 2;
 
         LineDataSet lineDataSet = new LineDataSet(entries, "Label");
         lineDataSet.setValueTextSize(12f);
@@ -162,20 +172,10 @@ public class CityViewModel {
         lineDataSet.setColor(R.color.colorAccent);
         lineDataSet.setValueTextColor(R.color.colorPrimary);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        sdf.setTimeZone(TimeZone.getTimeZone(city.getTimezone()));
+        eventBus.post(new LineChartEvent(lineDataSet, minTemp, maxTemp));
+    }
 
-        for (int i = 0; i < hours.length; i++) {
-            int unixTime = city.getHourly().getData().get(i).getTime();
-            Date date = new Date(unixTime * 1000L);
-            String hour = sdf.format(date);
-            hours[i] = hour;
-        }
-
-        Description description = new Description();
-        description.setText("");
-        EventBus.getDefault().post(new LineChartEvent(description, lineDataSet));
-
-        //eventBus.post(new LineChartEvent(description, lineDataSet));
+    public DailyData asd(int i) {
+        return city.getDaily().getData().get(i);
     }
 }

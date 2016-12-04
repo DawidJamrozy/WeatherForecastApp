@@ -1,5 +1,8 @@
 package com.dawidj.weatherforecastapp.models;
 
+import android.databinding.BaseObservable;
+
+import com.dawidj.weatherforecastapp.BR;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,8 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Dawidj on 24.10.2016.
  */
 
-public class City {
-
+public class City extends BaseObservable {
 
     @SerializedName("name")
     @Expose
@@ -22,9 +24,6 @@ public class City {
     @SerializedName("timezone")
     @Expose
     private String timezone;
-    @SerializedName("offset")
-    @Expose
-    private Double offset;
     @SerializedName("currently")
     @Expose
     private Currently currently;
@@ -34,170 +33,111 @@ public class City {
     @SerializedName("daily")
     @Expose
     private Daily daily;
-    @SerializedName("flags")
-    @Expose
-    private Flags flags;
 
 
     /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
+        notifyPropertyChanged(BR._all);
     }
 
     /**
-     *
-     * @return
-     * The latitude
+     * @return The latitude
      */
     public Double getLatitude() {
         return latitude;
     }
 
     /**
-     *
-     * @param latitude
-     * The latitude
+     * @param latitude The latitude
      */
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
+        notifyPropertyChanged(BR._all);
     }
 
     /**
-     *
-     * @return
-     * The longitude
+     * @return The longitude
      */
     public Double getLongitude() {
         return longitude;
     }
 
     /**
-     *
-     * @param longitude
-     * The longitude
+     * @param longitude The longitude
      */
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+        notifyPropertyChanged(BR._all);
     }
 
     /**
-     *
-     * @return
-     * The timezone
+     * @return The timezone
      */
     public String getTimezone() {
         return timezone;
     }
 
     /**
-     *
-     * @param timezone
-     * The timezone
+     * @param timezone The timezone
      */
     public void setTimezone(String timezone) {
         this.timezone = timezone;
+        notifyPropertyChanged(BR._all);
     }
 
-    /**
-     *
-     * @return
-     * The offset
-     */
-    public Double getOffset() {
-        return offset;
-    }
 
     /**
-     *
-     * @param offset
-     * The offset
-     */
-    public void setOffset(Double offset) {
-        this.offset = offset;
-    }
-
-    /**
-     *
-     * @return
-     * The currently
+     * @return The currently
      */
     public Currently getCurrently() {
         return currently;
     }
 
     /**
-     *
-     * @param currently
-     * The currently
+     * @param currently The currently
      */
     public void setCurrently(Currently currently) {
         this.currently = currently;
+        notifyPropertyChanged(BR._all);
     }
 
     /**
-     *
-     * @return
-     * The hourly
+     * @return The hourly
      */
     public Hourly getHourly() {
         return hourly;
     }
 
     /**
-     *
-     * @param hourly
-     * The hourly
+     * @param hourly The hourly
      */
     public void setHourly(Hourly hourly) {
         this.hourly = hourly;
+        notifyPropertyChanged(BR._all);
     }
 
     /**
-     *
-     * @return
-     * The daily
+     * @return The daily
      */
     public Daily getDaily() {
         return daily;
     }
 
     /**
-     *
-     * @param daily
-     * The daily
+     * @param daily The daily
      */
     public void setDaily(Daily daily) {
         this.daily = daily;
-    }
-
-    /**
-     *
-     * @return
-     * The flags
-     */
-    public Flags getFlags() {
-        return flags;
-    }
-
-    /**
-     *
-     * @param flags
-     * The flags
-     */
-    public void setFlags(Flags flags) {
-        this.flags = flags;
+        notifyPropertyChanged(BR._all);
     }
 }

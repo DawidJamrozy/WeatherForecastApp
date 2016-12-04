@@ -1,10 +1,13 @@
 package com.dawidj.weatherforecastapp.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.view.adapters.ViewPagerAdapter;
@@ -35,7 +38,25 @@ public class MainActivity extends AppCompatActivity {
     public void setUpViewPagerAdapter() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(new CityViewFragment(), "City");
-        viewPagerAdapter.addFragment(new CityViewFragment(), "City2");
         viewPager.setAdapter(viewPagerAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings:
+                Intent i = new Intent(this, LocationActivity.class);
+                startActivity(i);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

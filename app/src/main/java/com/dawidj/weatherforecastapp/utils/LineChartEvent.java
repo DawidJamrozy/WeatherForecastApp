@@ -1,6 +1,5 @@
 package com.dawidj.weatherforecastapp.utils;
 
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.LineDataSet;
 
 /**
@@ -9,11 +8,13 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 public class LineChartEvent {
 
-    public Description description;
     public LineDataSet lineDataSet;
+    public int minTemp;
+    public int maxTemp;
 
-    public LineChartEvent(Description description, LineDataSet lineDataSet) {
-        this.description = description;
+    public LineChartEvent(LineDataSet lineDataSet, int minTemp, int maxTemp) {
         this.lineDataSet = lineDataSet;
+        this.minTemp = minTemp;
+        this.maxTemp = maxTemp;
     }
 }

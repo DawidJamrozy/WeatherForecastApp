@@ -12,7 +12,7 @@ import retrofit2.http.Path;
 
 public interface WeatherAPI {
 
-    @GET("{lat},{lng}?lang=pl&exclude=flags,alerts&units=ca")
+    @GET("{lat},{lng}?lang=pl&exclude=flags,alerts,minutely&units=ca")
     Call<City> getCity(@Path("lat") String lat,
                        @Path("lng") String lng);
 

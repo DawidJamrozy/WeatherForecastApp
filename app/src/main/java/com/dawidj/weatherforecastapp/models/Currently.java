@@ -1,5 +1,8 @@
 package com.dawidj.weatherforecastapp.models;
 
+import android.databinding.BaseObservable;
+
+import com.dawidj.weatherforecastapp.BR;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Dawidj on 24.10.2016.
  */
 
-public class Currently {
+public class Currently extends BaseObservable {
 
     @SerializedName("time")
     @Expose
@@ -68,6 +71,7 @@ public class Currently {
      */
     public void setTime(Integer time) {
         this.time = time;
+        notifyPropertyChanged(BR._all);
     }
 
     /**
@@ -86,6 +90,8 @@ public class Currently {
      */
     public void setSummary(String summary) {
         this.summary = summary;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -104,6 +110,7 @@ public class Currently {
      */
     public void setIcon(String icon) {
         this.icon = icon;
+        notifyPropertyChanged(BR._all);
     }
 
     /**
@@ -122,6 +129,8 @@ public class Currently {
      */
     public void setPrecipIntensity(Double precipIntensity) {
         this.precipIntensity = precipIntensity;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -140,6 +149,8 @@ public class Currently {
      */
     public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -158,6 +169,8 @@ public class Currently {
      */
     public void setTemperature(Double temperature) {
         this.temperature = temperature;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -167,6 +180,7 @@ public class Currently {
      */
     public Double getApparentTemperature() {
         return apparentTemperature;
+
     }
 
     /**
@@ -176,6 +190,8 @@ public class Currently {
      */
     public void setApparentTemperature(Double apparentTemperature) {
         this.apparentTemperature = apparentTemperature;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -194,6 +210,8 @@ public class Currently {
      */
     public void setDewPoint(Double dewPoint) {
         this.dewPoint = dewPoint;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -202,7 +220,7 @@ public class Currently {
      * The humidity
      */
     public Double getHumidity() {
-        return humidity;
+        return humidity*100;
     }
 
     /**
@@ -212,6 +230,8 @@ public class Currently {
      */
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -230,6 +250,8 @@ public class Currently {
      */
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -248,6 +270,8 @@ public class Currently {
      */
     public void setWindBearing(Double windBearing) {
         this.windBearing = windBearing;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -266,6 +290,8 @@ public class Currently {
      */
     public void setCloudCover(Double cloudCover) {
         this.cloudCover = cloudCover;
+        notifyPropertyChanged(BR._all);
+
     }
 
     /**
@@ -275,6 +301,7 @@ public class Currently {
      */
     public Double getPressure() {
         return pressure;
+
     }
 
     /**
@@ -284,6 +311,7 @@ public class Currently {
      */
     public void setPressure(Double pressure) {
         this.pressure = pressure;
+        notifyPropertyChanged(BR._all);
     }
 
     /**
@@ -302,5 +330,7 @@ public class Currently {
      */
     public void setOzone(Double ozone) {
         this.ozone = ozone;
+        notifyPropertyChanged(BR._all);
+
     }
 }

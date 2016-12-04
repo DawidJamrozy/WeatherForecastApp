@@ -8,23 +8,25 @@ import android.view.ViewGroup;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.databinding.DayModelBinding;
-import com.dawidj.weatherforecastapp.models.City;
-import com.dawidj.weatherforecastapp.models.DailyData;
+import com.dawidj.weatherforecastapp.models.DayData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by djamrozy on 02.12.2016.
  */
 
-public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerViewHolder> implements DisplayCityView {
+public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerViewHolder> implements DisplayDayView {
 
-    List<DailyData> dailyList;
-
+    List<DayData> dayDataList = new ArrayList<>();
     private LayoutInflater inflater;
+
+    Context context;
 
     public DayRecyclerViewAdapter(Context context) {
         inflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     @Override
@@ -35,23 +37,19 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
     @Override
     public void onBindViewHolder(DayRecyclerViewHolder holder, int position) {
-        DailyData daily = dailyList.get(position);
-        holder.getBinding().setDailyData(daily);
+        DayData dayData = dayDataList.get(position);
+        holder.getBinding().setDay(dayData);
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return dayDataList.size();
     }
 
     @Override
-    public void displayCities(City city) {
-
-    }
-
-    @Override
-    public void displayDailyList(List<DailyData> dailyList) {
-        this.dailyList = dailyList;
+    public void displayDayList(List<DayData> dayDataList) {
+        this.dayDataList = dayDataList;
         notifyDataSetChanged();
     }
 }

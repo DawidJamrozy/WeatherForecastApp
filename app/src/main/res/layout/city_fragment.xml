@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -8,13 +8,13 @@
             type="com.dawidj.weatherforecastapp.viewModel.CityViewModel" />
     </data>
 
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.v4.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/costsNestedScrollView"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/background"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:id="@+id/content_main"
@@ -36,41 +36,38 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/main_background" />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
+                <EditText
                     android:id="@+id/cityEditText"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
                     android:ems="10"
-                    android:hint="City name"
+                    android:hint=" name"
                     android:imeOptions="actionDone"
                     android:maxLines="1"
                     android:text="@={CityViewModel.cityName}"
                     android:textColorHighlight="@android:color/white"
-                    android:textSize="16sp"
-                    app:met_floatingLabel="normal"
-                    app:met_floatingLabelTextSize="16dp"
-                    app:met_hideUnderline="true"
-                    app:met_textColor="@android:color/white"
-                    app:met_textColorHint="@android:color/white" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/temp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/cityEditText"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
-                    android:text="temp" />
+                    android:textSize="40sp"
+                    android:text="@{String.valueOf(CityViewModel.city.currently.temperature.intValue()) + @string/degree}" />
 
                 <TextView
                     android:id="@+id/condition"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/temp"
-                    android:layout_marginStart="5dp"
-                    android:text="condition" />
+                    android:layout_marginStart="10dp"
+                    android:textSize="16sp"
+                    android:text="@{CityViewModel.city.currently.summary}" />
 
                 <Button
                     android:id="@+id/button"
@@ -87,14 +84,12 @@
                 android:id="@+id/dayListLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/imageLayout">
+                android:layout_below="@id/imageLayout"
+                android:background="@android:color/white">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/day_recycler_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                </android.support.v7.widget.RecyclerView>
+                <include
+                    android:id="@+id/weeklyInfo"
+                    layout="@layout/weekly_info" />
 
 
             </RelativeLayout>
@@ -102,33 +97,55 @@
             <RelativeLayout
                 android:id="@+id/chartsLayout"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/dayListLayout"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/white">
 
+                <include
+                    android:id="@+id/chart"
+                    layout="@layout/city_chart" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chartsLayout"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white">
+
                 <TextView
-                    android:id="@+id/chart_description"
+                    android:id="@+id/detailHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Godzinowa" />
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Szczegóły" />
 
                 <View
-                    android:id="@+id/separator"
-                    style="@style/Divider"
-                    android:layout_below="@id/chart_description"
-                    android:layout_marginBottom="0dp" />
+                    android:id="@+id/verticalDivider"
+                    style="@style/VerticalDivider"
+                    android:layout_width="1dp"
+                    android:layout_height="117dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_below="@id/detailHeader"
+                    android:layout_centerHorizontal="true" />
 
-                <HorizontalScrollView
-                    android:layout_width="1000dp"
+                <View
+                    android:id="@id/separator"
+                    style="@style/HorizontalDivider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/detailHeader" />
+
+
+                <include
+                    android:id="@+id/includelayout"
+                    layout="@layout/details"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/separator">
-
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/linechart"
-                        android:layout_width="1000dp"
-                        android:layout_height="250dp" />
-                </HorizontalScrollView>
+                    android:layout_below="@id/separator" />
 
             </RelativeLayout>
 

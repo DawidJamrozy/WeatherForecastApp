@@ -2,5 +2,15 @@
     <string name="app_name">WeatherForecastApp</string>
     <string name="empty_city_name">Empty city name</string>
     <string name="space">&#160;</string>
+    <string name="windSpeed">&#160;km/h</string>
     <string name="degree">&#176;</string>
+    <string name="percent">&#160;&#37;</string>
+    <string name="pressure_symbol">&#160;hPa</string>
+    <string name="hours">Godzinowa</string>
+    <string name="weekly">Tygodniowa</string>
+    <string name="wind">Wiatr</string>
+    <string name="apparent">Odczuwalnie</string>
+    <string name="humidity">Wilgotność</string>
+    <string name="pressure">Ciśnienie</string>
+    <string name="add_location">Dodaj lokalizacje</string>
 </resources>
