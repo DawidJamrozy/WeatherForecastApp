@@ -10,7 +10,7 @@ import retrofit2.http.Path;
  * Created by djamrozy on 02.12.2016.
  */
 
-public interface WeatherAPI {
+public interface WeatherApi {
 
     @GET("{lat},{lng}?lang=pl&exclude=flags,alerts,minutely&units=ca")
     Call<City> getCity(@Path("lat") String lat,

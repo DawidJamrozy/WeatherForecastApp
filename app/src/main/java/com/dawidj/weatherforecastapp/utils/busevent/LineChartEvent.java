@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.utils;
+package com.dawidj.weatherforecastapp.utils.busevent;
 
 import com.github.mikephil.charting.data.LineDataSet;
 

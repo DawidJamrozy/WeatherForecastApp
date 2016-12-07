@@ -15,8 +15,8 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityFragmentBinding;
 import com.dawidj.weatherforecastapp.utils.AxisValueFormatter;
-import com.dawidj.weatherforecastapp.utils.LineChartEvent;
-import com.dawidj.weatherforecastapp.utils.NotifyRecyclerAdapter;
+import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
+import com.dawidj.weatherforecastapp.utils.busevent.NotifyRecyclerAdapterEvent;
 import com.dawidj.weatherforecastapp.view.adapters.DayRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 import com.github.mikephil.charting.charts.LineChart;
@@ -32,7 +32,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -49,6 +48,7 @@ public class CityViewFragment extends Fragment {
     private DayRecyclerViewAdapter dayRecyclerViewAdapter;
     private CityFragmentBinding binding;
     private CityViewModel cityViewModel;
+    private String cityName;
 
     @Inject
     EventBus eventBus;
@@ -75,13 +75,12 @@ public class CityViewFragment extends Fragment {
         App.getApplication().getWeatherComponent().inject(this);
         setRecyclerView();
         cityViewModel.setDisplayDayView(dayRecyclerViewAdapter);
-
-        return view;
-    }
-
-    @OnClick(R.id.button)
-    public void loadChart() {
+        Bundle args = getArguments();
+        cityName = args.getString("cityName");
+        cityViewModel.setCityName(cityName);
         cityViewModel.getWeatherData();
+        return view;
+        //TODO Screen is moving to the middle - BUG
     }
 
     public void setRecyclerView() {
@@ -124,7 +123,7 @@ public class CityViewFragment extends Fragment {
     }
 
     @Subscribe
-    public void onNotifyRecyclerAdapter(NotifyRecyclerAdapter event) {
+    public void onNotifyRecyclerAdapter(NotifyRecyclerAdapterEvent event) {
         Timber.i("onNotifyRecyclerAdapter(): invoked");
         dayRecyclerViewAdapter.notifyDataSetChanged();
     }
@@ -133,14 +132,12 @@ public class CityViewFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
         eventBus.getDefault().register(this);
-
     }
 
     @Override

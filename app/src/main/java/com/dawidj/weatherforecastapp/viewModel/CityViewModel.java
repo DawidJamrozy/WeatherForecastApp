@@ -1,20 +1,19 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
 import android.content.Context;
-import android.databinding.ObservableField;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
 
 import com.dawidj.weatherforecastapp.R;
-import com.dawidj.weatherforecastapp.api.WeatherAPI;
+import com.dawidj.weatherforecastapp.api.WeatherApi;
 import com.dawidj.weatherforecastapp.models.City;
 import com.dawidj.weatherforecastapp.models.DailyData;
 import com.dawidj.weatherforecastapp.models.DayData;
 import com.dawidj.weatherforecastapp.utils.Const;
-import com.dawidj.weatherforecastapp.utils.LineChartEvent;
-import com.dawidj.weatherforecastapp.utils.NotifyRecyclerAdapter;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
+import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
+import com.dawidj.weatherforecastapp.utils.busevent.NotifyRecyclerAdapterEvent;
 import com.dawidj.weatherforecastapp.view.adapters.DisplayDayView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -49,8 +48,8 @@ public class CityViewModel {
     private Address address;
     private City city = new City();
     public final static String[] hours = new String[25];
-    private ObservableField<String> cityName = new ObservableField<>();
     private DisplayDayView displayDayView;
+    private String cityName;
     private List<DayData> day = new ArrayList<>();
 
     public void setDisplayDayView(DisplayDayView displayDayView) {
@@ -61,8 +60,12 @@ public class CityViewModel {
         return city;
     }
 
-    public ObservableField<String> getCityName() {
+    public String getCityName() {
         return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     @Inject
@@ -76,19 +79,17 @@ public class CityViewModel {
 
     public void getWeatherData() {
 
-        final String name = getCityName().get();
-
         try {
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 
-            List<Address> addressList = geocoder.getFromLocationName(name, 1);
+            List<Address> addressList = geocoder.getFromLocationName(getCityName(), 1);
             address = addressList.get(0);
 
 
             String lat = Double.toString(address.getLatitude());
             String lng = Double.toString(address.getLongitude());
 
-            WeatherAPI service = retrofit.create(WeatherAPI.class);
+            WeatherApi service = retrofit.create(WeatherApi.class);
 
             Call<City> call = service.getCity(lat, lng);
 
@@ -99,7 +100,7 @@ public class CityViewModel {
 
                     City data = response.body();
 
-                    city.setName(name);
+                    city.setName(getCityName());
                     city.setLatitude(data.getLatitude());
                     city.setLongitude(data.getLongitude());
                     city.setTimezone(data.getTimezone());
@@ -125,9 +126,8 @@ public class CityViewModel {
 
 
                     //TODO use eventbus to notify view about recyclerViewadapter data change
-                    eventBus.post(new NotifyRecyclerAdapter());
+                    eventBus.post(new NotifyRecyclerAdapterEvent());
 
-                    //setDetailsData();
                     setDayChart();
                 }
 

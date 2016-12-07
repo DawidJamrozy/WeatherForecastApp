@@ -12,9 +12,9 @@ import android.view.MenuItem;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.view.adapters.ViewPagerAdapter;
 
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,20 +25,20 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tablayout)
     TabLayout tabLayout;
 
+    private String[] cities;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        setUpViewPagerAdapter();
+        Timber.i("onCreate(): ");
+        Bundle extras = getIntent().getExtras();
+        cities =  extras.getStringArray("locationList");
+        setUpViewPagerAdapter(cities);
         tabLayout.setupWithViewPager(viewPager);
-    }
 
-    public void setUpViewPagerAdapter() {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new CityViewFragment(), "City");
-        viewPager.setAdapter(viewPagerAdapter);
     }
 
     @Override
@@ -58,5 +58,22 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setUpViewPagerAdapter(String[] cityTable) {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        for (String cityName : cityTable) {
+            viewPagerAdapter.addFragment(cityViewFragment(cityName), cityName);
+        }
+        viewPager.setAdapter(viewPagerAdapter);
+    }
+
+    public CityViewFragment cityViewFragment(String city) {
+        CityViewFragment fragment = new CityViewFragment();
+        // Supply index input as an argument.
+        Bundle args = new Bundle();
+        args.putString("cityName", city);
+        fragment.setArguments(args);
+        return fragment;
     }
 }

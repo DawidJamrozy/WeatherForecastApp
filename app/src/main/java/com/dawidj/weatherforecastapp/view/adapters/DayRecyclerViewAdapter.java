@@ -25,8 +25,8 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
     Context context;
 
     public DayRecyclerViewAdapter(Context context) {
-        inflater = LayoutInflater.from(context);
         this.context = context;
+        inflater = LayoutInflater.from(context);
     }
 
     @Override

@@ -36,18 +36,13 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/main_background" />
 
-                <EditText
-                    android:id="@+id/cityEditText"
-                    android:layout_width="200dp"
+                <TextView
+                    android:id="@+id/cityText"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
-                    android:ems="10"
-                    android:hint=" name"
-                    android:imeOptions="actionDone"
-                    android:maxLines="1"
-                    android:text="@={CityViewModel.cityName}"
-                    android:textColorHighlight="@android:color/white"
+                    android:text="@{CityViewModel.cityName}"
                     android:textSize="16sp" />
 
                 <TextView
@@ -57,8 +52,8 @@
                     android:layout_below="@+id/cityEditText"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
-                    android:textSize="40sp"
-                    android:text="@{String.valueOf(CityViewModel.city.currently.temperature.intValue()) + @string/degree}" />
+                    android:text="@{String.valueOf(CityViewModel.city.currently.temperature.intValue()) + @string/degree}"
+                    android:textSize="40sp" />
 
                 <TextView
                     android:id="@+id/condition"
@@ -66,16 +61,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/temp"
                     android:layout_marginStart="10dp"
-                    android:textSize="16sp"
-                    android:text="@{CityViewModel.city.currently.summary}" />
-
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/temp"
-                    android:layout_alignParentEnd="true"
-                    android:text="Load" />
+                    android:text="@{CityViewModel.city.currently.summary}"
+                    android:textSize="16sp" />
 
             </RelativeLayout>
 
@@ -128,9 +115,9 @@
                     style="@style/VerticalDivider"
                     android:layout_width="1dp"
                     android:layout_height="117dp"
-                    android:layout_marginTop="6dp"
                     android:layout_below="@id/detailHeader"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="6dp" />
 
                 <View
                     android:id="@id/separator"

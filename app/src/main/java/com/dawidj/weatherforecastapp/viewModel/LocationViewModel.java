@@ -3,7 +3,7 @@ package com.dawidj.weatherforecastapp.viewModel;
 import android.databinding.ObservableField;
 
 import com.dawidj.weatherforecastapp.models.Location;
-import com.dawidj.weatherforecastapp.utils.LocationEvent;
+import com.dawidj.weatherforecastapp.utils.busevent.LocationEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -22,9 +22,7 @@ public class LocationViewModel {
     private String name = "Location List";
     private ObservableField<String> cityName = new ObservableField<>();
 
-    public ObservableField<String> getCityName() {
-        return cityName;
-    }
+    public ObservableField<String> getCityName() {return cityName;}
 
     public String getName() {
         return name;
@@ -40,15 +38,16 @@ public class LocationViewModel {
 
     @Inject
     EventBus eventBus;
+
     public LocationViewModel() {
     }
-
 
     public void addItem() {
         Location location = new Location();
         location.setName(getCityName().get());
         locationList.add(location);
         eventBus.post(new LocationEvent());
+        //TODO clear edit text after adding new item
     }
 
 }
