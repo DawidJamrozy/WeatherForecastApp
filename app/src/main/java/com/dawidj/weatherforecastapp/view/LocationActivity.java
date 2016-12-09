@@ -105,4 +105,10 @@ public class LocationActivity extends AppCompatActivity {
         super.onStop();
         eventBus.unregister(this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationViewModel.onDestroy();
+    }
 }

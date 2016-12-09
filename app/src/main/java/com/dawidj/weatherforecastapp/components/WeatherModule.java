@@ -2,6 +2,7 @@ package com.dawidj.weatherforecastapp.components;
 
 import org.greenrobot.eventbus.EventBus;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -17,12 +18,34 @@ public class WeatherModule {
 
     @Provides
     @Singleton
-    Retrofit retrofit() {
+    @Named("darksky")
+    Retrofit darkskyRetrofit() {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl("https://api.darksky.net/forecast/555119929f4837cddd4ce3f097bf63f1/")
                 .build();
     }
+
+    @Provides
+    @Singleton
+    @Named("autocomplete")
+    Retrofit autocompleteRetrofit() {
+        return new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://maps.googleapis.com/maps/api/place/autocomplete/")
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    @Named("details")
+    Retrofit detailRetrofit() {
+        return new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://maps.googleapis.com/maps/api/place/details/")
+                .build();
+    }
+
 
     @Provides
     @Singleton

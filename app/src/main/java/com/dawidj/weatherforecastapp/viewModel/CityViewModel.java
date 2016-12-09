@@ -31,6 +31,11 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,6 +80,39 @@ public class CityViewModel {
 
     public CityViewModel(Context context) {
         this.context = context;
+
+        List<String> testList = new ArrayList<>();
+        testList.add("test");
+        testList.add("test1");
+        testList.add("test2");
+        testList.add("test3");
+        testList.add("test4");
+
+
+        Observable.fromIterable(testList)
+
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String s) throws Exception {
+                        return String.format("To jest test %s", s);
+                    }
+                })
+                .subscribe(new DisposableObserver<String>() {
+                    @Override
+                    public void onNext(String value) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                })
     }
 
     public void getWeatherData() {
@@ -84,6 +122,7 @@ public class CityViewModel {
 
             List<Address> addressList = geocoder.getFromLocationName(getCityName(), 1);
             address = addressList.get(0);
+
 
 
             String lat = Double.toString(address.getLatitude());

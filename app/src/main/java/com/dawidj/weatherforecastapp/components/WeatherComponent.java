@@ -18,5 +18,5 @@ public interface WeatherComponent {
     void inject(CityViewModel cityViewModel);
     void inject(CityViewFragment cityViewFragment);
     void inject(LocationViewModel locationViewModel);
-    void inject (LocationActivity locationActivity);
+    void inject(LocationActivity locationActivity);
 }
