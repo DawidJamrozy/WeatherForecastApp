@@ -17,19 +17,16 @@
             android:name=".view.SearchActivity"
             android:label=""
             android:theme="@style/AppTheme">
-        </activity>
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBIoHevjG2pbdb4Pz2MVYkMf0rIRUtd-d4" />
-
-        <activity android:name=".view.MyCitiesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBIoHevjG2pbdb4Pz2MVYkMf0rIRUtd-d4" />
     </application>
 
 </manifest>

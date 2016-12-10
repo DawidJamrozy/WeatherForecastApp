@@ -2,25 +2,14 @@ package com.dawidj.weatherforecastapp.models.Weather;
 
 import android.databinding.BaseObservable;
 
-import com.dawidj.weatherforecastapp.BR;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Keep;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by Dawidj on 25.10.2016.
  */
-@Entity
 public class DailyData extends BaseObservable {
 
-    @Id
-    private Long id;
-
-    private String dailyDataID;
     @SerializedName("time")
     @Expose
     private Integer time;
@@ -99,66 +88,9 @@ public class DailyData extends BaseObservable {
     @SerializedName("ozone")
     @Expose
     private Double ozone;
-
-    @Generated(hash = 852559969)
-    public DailyData(Long id, String dailyDataID, Integer time, String summary,
-            String icon, Double sunriseTime, Double sunsetTime, Double moonPhase,
-            Double precipIntensity, Double precipIntensityMax,
-            Double precipIntensityMaxTime, Double precipProbability,
-            String precipType, Double temperatureMin, Double temperatureMinTime,
-            Double temperatureMax, Double temperatureMaxTime,
-            Double apparentTemperatureMin, Double apparentTemperatureMinTime,
-            Double apparentTemperatureMax, Double apparentTemperatureMaxTime,
-            Double dewPoint, Double humidity, Double windSpeed, Double windBearing,
-            Double cloudCover, Double pressure, Double ozone) {
-        this.id = id;
-        this.dailyDataID = dailyDataID;
-        this.time = time;
-        this.summary = summary;
-        this.icon = icon;
-        this.sunriseTime = sunriseTime;
-        this.sunsetTime = sunsetTime;
-        this.moonPhase = moonPhase;
-        this.precipIntensity = precipIntensity;
-        this.precipIntensityMax = precipIntensityMax;
-        this.precipIntensityMaxTime = precipIntensityMaxTime;
-        this.precipProbability = precipProbability;
-        this.precipType = precipType;
-        this.temperatureMin = temperatureMin;
-        this.temperatureMinTime = temperatureMinTime;
-        this.temperatureMax = temperatureMax;
-        this.temperatureMaxTime = temperatureMaxTime;
-        this.apparentTemperatureMin = apparentTemperatureMin;
-        this.apparentTemperatureMinTime = apparentTemperatureMinTime;
-        this.apparentTemperatureMax = apparentTemperatureMax;
-        this.apparentTemperatureMaxTime = apparentTemperatureMaxTime;
-        this.dewPoint = dewPoint;
-        this.humidity = humidity;
-        this.windSpeed = windSpeed;
-        this.windBearing = windBearing;
-        this.cloudCover = cloudCover;
-        this.pressure = pressure;
-        this.ozone = ozone;
-    }
-
-    @Generated(hash = 556979270)
-    public DailyData() {
-    }
-
-    @Keep
-    public String getDailyDataID() {
-        return dailyDataID;
-    }
-
-    @Keep
-    public void setDailyDataID(String dailyDataID) {
-        this.dailyDataID = dailyDataID;
-    }
-
     /**
      * @return The time
      */
-    @Keep
     public Integer getTime() {
         return time;
     }
@@ -166,7 +98,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param time The time
      */
-    @Keep
     public void setTime(Integer time) {
         this.time = time;
     }
@@ -174,7 +105,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The summary
      */
-    @Keep
     public String getSummary() {
         return summary;
     }
@@ -182,16 +112,13 @@ public class DailyData extends BaseObservable {
     /**
      * @param summary The summary
      */
-    @Keep
     public void setSummary(String summary) {
         this.summary = summary;
-        notifyPropertyChanged(BR._all);
     }
 
     /**
      * @return The icon
      */
-    @Keep
     public String getIcon() {
         return icon;
     }
@@ -199,16 +126,13 @@ public class DailyData extends BaseObservable {
     /**
      * @param icon The icon
      */
-    @Keep
     public void setIcon(String icon) {
         this.icon = icon;
-        notifyPropertyChanged(BR._all);
     }
 
     /**
      * @return The sunriseTime
      */
-    @Keep
     public Double getSunriseTime() {
         return sunriseTime;
     }
@@ -216,7 +140,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param sunriseTime The sunriseTime
      */
-    @Keep
     public void setSunriseTime(Double sunriseTime) {
         this.sunriseTime = sunriseTime;
     }
@@ -224,7 +147,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The sunsetTime
      */
-    @Keep
     public Double getSunsetTime() {
         return sunsetTime;
     }
@@ -232,7 +154,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param sunsetTime The sunsetTime
      */
-    @Keep
     public void setSunsetTime(Double sunsetTime) {
         this.sunsetTime = sunsetTime;
     }
@@ -240,7 +161,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The moonPhase
      */
-    @Keep
     public Double getMoonPhase() {
         return moonPhase;
     }
@@ -248,7 +168,7 @@ public class DailyData extends BaseObservable {
     /**
      * @param moonPhase The moonPhase
      */
-    @Keep
+
     public void setMoonPhase(Double moonPhase) {
         this.moonPhase = moonPhase;
     }
@@ -256,7 +176,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The precipIntensity
      */
-    @Keep
     public Double getPrecipIntensity() {
         return precipIntensity;
     }
@@ -264,7 +183,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param precipIntensity The precipIntensity
      */
-    @Keep
     public void setPrecipIntensity(Double precipIntensity) {
         this.precipIntensity = precipIntensity;
     }
@@ -272,7 +190,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The precipIntensityMax
      */
-    @Keep
     public Double getPrecipIntensityMax() {
         return precipIntensityMax;
     }
@@ -280,7 +197,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param precipIntensityMax The precipIntensityMax
      */
-    @Keep
     public void setPrecipIntensityMax(Double precipIntensityMax) {
         this.precipIntensityMax = precipIntensityMax;
     }
@@ -288,7 +204,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The precipIntensityMaxTime
      */
-    @Keep
     public Double getPrecipIntensityMaxTime() {
         return precipIntensityMaxTime;
     }
@@ -296,7 +211,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param precipIntensityMaxTime The precipIntensityMaxTime
      */
-    @Keep
     public void setPrecipIntensityMaxTime(Double precipIntensityMaxTime) {
         this.precipIntensityMaxTime = precipIntensityMaxTime;
     }
@@ -304,7 +218,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The precipProbability
      */
-    @Keep
     public Double getPrecipProbability() {
         return precipProbability;
     }
@@ -312,7 +225,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param precipProbability The precipProbability
      */
-    @Keep
     public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
     }
@@ -320,7 +232,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The precipType
      */
-    @Keep
     public String getPrecipType() {
         return precipType;
     }
@@ -328,7 +239,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param precipType The precipType
      */
-    @Keep
     public void setPrecipType(String precipType) {
         this.precipType = precipType;
     }
@@ -336,7 +246,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The temperatureMin
      */
-    @Keep
     public Double getTemperatureMin() {
         return temperatureMin;
     }
@@ -344,7 +253,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param temperatureMin The temperatureMin
      */
-    @Keep
     public void setTemperatureMin(Double temperatureMin) {
         this.temperatureMin = temperatureMin;
     }
@@ -352,7 +260,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The temperatureMinTime
      */
-    @Keep
     public Double getTemperatureMinTime() {
         return temperatureMinTime;
     }
@@ -360,7 +267,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param temperatureMinTime The temperatureMinTime
      */
-    @Keep
     public void setTemperatureMinTime(Double temperatureMinTime) {
         this.temperatureMinTime = temperatureMinTime;
     }
@@ -368,7 +274,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The temperatureMax
      */
-    @Keep
     public Double getTemperatureMax() {
         return temperatureMax;
     }
@@ -376,16 +281,14 @@ public class DailyData extends BaseObservable {
     /**
      * @param temperatureMax The temperatureMax
      */
-    @Keep
     public void setTemperatureMax(Double temperatureMax) {
         this.temperatureMax = temperatureMax;
-        notifyPropertyChanged(BR._all);
+
     }
 
     /**
      * @return The temperatureMaxTime
      */
-    @Keep
     public Double getTemperatureMaxTime() {
         return temperatureMaxTime;
     }
@@ -393,7 +296,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param temperatureMaxTime The temperatureMaxTime
      */
-    @Keep
     public void setTemperatureMaxTime(Double temperatureMaxTime) {
         this.temperatureMaxTime = temperatureMaxTime;
     }
@@ -401,7 +303,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The apparentTemperatureMin
      */
-    @Keep
     public Double getApparentTemperatureMin() {
         return apparentTemperatureMin;
     }
@@ -409,7 +310,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param apparentTemperatureMin The apparentTemperatureMin
      */
-    @Keep
     public void setApparentTemperatureMin(Double apparentTemperatureMin) {
         this.apparentTemperatureMin = apparentTemperatureMin;
     }
@@ -417,7 +317,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The apparentTemperatureMinTime
      */
-    @Keep
     public Double getApparentTemperatureMinTime() {
         return apparentTemperatureMinTime;
     }
@@ -425,7 +324,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param apparentTemperatureMinTime The apparentTemperatureMinTime
      */
-    @Keep
     public void setApparentTemperatureMinTime(Double apparentTemperatureMinTime) {
         this.apparentTemperatureMinTime = apparentTemperatureMinTime;
     }
@@ -433,7 +331,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The apparentTemperatureMax
      */
-    @Keep
     public Double getApparentTemperatureMax() {
         return apparentTemperatureMax;
     }
@@ -441,7 +338,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param apparentTemperatureMax The apparentTemperatureMax
      */
-    @Keep
     public void setApparentTemperatureMax(Double apparentTemperatureMax) {
         this.apparentTemperatureMax = apparentTemperatureMax;
     }
@@ -449,7 +345,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The apparentTemperatureMaxTime
      */
-    @Keep
     public Double getApparentTemperatureMaxTime() {
         return apparentTemperatureMaxTime;
     }
@@ -457,7 +352,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param apparentTemperatureMaxTime The apparentTemperatureMaxTime
      */
-    @Keep
     public void setApparentTemperatureMaxTime(Double apparentTemperatureMaxTime) {
         this.apparentTemperatureMaxTime = apparentTemperatureMaxTime;
     }
@@ -465,7 +359,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The dewPoint
      */
-    @Keep
     public Double getDewPoint() {
         return dewPoint;
     }
@@ -473,7 +366,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param dewPoint The dewPoint
      */
-    @Keep
     public void setDewPoint(Double dewPoint) {
         this.dewPoint = dewPoint;
     }
@@ -481,7 +373,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The humidity
      */
-    @Keep
     public Double getHumidity() {
         return humidity;
     }
@@ -489,7 +380,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param humidity The humidity
      */
-    @Keep
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
@@ -497,7 +387,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The windSpeed
      */
-    @Keep
     public Double getWindSpeed() {
         return windSpeed;
     }
@@ -505,7 +394,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param windSpeed The windSpeed
      */
-    @Keep
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
     }
@@ -513,7 +401,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The windBearing
      */
-    @Keep
     public Double getWindBearing() {
         return windBearing;
     }
@@ -521,7 +408,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param windBearing The windBearing
      */
-    @Keep
     public void setWindBearing(Double windBearing) {
         this.windBearing = windBearing;
     }
@@ -529,7 +415,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The cloudCover
      */
-    @Keep
     public Double getCloudCover() {
         return cloudCover;
     }
@@ -537,7 +422,6 @@ public class DailyData extends BaseObservable {
     /**
      * @param cloudCover The cloudCover
      */
-    @Keep
     public void setCloudCover(Double cloudCover) {
         this.cloudCover = cloudCover;
     }
@@ -545,7 +429,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The pressure
      */
-    @Keep
     public Double getPressure() {
         return pressure;
     }
@@ -560,7 +443,6 @@ public class DailyData extends BaseObservable {
     /**
      * @return The ozone
      */
-    @Keep
     public Double getOzone() {
         return ozone;
     }
@@ -568,17 +450,9 @@ public class DailyData extends BaseObservable {
     /**
      * @param ozone The ozone
      */
-    @Keep
     public void setOzone(Double ozone) {
         this.ozone = ozone;
     }
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
 }

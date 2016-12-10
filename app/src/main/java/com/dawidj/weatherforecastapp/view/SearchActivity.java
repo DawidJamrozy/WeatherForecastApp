@@ -49,6 +49,7 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
     private SearchRecyclerViewAdapter searchRecyclerViewAdapter;
     private SearchViewModel searchViewModel;
     private SearchActivityBinding binding;
+
     @Inject
     EventBus eventBus;
 

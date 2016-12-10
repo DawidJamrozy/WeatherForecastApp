@@ -2,25 +2,15 @@ package com.dawidj.weatherforecastapp.models.Weather;
 
 import android.databinding.BaseObservable;
 
-import com.dawidj.weatherforecastapp.BR;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Keep;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by Dawidj on 25.10.2016.
  */
-@Entity
 public class HourlyData extends BaseObservable {
 
-    @Id
-    private Long id;
 
-    private String hourlyDataID;
     @SerializedName("time")
     @Expose
     private Integer time;
@@ -68,50 +58,9 @@ public class HourlyData extends BaseObservable {
     private String precipType;
 
 
-    @Generated(hash = 1739928541)
-    public HourlyData(Long id, String hourlyDataID, Integer time, String summary,
-            String icon, Double precipIntensity, Double precipProbability,
-            Double temperature, Double apparentTemperature, Double dewPoint,
-            Double humidity, Double windSpeed, Double windBearing,
-            Double cloudCover, Double pressure, Double ozone, String precipType) {
-        this.id = id;
-        this.hourlyDataID = hourlyDataID;
-        this.time = time;
-        this.summary = summary;
-        this.icon = icon;
-        this.precipIntensity = precipIntensity;
-        this.precipProbability = precipProbability;
-        this.temperature = temperature;
-        this.apparentTemperature = apparentTemperature;
-        this.dewPoint = dewPoint;
-        this.humidity = humidity;
-        this.windSpeed = windSpeed;
-        this.windBearing = windBearing;
-        this.cloudCover = cloudCover;
-        this.pressure = pressure;
-        this.ozone = ozone;
-        this.precipType = precipType;
-    }
-
-    @Generated(hash = 8296476)
-    public HourlyData() {
-    }
-
-
-    @Keep
-    public String getHourlyDataID() {
-        return hourlyDataID;
-    }
-
-    @Keep
-    public void setHourlyDataID(String hourlyDataID) {
-        this.hourlyDataID = hourlyDataID;
-    }
-
     /**
      * @return The time
      */
-    @Keep
     public Integer getTime() {
         return time;
     }
@@ -119,16 +68,13 @@ public class HourlyData extends BaseObservable {
     /**
      * @param time The time
      */
-    @Keep
     public void setTime(Integer time) {
         this.time = time;
-        notifyPropertyChanged(BR._all);
     }
 
     /**
      * @return The summary
      */
-    @Keep
     public String getSummary() {
         return summary;
     }
@@ -136,7 +82,6 @@ public class HourlyData extends BaseObservable {
     /**
      * @param summary The summary
      */
-    @Keep
     public void setSummary(String summary) {
         this.summary = summary;
     }
@@ -144,7 +89,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The icon
      */
-    @Keep
+
     public String getIcon() {
         return icon;
     }
@@ -152,16 +97,13 @@ public class HourlyData extends BaseObservable {
     /**
      * @param icon The icon
      */
-    @Keep
     public void setIcon(String icon) {
         this.icon = icon;
-        notifyPropertyChanged(BR._all);
     }
 
     /**
      * @return The precipIntensity
      */
-    @Keep
     public Double getPrecipIntensity() {
         return precipIntensity;
     }
@@ -169,7 +111,6 @@ public class HourlyData extends BaseObservable {
     /**
      * @param precipIntensity The precipIntensity
      */
-    @Keep
     public void setPrecipIntensity(Double precipIntensity) {
         this.precipIntensity = precipIntensity;
     }
@@ -177,7 +118,6 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The precipProbability
      */
-    @Keep
     public Double getPrecipProbability() {
         return precipProbability;
     }
@@ -185,7 +125,6 @@ public class HourlyData extends BaseObservable {
     /**
      * @param precipProbability The precipProbability
      */
-    @Keep
     public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
     }
@@ -193,7 +132,6 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The temperature
      */
-    @Keep
     public Double getTemperature() {
         return temperature;
     }
@@ -201,16 +139,13 @@ public class HourlyData extends BaseObservable {
     /**
      * @param temperature The temperature
      */
-    @Keep
     public void setTemperature(Double temperature) {
         this.temperature = temperature;
-        notifyPropertyChanged(BR._all);
     }
 
     /**
      * @return The apparentTemperature
      */
-    @Keep
     public Double getApparentTemperature() {
         return apparentTemperature;
     }
@@ -218,7 +153,6 @@ public class HourlyData extends BaseObservable {
     /**
      * @param apparentTemperature The apparentTemperature
      */
-    @Keep
     public void setApparentTemperature(Double apparentTemperature) {
         this.apparentTemperature = apparentTemperature;
     }
@@ -226,7 +160,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The dewPoint
      */
-    @Keep
+
     public Double getDewPoint() {
         return dewPoint;
     }
@@ -234,7 +168,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @param dewPoint The dewPoint
      */
-    @Keep
+
     public void setDewPoint(Double dewPoint) {
         this.dewPoint = dewPoint;
     }
@@ -242,7 +176,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The humidity
      */
-    @Keep
+
     public Double getHumidity() {
         return humidity;
     }
@@ -250,7 +184,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @param humidity The humidity
      */
-    @Keep
+
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
@@ -258,7 +192,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The windSpeed
      */
-    @Keep
+
     public Double getWindSpeed() {
         return windSpeed;
     }
@@ -266,7 +200,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @param windSpeed The windSpeed
      */
-    @Keep
+
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
     }
@@ -274,7 +208,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The windBearing
      */
-    @Keep
+
     public Double getWindBearing() {
         return windBearing;
     }
@@ -282,7 +216,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @param windBearing The windBearing
      */
-    @Keep
+
     public void setWindBearing(Double windBearing) {
         this.windBearing = windBearing;
     }
@@ -290,7 +224,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The cloudCover
      */
-    @Keep
+
     public Double getCloudCover() {
         return cloudCover;
     }
@@ -298,7 +232,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @param cloudCover The cloudCover
      */
-    @Keep
+
     public void setCloudCover(Double cloudCover) {
         this.cloudCover = cloudCover;
     }
@@ -306,7 +240,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The pressure
      */
-    @Keep
+
     public Double getPressure() {
         return pressure;
     }
@@ -314,7 +248,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @param pressure The pressure
      */
-    @Keep
+
     public void setPressure(Double pressure) {
         this.pressure = pressure;
     }
@@ -322,7 +256,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The ozone
      */
-    @Keep
+
     public Double getOzone() {
         return ozone;
     }
@@ -330,7 +264,7 @@ public class HourlyData extends BaseObservable {
     /**
      * @param ozone The ozone
      */
-    @Keep
+
     public void setOzone(Double ozone) {
         this.ozone = ozone;
     }
@@ -338,7 +272,6 @@ public class HourlyData extends BaseObservable {
     /**
      * @return The precipType
      */
-    @Keep
     public String getPrecipType() {
         return precipType;
     }
@@ -346,16 +279,8 @@ public class HourlyData extends BaseObservable {
     /**
      * @param precipType The precipType
      */
-    @Keep
     public void setPrecipType(String precipType) {
         this.precipType = precipType;
     }
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

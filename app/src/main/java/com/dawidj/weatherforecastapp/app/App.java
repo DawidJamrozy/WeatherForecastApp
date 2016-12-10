@@ -2,7 +2,6 @@ package com.dawidj.weatherforecastapp.app;
 
 import android.app.Application;
 
-import com.dawidj.weatherforecastapp.components.DaggerWeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherModule;
 
@@ -35,9 +34,5 @@ public class App extends Application {
         weatherComponent = DaggerWeatherComponent.builder()
                 .weatherModule(new WeatherModule())
                 .build();
-
-       /* DevOpenHelper helper = new DevOpenHelper(this, "city-db");
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();*/
     }
 }
