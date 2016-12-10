@@ -25,8 +25,6 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
-
 /**
  * Created by Dawidj on 30.11.2016.
  */
@@ -59,8 +57,7 @@ public class CityViewModel {
 
     @Inject
     EventBus eventBus;
-    @Inject
-    Retrofit retrofit;
+
 
     public CityViewModel(Context context) {
         this.context = context;

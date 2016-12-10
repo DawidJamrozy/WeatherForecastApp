@@ -2,6 +2,7 @@ package com.dawidj.weatherforecastapp.app;
 
 import android.app.Application;
 
+import com.dawidj.weatherforecastapp.components.DaggerWeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherModule;
 
