@@ -4,8 +4,11 @@ package com.dawidj.weatherforecastapp.utils.busevent;
  * Created by Dawidj on 04.12.2016.
  */
 
-public class LocationEvent {
+public class ClearLocation {
 
-
+    public ClearLocation() {
+    }
 
 }
+
+

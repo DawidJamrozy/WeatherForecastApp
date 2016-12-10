@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="location"
-            type="com.dawidj.weatherforecastapp.models.Location" />
+            name="CityLatLng"
+            type="com.dawidj.weatherforecastapp.models.details.CityLatLng" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,7 +22,7 @@
             android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{location.name}" />
+            android:text="@{CityLatLng.result.name}" />
 
     </LinearLayout>
 </layout>

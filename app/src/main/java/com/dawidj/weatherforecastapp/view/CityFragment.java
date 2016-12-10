@@ -38,7 +38,7 @@ import timber.log.Timber;
  * Created by Dawidj on 30.11.2016.
  */
 
-public class CityViewFragment extends Fragment {
+public class CityFragment extends Fragment {
 
     @BindView(R.id.linechart)
     LineChart lineChart;
@@ -53,7 +53,7 @@ public class CityViewFragment extends Fragment {
     @Inject
     EventBus eventBus;
 
-    public CityViewFragment() {
+    public CityFragment() {
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CityViewFragment extends Fragment {
         Bundle args = getArguments();
         cityName = args.getString("cityName");
         cityViewModel.setCityName(cityName);
-        cityViewModel.getWeatherData();
+        //cityViewModel.getWeatherData();
         return view;
         //TODO Screen is moving to the middle - BUG
     }

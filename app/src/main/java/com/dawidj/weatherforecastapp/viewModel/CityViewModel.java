@@ -2,46 +2,30 @@ package com.dawidj.weatherforecastapp.viewModel;
 
 import android.content.Context;
 import android.location.Address;
-import android.location.Geocoder;
-import android.util.Log;
 
 import com.dawidj.weatherforecastapp.R;
-import com.dawidj.weatherforecastapp.api.WeatherApi;
-import com.dawidj.weatherforecastapp.models.City;
-import com.dawidj.weatherforecastapp.models.DailyData;
-import com.dawidj.weatherforecastapp.models.DayData;
+import com.dawidj.weatherforecastapp.models.Weather.City;
+import com.dawidj.weatherforecastapp.models.Weather.DailyData;
+import com.dawidj.weatherforecastapp.models.Weather.DayData;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
 import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
-import com.dawidj.weatherforecastapp.utils.busevent.NotifyRecyclerAdapterEvent;
 import com.dawidj.weatherforecastapp.view.adapters.DisplayDayView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Dawidj on 30.11.2016.
@@ -80,43 +64,10 @@ public class CityViewModel {
 
     public CityViewModel(Context context) {
         this.context = context;
-
-        List<String> testList = new ArrayList<>();
-        testList.add("test");
-        testList.add("test1");
-        testList.add("test2");
-        testList.add("test3");
-        testList.add("test4");
-
-
-        Observable.fromIterable(testList)
-
-                .map(new Function<String, String>() {
-                    @Override
-                    public String apply(String s) throws Exception {
-                        return String.format("To jest test %s", s);
-                    }
-                })
-                .subscribe(new DisposableObserver<String>() {
-                    @Override
-                    public void onNext(String value) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                })
     }
 
     public void getWeatherData() {
-
+/*
         try {
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 
@@ -172,7 +123,7 @@ public class CityViewModel {
 
                 @Override
                 public void onFailure(Call<City> call, Throwable t) {
-                    Log.i(TAG, "onFailure: " + t.toString());
+                    t.printStackTrace();
                 }
             });
         } catch (IOException e) {
@@ -181,7 +132,7 @@ public class CityViewModel {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void setDayChart() {

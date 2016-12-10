@@ -1,12 +1,17 @@
 package com.dawidj.weatherforecastapp.components;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -18,31 +23,44 @@ public class WeatherModule {
 
     @Provides
     @Singleton
+    OkHttpClient okHttpClient() {
+        return new OkHttpClient.Builder().connectTimeout(8000, TimeUnit.MILLISECONDS).build();
+    }
+
+
+    @Provides
+    @Singleton
     @Named("darksky")
-    Retrofit darkskyRetrofit() {
+    Retrofit darkskyRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl("https://api.darksky.net/forecast/555119929f4837cddd4ce3f097bf63f1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(okHttpClient)
                 .build();
     }
 
     @Provides
     @Singleton
     @Named("autocomplete")
-    Retrofit autocompleteRetrofit() {
+    Retrofit autocompleteRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl("https://maps.googleapis.com/maps/api/place/autocomplete/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(okHttpClient)
                 .build();
     }
 
     @Provides
     @Singleton
     @Named("details")
-    Retrofit detailRetrofit() {
+    Retrofit detailRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl("https://maps.googleapis.com/maps/api/place/details/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(okHttpClient)
                 .build();
     }
 

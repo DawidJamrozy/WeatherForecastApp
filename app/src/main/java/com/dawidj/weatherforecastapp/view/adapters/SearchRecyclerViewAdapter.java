@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.databinding.LocationModelBinding;
-import com.dawidj.weatherforecastapp.models.Location;
+import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 
 import java.util.List;
 
@@ -16,30 +16,30 @@ import java.util.List;
  * Created by Dawidj on 04.12.2016.
  */
 
-public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRecyclerViewHolder>  {
+public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecyclerViewHolder> {
 
-    private List<Location> locationList;
+    private List<CityLatLng> locationList;
 
     private LayoutInflater inflater;
 
     private Context context;
 
-    public LocationRecyclerViewAdapter(Context context, List<Location> locationList) {
+    public SearchRecyclerViewAdapter(Context context, List<CityLatLng> locationList) {
         this.context = context;
         this.locationList = locationList;
         inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public LocationRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LocationModelBinding binder = DataBindingUtil.inflate(inflater, R.layout.location_model, parent, false);
-        return new LocationRecyclerViewHolder(binder);
+        return new SearchRecyclerViewHolder(binder);
     }
 
     @Override
-    public void onBindViewHolder(LocationRecyclerViewHolder holder, int position) {
-        Location location = locationList.get(position);
-        holder.getBinding().setLocation(location);
+    public void onBindViewHolder(SearchRecyclerViewHolder holder, int position) {
+        CityLatLng cityLatLng = locationList.get(position);
+        holder.getBinding().setCityLatLng(cityLatLng);
     }
 
     @Override

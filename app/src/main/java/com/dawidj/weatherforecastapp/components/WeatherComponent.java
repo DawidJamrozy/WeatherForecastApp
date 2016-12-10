@@ -1,9 +1,9 @@
 package com.dawidj.weatherforecastapp.components;
 
-import com.dawidj.weatherforecastapp.view.CityViewFragment;
-import com.dawidj.weatherforecastapp.view.LocationActivity;
+import com.dawidj.weatherforecastapp.view.CityFragment;
+import com.dawidj.weatherforecastapp.view.SearchActivity;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
-import com.dawidj.weatherforecastapp.viewModel.LocationViewModel;
+import com.dawidj.weatherforecastapp.viewModel.SearchViewModel;
 
 import javax.inject.Singleton;
 
@@ -16,7 +16,7 @@ import dagger.Component;
 @Component (modules=WeatherModule.class)
 public interface WeatherComponent {
     void inject(CityViewModel cityViewModel);
-    void inject(CityViewFragment cityViewFragment);
-    void inject(LocationViewModel locationViewModel);
-    void inject(LocationActivity locationActivity);
+    void inject(CityFragment cityFragment);
+    void inject(SearchViewModel searchViewModel);
+    void inject(SearchActivity searchActivity);
 }

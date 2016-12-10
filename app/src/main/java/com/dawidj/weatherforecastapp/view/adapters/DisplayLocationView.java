@@ -1,6 +1,6 @@
 package com.dawidj.weatherforecastapp.view.adapters;
 
-import com.dawidj.weatherforecastapp.models.Location;
+import com.dawidj.weatherforecastapp.models.Weather.Location;
 
 import java.util.List;
 

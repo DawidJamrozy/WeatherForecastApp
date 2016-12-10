@@ -5,7 +5,7 @@
 
         <variable
             name="day"
-            type="com.dawidj.weatherforecastapp.models.DayData" />
+            type="com.dawidj.weatherforecastapp.models.Weather.DayData" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

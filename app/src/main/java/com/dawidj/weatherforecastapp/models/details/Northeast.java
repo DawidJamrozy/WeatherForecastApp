@@ -1,17 +1,13 @@
-package com.dawidj.weatherforecastapp.models;
+package com.dawidj.weatherforecastapp.models.details;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by djamrozy on 09.12.2016.
+ * Created by Dawidj on 10.12.2016.
  */
 
-public class CityLatLng {
-
-    @SerializedName("name")
-    @Expose
-    private String name;
+public class Northeast {
     @SerializedName("lat")
     @Expose
     private Double lat;
@@ -19,20 +15,11 @@ public class CityLatLng {
     @Expose
     private Double lng;
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     /**
- *
- * @return
- * The lat
- */
+     *
+     * @return
+     * The lat
+     */
     public Double getLat() {
         return lat;
     }
@@ -63,7 +50,4 @@ public class CityLatLng {
     public void setLng(Double lng) {
         this.lng = lng;
     }
-
 }
-
-

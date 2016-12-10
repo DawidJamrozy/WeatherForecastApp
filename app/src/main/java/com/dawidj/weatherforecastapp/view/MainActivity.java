@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_settings:
-                Intent i = new Intent(this, LocationActivity.class);
+                Intent i = new Intent(this, SearchActivity.class);
                 startActivity(i);
                 break;
         }
@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
     }
 
-    public CityViewFragment cityViewFragment(String city) {
-        CityViewFragment fragment = new CityViewFragment();
+    public CityFragment cityViewFragment(String city) {
+        CityFragment fragment = new CityFragment();
         // Supply index input as an argument.
         Bundle args = new Bundle();
         args.putString("cityName", city);

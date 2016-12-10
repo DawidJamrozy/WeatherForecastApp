@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="LocationViewModel"
-            type="com.dawidj.weatherforecastapp.viewModel.LocationViewModel" />
+            name="SearchViewModel"
+            type="com.dawidj.weatherforecastapp.viewModel.SearchViewModel" />
     </data>
 
     <RelativeLayout
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:background="@color/background"
         android:fitsSystemWindows="true"
-        tools:context="com.dawidj.weatherforecastapp.view.LocationActivity">
+        tools:context="com.dawidj.weatherforecastapp.view.SearchActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -35,9 +35,11 @@
                     android:id="@+id/cityEditText"
                     android:layout_width="200dp"
                     android:background="@color/background"
-                    android:text="@={LocationViewModel.cityName}"
+                    android:text="@={SearchViewModel.cityName}"
                     android:textColor="@android:color/black"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:addTextChangedListener="@{SearchViewModel.textWatcher}"
+                    />
 
             </android.support.v7.widget.Toolbar>
 
@@ -55,7 +57,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{LocationViewModel.name}" />
+                android:text="@{SearchViewModel.name}" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/locationList"
