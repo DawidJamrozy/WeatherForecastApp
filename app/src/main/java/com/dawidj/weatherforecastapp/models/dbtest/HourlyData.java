@@ -1,16 +1,25 @@
-package com.dawidj.weatherforecastapp.models.weather;
+package com.dawidj.weatherforecastapp.models.dbtest;
 
 import android.databinding.BaseObservable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
 /**
  * Created by Dawidj on 25.10.2016.
  */
+
+@Entity
 public class HourlyData extends BaseObservable {
 
+    @Id
+    private Long id;
 
+    private Long hourlyID;
     @SerializedName("time")
     @Expose
     private Integer time;
@@ -56,231 +65,135 @@ public class HourlyData extends BaseObservable {
     @SerializedName("precipType")
     @Expose
     private String precipType;
-
-
-    /**
-     * @return The time
-     */
-    public Integer getTime() {
-        return time;
+    @Generated(hash = 1210503856)
+    public HourlyData(Long id, Long hourlyID, Integer time, String summary,
+            String icon, Double precipIntensity, Double precipProbability,
+            Double temperature, Double apparentTemperature, Double dewPoint,
+            Double humidity, Double windSpeed, Double windBearing,
+            Double cloudCover, Double pressure, Double ozone, String precipType) {
+        this.id = id;
+        this.hourlyID = hourlyID;
+        this.time = time;
+        this.summary = summary;
+        this.icon = icon;
+        this.precipIntensity = precipIntensity;
+        this.precipProbability = precipProbability;
+        this.temperature = temperature;
+        this.apparentTemperature = apparentTemperature;
+        this.dewPoint = dewPoint;
+        this.humidity = humidity;
+        this.windSpeed = windSpeed;
+        this.windBearing = windBearing;
+        this.cloudCover = cloudCover;
+        this.pressure = pressure;
+        this.ozone = ozone;
+        this.precipType = precipType;
     }
-
-    /**
-     * @param time The time
-     */
+    @Generated(hash = 8296476)
+    public HourlyData() {
+    }
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public Long getHourlyID() {
+        return this.hourlyID;
+    }
+    public void setHourlyID(Long hourlyID) {
+        this.hourlyID = hourlyID;
+    }
+    public Integer getTime() {
+        return this.time;
+    }
     public void setTime(Integer time) {
         this.time = time;
     }
-
-    /**
-     * @return The summary
-     */
     public String getSummary() {
-        return summary;
+        return this.summary;
     }
-
-    /**
-     * @param summary The summary
-     */
     public void setSummary(String summary) {
         this.summary = summary;
     }
-
-    /**
-     * @return The icon
-     */
-
     public String getIcon() {
-        return icon;
+        return this.icon;
     }
-
-    /**
-     * @param icon The icon
-     */
     public void setIcon(String icon) {
         this.icon = icon;
     }
-
-    /**
-     * @return The precipIntensity
-     */
     public Double getPrecipIntensity() {
-        return precipIntensity;
+        return this.precipIntensity;
     }
-
-    /**
-     * @param precipIntensity The precipIntensity
-     */
     public void setPrecipIntensity(Double precipIntensity) {
         this.precipIntensity = precipIntensity;
     }
-
-    /**
-     * @return The precipProbability
-     */
     public Double getPrecipProbability() {
-        return precipProbability;
+        return this.precipProbability;
     }
-
-    /**
-     * @param precipProbability The precipProbability
-     */
     public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
     }
-
-    /**
-     * @return The temperature
-     */
     public Double getTemperature() {
-        return temperature;
+        return this.temperature;
     }
-
-    /**
-     * @param temperature The temperature
-     */
     public void setTemperature(Double temperature) {
         this.temperature = temperature;
     }
-
-    /**
-     * @return The apparentTemperature
-     */
     public Double getApparentTemperature() {
-        return apparentTemperature;
+        return this.apparentTemperature;
     }
-
-    /**
-     * @param apparentTemperature The apparentTemperature
-     */
     public void setApparentTemperature(Double apparentTemperature) {
         this.apparentTemperature = apparentTemperature;
     }
-
-    /**
-     * @return The dewPoint
-     */
-
     public Double getDewPoint() {
-        return dewPoint;
+        return this.dewPoint;
     }
-
-    /**
-     * @param dewPoint The dewPoint
-     */
-
     public void setDewPoint(Double dewPoint) {
         this.dewPoint = dewPoint;
     }
-
-    /**
-     * @return The humidity
-     */
-
     public Double getHumidity() {
-        return humidity;
+        return this.humidity;
     }
-
-    /**
-     * @param humidity The humidity
-     */
-
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
-
-    /**
-     * @return The windSpeed
-     */
-
     public Double getWindSpeed() {
-        return windSpeed;
+        return this.windSpeed;
     }
-
-    /**
-     * @param windSpeed The windSpeed
-     */
-
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
     }
-
-    /**
-     * @return The windBearing
-     */
-
     public Double getWindBearing() {
-        return windBearing;
+        return this.windBearing;
     }
-
-    /**
-     * @param windBearing The windBearing
-     */
-
     public void setWindBearing(Double windBearing) {
         this.windBearing = windBearing;
     }
-
-    /**
-     * @return The cloudCover
-     */
-
     public Double getCloudCover() {
-        return cloudCover;
+        return this.cloudCover;
     }
-
-    /**
-     * @param cloudCover The cloudCover
-     */
-
     public void setCloudCover(Double cloudCover) {
         this.cloudCover = cloudCover;
     }
-
-    /**
-     * @return The pressure
-     */
-
     public Double getPressure() {
-        return pressure;
+        return this.pressure;
     }
-
-    /**
-     * @param pressure The pressure
-     */
-
     public void setPressure(Double pressure) {
         this.pressure = pressure;
     }
-
-    /**
-     * @return The ozone
-     */
-
     public Double getOzone() {
-        return ozone;
+        return this.ozone;
     }
-
-    /**
-     * @param ozone The ozone
-     */
-
     public void setOzone(Double ozone) {
         this.ozone = ozone;
     }
-
-    /**
-     * @return The precipType
-     */
     public String getPrecipType() {
-        return precipType;
+        return this.precipType;
     }
-
-    /**
-     * @param precipType The precipType
-     */
     public void setPrecipType(String precipType) {
         this.precipType = precipType;
     }
+
 
 }

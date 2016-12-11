@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.models.Weather;
+package com.dawidj.weatherforecastapp.models.weather;
 
 import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;

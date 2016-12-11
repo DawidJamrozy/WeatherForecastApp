@@ -10,9 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.dawidj.weatherforecastapp.R;
+import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesActivityBinding;
+import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
 import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +32,9 @@ public class MyCitiesActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @Inject
+    DaoSession daoSession;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +42,8 @@ public class MyCitiesActivity extends AppCompatActivity {
         myCitiesViewModel = new MyCitiesViewModel();
         binding.setViewModel(myCitiesViewModel);
         ButterKnife.bind(this);
+        App.getApplication().getWeatherComponent().inject(this);
+        App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
         setSupportActionBar(toolbar);
         setRecycler();
     }

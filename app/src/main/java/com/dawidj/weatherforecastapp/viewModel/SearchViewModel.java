@@ -5,7 +5,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import com.dawidj.weatherforecastapp.api.WeatherApi;
-import com.dawidj.weatherforecastapp.models.Weather.City;
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
 import com.dawidj.weatherforecastapp.models.autocomplete.Prediction;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
@@ -84,25 +83,25 @@ public class SearchViewModel {
         cityWeatherDataObservable.onNext(cityLatLngList.get(position));
 
         cityWeatherDataObservable
-                .flatMap(new Function<CityLatLng, ObservableSource<City>>() {
+                .flatMap(new Function<CityLatLng, ObservableSource<com.dawidj.weatherforecastapp.models.dbtest.City>>() {
                     @Override
-                    public ObservableSource<City> apply(CityLatLng cityLatLng) throws Exception {
+                    public ObservableSource<com.dawidj.weatherforecastapp.models.dbtest.City> apply(CityLatLng cityLatLng) throws Exception {
                         return serviceWeather.getCity(cityLatLng.getResult().getGeometry().getLocation().getLat().toString(),
                                 cityLatLng.getResult().getGeometry().getLocation().getLng().toString());
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<City>() {
+                .subscribe(new Observer<com.dawidj.weatherforecastapp.models.dbtest.City>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(City value) {
+                    public void onNext(com.dawidj.weatherforecastapp.models.dbtest.City value) {
                         value.setName(cityLatLngList.get(position).getResult().getName());
+                        value.setCityID(20L);
                         //TODO insert value to db
-
                     }
 
                     @Override
@@ -115,8 +114,6 @@ public class SearchViewModel {
 
                     }
                 });
-
-
     }
 
     public void rxQueryBuilder() {
@@ -126,12 +123,10 @@ public class SearchViewModel {
         final WeatherApi serviceDetails = retrofitDetails.create(WeatherApi.class);
 
         textWatcherObservable
-                .debounce(1000, TimeUnit.MILLISECONDS)
+                .debounce(800, TimeUnit.MILLISECONDS)
                 .doOnEach(new Observer<String>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
+                    public void onSubscribe(Disposable d) {compositeDisposable.add(d);}
 
                     @Override
                     public void onNext(String value) {
@@ -147,9 +142,7 @@ public class SearchViewModel {
                     }
 
                     @Override
-                    public void onComplete() {
-
-                    }
+                    public void onComplete() {}
                 })
                 .filter(new Predicate<String>() {
                     @Override
@@ -171,7 +164,6 @@ public class SearchViewModel {
                 }).flatMap(new Function<Prediction, ObservableSource<CityLatLng>>() {
             @Override
             public ObservableSource<CityLatLng> apply(Prediction prediction) throws Exception {
-
                 return serviceDetails.getCityLatLng(prediction.getPlaceId(), Const.GOOGLE_PLACES_KEY);
             }
         }).subscribeOn(Schedulers.io())
@@ -194,14 +186,8 @@ public class SearchViewModel {
                     }
 
                     @Override
-                    public void onComplete() {
-
-                    }
+                    public void onComplete() {}
                 });
-    }
-
-    public void onDestroy() {
-        compositeDisposable.clear();
     }
 
     public TextWatcher getTextWatcher() {
@@ -221,6 +207,10 @@ public class SearchViewModel {
 
             }
         };
+    }
+
+    public void onDestroy() {
+        compositeDisposable.clear();
     }
 
 }

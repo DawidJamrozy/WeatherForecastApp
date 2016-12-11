@@ -1,6 +1,5 @@
 package com.dawidj.weatherforecastapp.api;
 
-import com.dawidj.weatherforecastapp.models.Weather.City;
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 
@@ -20,8 +19,8 @@ public interface WeatherApi {
 //                       @Path("lng") String lng);
 
     @GET("{lat},{lng}?lang=pl&exclude=flags,alerts,minutely&units=ca")
-    Observable<City> getCity(@Path("lat") String lat,
-                             @Path("lng") String lng);
+    Observable<com.dawidj.weatherforecastapp.models.dbtest.City> getCity(@Path("lat") String lat,
+                                                                         @Path("lng") String lng);
 
     @GET("json?")
     Observable<CityID> getCityName(@Query("input") String city,

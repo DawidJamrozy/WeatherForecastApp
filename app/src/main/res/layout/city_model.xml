@@ -3,7 +3,7 @@
     <data>
         <variable
             name="CityModel"
-            type="com.dawidj.weatherforecastapp.models.Weather.City"/>
+            type="com.dawidj.weatherforecastapp.models.weather.City"/>
     </data>
 
 

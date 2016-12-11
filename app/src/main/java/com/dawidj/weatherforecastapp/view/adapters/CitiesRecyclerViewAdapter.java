@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.databinding.CityModelBinding;
-import com.dawidj.weatherforecastapp.models.Weather.City;
+import com.dawidj.weatherforecastapp.models.weather.City;
 
 import java.util.List;
 

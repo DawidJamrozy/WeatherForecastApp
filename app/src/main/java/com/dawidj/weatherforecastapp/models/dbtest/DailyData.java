@@ -1,14 +1,24 @@
-package com.dawidj.weatherforecastapp.models.weather;
+package com.dawidj.weatherforecastapp.models.dbtest;
 
 import android.databinding.BaseObservable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
 /**
  * Created by Dawidj on 25.10.2016.
  */
+@Entity
 public class DailyData extends BaseObservable {
+
+    @Id
+    private Long id;
+
+    private Long dailyID;
 
     @SerializedName("time")
     @Expose
@@ -88,368 +98,214 @@ public class DailyData extends BaseObservable {
     @SerializedName("ozone")
     @Expose
     private Double ozone;
-    /**
-     * @return The time
-     */
-    public Integer getTime() {
-        return time;
+    @Generated(hash = 1936653682)
+    public DailyData(Long id, Long dailyID, Integer time, String summary,
+            String icon, Double sunriseTime, Double sunsetTime, Double moonPhase,
+            Double precipIntensity, Double precipIntensityMax,
+            Double precipIntensityMaxTime, Double precipProbability,
+            String precipType, Double temperatureMin, Double temperatureMinTime,
+            Double temperatureMax, Double temperatureMaxTime,
+            Double apparentTemperatureMin, Double apparentTemperatureMinTime,
+            Double apparentTemperatureMax, Double apparentTemperatureMaxTime,
+            Double dewPoint, Double humidity, Double windSpeed, Double windBearing,
+            Double cloudCover, Double pressure, Double ozone) {
+        this.id = id;
+        this.dailyID = dailyID;
+        this.time = time;
+        this.summary = summary;
+        this.icon = icon;
+        this.sunriseTime = sunriseTime;
+        this.sunsetTime = sunsetTime;
+        this.moonPhase = moonPhase;
+        this.precipIntensity = precipIntensity;
+        this.precipIntensityMax = precipIntensityMax;
+        this.precipIntensityMaxTime = precipIntensityMaxTime;
+        this.precipProbability = precipProbability;
+        this.precipType = precipType;
+        this.temperatureMin = temperatureMin;
+        this.temperatureMinTime = temperatureMinTime;
+        this.temperatureMax = temperatureMax;
+        this.temperatureMaxTime = temperatureMaxTime;
+        this.apparentTemperatureMin = apparentTemperatureMin;
+        this.apparentTemperatureMinTime = apparentTemperatureMinTime;
+        this.apparentTemperatureMax = apparentTemperatureMax;
+        this.apparentTemperatureMaxTime = apparentTemperatureMaxTime;
+        this.dewPoint = dewPoint;
+        this.humidity = humidity;
+        this.windSpeed = windSpeed;
+        this.windBearing = windBearing;
+        this.cloudCover = cloudCover;
+        this.pressure = pressure;
+        this.ozone = ozone;
     }
-
-    /**
-     * @param time The time
-     */
+    @Generated(hash = 556979270)
+    public DailyData() {
+    }
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public Long getDailyID() {
+        return this.dailyID;
+    }
+    public void setDailyID(Long dailyID) {
+        this.dailyID = dailyID;
+    }
+    public Integer getTime() {
+        return this.time;
+    }
     public void setTime(Integer time) {
         this.time = time;
     }
-
-    /**
-     * @return The summary
-     */
     public String getSummary() {
-        return summary;
+        return this.summary;
     }
-
-    /**
-     * @param summary The summary
-     */
     public void setSummary(String summary) {
         this.summary = summary;
     }
-
-    /**
-     * @return The icon
-     */
     public String getIcon() {
-        return icon;
+        return this.icon;
     }
-
-    /**
-     * @param icon The icon
-     */
     public void setIcon(String icon) {
         this.icon = icon;
     }
-
-    /**
-     * @return The sunriseTime
-     */
     public Double getSunriseTime() {
-        return sunriseTime;
+        return this.sunriseTime;
     }
-
-    /**
-     * @param sunriseTime The sunriseTime
-     */
     public void setSunriseTime(Double sunriseTime) {
         this.sunriseTime = sunriseTime;
     }
-
-    /**
-     * @return The sunsetTime
-     */
     public Double getSunsetTime() {
-        return sunsetTime;
+        return this.sunsetTime;
     }
-
-    /**
-     * @param sunsetTime The sunsetTime
-     */
     public void setSunsetTime(Double sunsetTime) {
         this.sunsetTime = sunsetTime;
     }
-
-    /**
-     * @return The moonPhase
-     */
     public Double getMoonPhase() {
-        return moonPhase;
+        return this.moonPhase;
     }
-
-    /**
-     * @param moonPhase The moonPhase
-     */
-
     public void setMoonPhase(Double moonPhase) {
         this.moonPhase = moonPhase;
     }
-
-    /**
-     * @return The precipIntensity
-     */
     public Double getPrecipIntensity() {
-        return precipIntensity;
+        return this.precipIntensity;
     }
-
-    /**
-     * @param precipIntensity The precipIntensity
-     */
     public void setPrecipIntensity(Double precipIntensity) {
         this.precipIntensity = precipIntensity;
     }
-
-    /**
-     * @return The precipIntensityMax
-     */
     public Double getPrecipIntensityMax() {
-        return precipIntensityMax;
+        return this.precipIntensityMax;
     }
-
-    /**
-     * @param precipIntensityMax The precipIntensityMax
-     */
     public void setPrecipIntensityMax(Double precipIntensityMax) {
         this.precipIntensityMax = precipIntensityMax;
     }
-
-    /**
-     * @return The precipIntensityMaxTime
-     */
     public Double getPrecipIntensityMaxTime() {
-        return precipIntensityMaxTime;
+        return this.precipIntensityMaxTime;
     }
-
-    /**
-     * @param precipIntensityMaxTime The precipIntensityMaxTime
-     */
     public void setPrecipIntensityMaxTime(Double precipIntensityMaxTime) {
         this.precipIntensityMaxTime = precipIntensityMaxTime;
     }
-
-    /**
-     * @return The precipProbability
-     */
     public Double getPrecipProbability() {
-        return precipProbability;
+        return this.precipProbability;
     }
-
-    /**
-     * @param precipProbability The precipProbability
-     */
     public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
     }
-
-    /**
-     * @return The precipType
-     */
     public String getPrecipType() {
-        return precipType;
+        return this.precipType;
     }
-
-    /**
-     * @param precipType The precipType
-     */
     public void setPrecipType(String precipType) {
         this.precipType = precipType;
     }
-
-    /**
-     * @return The temperatureMin
-     */
     public Double getTemperatureMin() {
-        return temperatureMin;
+        return this.temperatureMin;
     }
-
-    /**
-     * @param temperatureMin The temperatureMin
-     */
     public void setTemperatureMin(Double temperatureMin) {
         this.temperatureMin = temperatureMin;
     }
-
-    /**
-     * @return The temperatureMinTime
-     */
     public Double getTemperatureMinTime() {
-        return temperatureMinTime;
+        return this.temperatureMinTime;
     }
-
-    /**
-     * @param temperatureMinTime The temperatureMinTime
-     */
     public void setTemperatureMinTime(Double temperatureMinTime) {
         this.temperatureMinTime = temperatureMinTime;
     }
-
-    /**
-     * @return The temperatureMax
-     */
     public Double getTemperatureMax() {
-        return temperatureMax;
+        return this.temperatureMax;
     }
-
-    /**
-     * @param temperatureMax The temperatureMax
-     */
     public void setTemperatureMax(Double temperatureMax) {
         this.temperatureMax = temperatureMax;
-
     }
-
-    /**
-     * @return The temperatureMaxTime
-     */
     public Double getTemperatureMaxTime() {
-        return temperatureMaxTime;
+        return this.temperatureMaxTime;
     }
-
-    /**
-     * @param temperatureMaxTime The temperatureMaxTime
-     */
     public void setTemperatureMaxTime(Double temperatureMaxTime) {
         this.temperatureMaxTime = temperatureMaxTime;
     }
-
-    /**
-     * @return The apparentTemperatureMin
-     */
     public Double getApparentTemperatureMin() {
-        return apparentTemperatureMin;
+        return this.apparentTemperatureMin;
     }
-
-    /**
-     * @param apparentTemperatureMin The apparentTemperatureMin
-     */
     public void setApparentTemperatureMin(Double apparentTemperatureMin) {
         this.apparentTemperatureMin = apparentTemperatureMin;
     }
-
-    /**
-     * @return The apparentTemperatureMinTime
-     */
     public Double getApparentTemperatureMinTime() {
-        return apparentTemperatureMinTime;
+        return this.apparentTemperatureMinTime;
     }
-
-    /**
-     * @param apparentTemperatureMinTime The apparentTemperatureMinTime
-     */
     public void setApparentTemperatureMinTime(Double apparentTemperatureMinTime) {
         this.apparentTemperatureMinTime = apparentTemperatureMinTime;
     }
-
-    /**
-     * @return The apparentTemperatureMax
-     */
     public Double getApparentTemperatureMax() {
-        return apparentTemperatureMax;
+        return this.apparentTemperatureMax;
     }
-
-    /**
-     * @param apparentTemperatureMax The apparentTemperatureMax
-     */
     public void setApparentTemperatureMax(Double apparentTemperatureMax) {
         this.apparentTemperatureMax = apparentTemperatureMax;
     }
-
-    /**
-     * @return The apparentTemperatureMaxTime
-     */
     public Double getApparentTemperatureMaxTime() {
-        return apparentTemperatureMaxTime;
+        return this.apparentTemperatureMaxTime;
     }
-
-    /**
-     * @param apparentTemperatureMaxTime The apparentTemperatureMaxTime
-     */
     public void setApparentTemperatureMaxTime(Double apparentTemperatureMaxTime) {
         this.apparentTemperatureMaxTime = apparentTemperatureMaxTime;
     }
-
-    /**
-     * @return The dewPoint
-     */
     public Double getDewPoint() {
-        return dewPoint;
+        return this.dewPoint;
     }
-
-    /**
-     * @param dewPoint The dewPoint
-     */
     public void setDewPoint(Double dewPoint) {
         this.dewPoint = dewPoint;
     }
-
-    /**
-     * @return The humidity
-     */
     public Double getHumidity() {
-        return humidity;
+        return this.humidity;
     }
-
-    /**
-     * @param humidity The humidity
-     */
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
-
-    /**
-     * @return The windSpeed
-     */
     public Double getWindSpeed() {
-        return windSpeed;
+        return this.windSpeed;
     }
-
-    /**
-     * @param windSpeed The windSpeed
-     */
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
     }
-
-    /**
-     * @return The windBearing
-     */
     public Double getWindBearing() {
-        return windBearing;
+        return this.windBearing;
     }
-
-    /**
-     * @param windBearing The windBearing
-     */
     public void setWindBearing(Double windBearing) {
         this.windBearing = windBearing;
     }
-
-    /**
-     * @return The cloudCover
-     */
     public Double getCloudCover() {
-        return cloudCover;
+        return this.cloudCover;
     }
-
-    /**
-     * @param cloudCover The cloudCover
-     */
     public void setCloudCover(Double cloudCover) {
         this.cloudCover = cloudCover;
     }
-
-    /**
-     * @return The pressure
-     */
     public Double getPressure() {
-        return pressure;
+        return this.pressure;
     }
-
-    /**
-     * @param pressure The pressure
-     */
     public void setPressure(Double pressure) {
         this.pressure = pressure;
     }
-
-    /**
-     * @return The ozone
-     */
     public Double getOzone() {
-        return ozone;
+        return this.ozone;
     }
-
-    /**
-     * @param ozone The ozone
-     */
     public void setOzone(Double ozone) {
         this.ozone = ozone;
     }

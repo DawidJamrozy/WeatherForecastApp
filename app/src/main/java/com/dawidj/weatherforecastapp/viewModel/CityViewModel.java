@@ -4,9 +4,9 @@ import android.content.Context;
 import android.location.Address;
 
 import com.dawidj.weatherforecastapp.R;
-import com.dawidj.weatherforecastapp.models.Weather.City;
-import com.dawidj.weatherforecastapp.models.Weather.DailyData;
-import com.dawidj.weatherforecastapp.models.Weather.DayData;
+import com.dawidj.weatherforecastapp.models.weather.City;
+import com.dawidj.weatherforecastapp.models.weather.DailyData;
+import com.dawidj.weatherforecastapp.models.weather.DayData;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
 import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
@@ -57,6 +57,7 @@ public class CityViewModel {
 
     @Inject
     EventBus eventBus;
+
 
 
     public CityViewModel(Context context) {

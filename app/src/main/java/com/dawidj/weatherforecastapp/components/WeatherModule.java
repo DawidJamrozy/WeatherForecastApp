@@ -1,5 +1,7 @@
 package com.dawidj.weatherforecastapp.components;
 
+import com.dawidj.weatherforecastapp.app.App;
+import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import org.greenrobot.eventbus.EventBus;
@@ -69,7 +71,12 @@ public class WeatherModule {
     @Singleton
     EventBus eventBus() {
         return new EventBus().getDefault();
+    }
 
+    @Provides
+    @Singleton
+    DaoSession daoSession() {
+        return App.getApplication().getDaoSession();
     }
 
 }
