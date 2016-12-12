@@ -1,7 +1,7 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
 import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
-import com.dawidj.weatherforecastapp.models.weather.City;
+import com.dawidj.weatherforecastapp.models.dbtest.City;
 
 import java.util.ArrayList;
 import java.util.List;

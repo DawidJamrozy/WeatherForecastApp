@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MyCitiesActivity extends AppCompatActivity {
 
@@ -50,6 +52,7 @@ public class MyCitiesActivity extends AppCompatActivity {
 
     public void setRecycler() {
         recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         citiesRecyclerViewAdapter = new CitiesRecyclerViewAdapter(this, myCitiesViewModel.getCityList());
         recyclerView.setAdapter(citiesRecyclerViewAdapter);
     }
@@ -68,9 +71,21 @@ public class MyCitiesActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_settings:
                 Intent i = new Intent(this, SearchActivity.class);
-                startActivity(i);
+                startActivityForResult(i, 5);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 5) {
+            Timber.i("onActivityResult(): ");
+            myCitiesViewModel.setCityList(daoSession.getCityDao().queryBuilder().list());
+            citiesRecyclerViewAdapter.notifyDataSetChanged();
+        }
     }
 }

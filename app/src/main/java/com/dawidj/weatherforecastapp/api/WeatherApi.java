@@ -18,9 +18,12 @@ public interface WeatherApi {
 //    Call<City> getCity(@Path("lat") String lat,
 //                       @Path("lng") String lng);
 
-    @GET("{lat},{lng}?lang=pl&exclude=flags,alerts,minutely&units=ca")
+    @GET("{lat},{lng}?")
     Observable<com.dawidj.weatherforecastapp.models.dbtest.City> getCity(@Path("lat") String lat,
-                                                                         @Path("lng") String lng);
+                                                                         @Path("lng") String lng,
+                                                                         @Query("lang") String lang,
+                                                                         @Query("exclude") String exclude,
+                                                                         @Query("units") String units);
 
     @GET("json?")
     Observable<CityID> getCityName(@Query("input") String city,

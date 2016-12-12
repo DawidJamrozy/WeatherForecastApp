@@ -7,10 +7,15 @@ import android.text.TextWatcher;
 import com.dawidj.weatherforecastapp.api.WeatherApi;
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
 import com.dawidj.weatherforecastapp.models.autocomplete.Prediction;
+import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
+import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
+import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.busevent.AddLocation;
 import com.dawidj.weatherforecastapp.utils.busevent.ClearLocation;
+import com.dawidj.weatherforecastapp.utils.busevent.NotifyRecyclerAdapterEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -31,6 +36,7 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import retrofit2.Retrofit;
+import timber.log.Timber;
 
 /**
  * Created by Dawidj on 04.12.2016.
@@ -44,6 +50,7 @@ public class SearchViewModel {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final PublishSubject<String> textWatcherObservable = PublishSubject.create();
     private final PublishSubject<CityLatLng> cityWeatherDataObservable = PublishSubject.create();
+    private int listPosition;
 
     public ObservableField<String> getCityName() {
         return cityName;
@@ -61,6 +68,9 @@ public class SearchViewModel {
     EventBus eventBus;
 
     @Inject
+    DaoSession daoSession;
+
+    @Inject
     @Named("darksky")
     Retrofit retrofitDarksky;
 
@@ -75,19 +85,33 @@ public class SearchViewModel {
     public SearchViewModel() {
 
     }
-
+    //klikniecie na recycler view wywołuje tą metode
     public void addCity(final int position) {
+        Timber.i("addCity(): " + position);
+        listPosition = position;
+        cityWeatherDataObservable.onNext(cityLatLngList.get(position));
+    }
+
+    public void testRx() {
+        Timber.i("testRx(): ");
+
+    }
+
+    public void rxQueryBuilder() {
+        final WeatherApi serviceAutocomplete = retrofitAutocomplete.create(WeatherApi.class);
+
+        final WeatherApi serviceDetails = retrofitDetails.create(WeatherApi.class);
 
         final WeatherApi serviceWeather = retrofitDarksky.create(WeatherApi.class);
 
-        cityWeatherDataObservable.onNext(cityLatLngList.get(position));
-
         cityWeatherDataObservable
-                .flatMap(new Function<CityLatLng, ObservableSource<com.dawidj.weatherforecastapp.models.dbtest.City>>() {
+                .flatMap(new Function<CityLatLng, ObservableSource<City>>() {
                     @Override
-                    public ObservableSource<com.dawidj.weatherforecastapp.models.dbtest.City> apply(CityLatLng cityLatLng) throws Exception {
+                    public ObservableSource<City> apply(CityLatLng cityLatLng) throws Exception {
                         return serviceWeather.getCity(cityLatLng.getResult().getGeometry().getLocation().getLat().toString(),
-                                cityLatLng.getResult().getGeometry().getLocation().getLng().toString());
+                                cityLatLng.getResult().getGeometry().getLocation().getLng().toString(), "pl", "flags,alerts,minutely", "ca");
+
+
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -99,9 +123,23 @@ public class SearchViewModel {
 
                     @Override
                     public void onNext(com.dawidj.weatherforecastapp.models.dbtest.City value) {
-                        value.setName(cityLatLngList.get(position).getResult().getName());
-                        value.setCityID(20L);
-                        //TODO insert value to db
+                        value.setName(cityLatLngList.get(listPosition).getResult().getName());
+
+                        long id = daoSession.getCityDao().insert(value);
+
+                        for(HourlyData hourlyData : value.getHourly().getData()) {
+                            hourlyData.setHourlyID(id);
+                            daoSession.getHourlyDataDao().insert(hourlyData);
+                        }
+                        for (DailyData dailyData : value.getDaily().getData()) {
+                            dailyData.setDailyID(id);
+                            daoSession.getDailyDataDao().insert(dailyData);
+                        }
+                        Timber.i("onNext(): ");
+                        daoSession.getCurrentlyDao().insert(value.getCurrently());
+                        daoSession.getDailyDao().insert(value.getDaily());
+                        daoSession.getHourlyDao().insert(value.getHourly());
+                        eventBus.post(new NotifyRecyclerAdapterEvent());
                     }
 
                     @Override
@@ -114,13 +152,6 @@ public class SearchViewModel {
 
                     }
                 });
-    }
-
-    public void rxQueryBuilder() {
-
-        final WeatherApi serviceAutocomplete = retrofitAutocomplete.create(WeatherApi.class);
-
-        final WeatherApi serviceDetails = retrofitDetails.create(WeatherApi.class);
 
         textWatcherObservable
                 .debounce(800, TimeUnit.MILLISECONDS)
@@ -134,6 +165,7 @@ public class SearchViewModel {
                             cityLatLngList.clear();
                             eventBus.post(new ClearLocation());
                         }
+                        Timber.i("onNext(): ");
                     }
 
                     @Override
