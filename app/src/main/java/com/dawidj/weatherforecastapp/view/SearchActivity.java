@@ -60,7 +60,6 @@ public class SearchActivity extends AppCompatActivity {
         App.getApplication().getWeatherComponent().inject(searchViewModel);
         setRecyclerView();
         searchViewModel.rxQueryBuilder();
-        searchViewModel.testRx();
     }
 
     public void setRecyclerView() {
@@ -77,11 +76,11 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-
     @Subscribe
     public void notifyAdapterToAdd(AddLocation event) {
         Timber.i("notifyAdapterToAdd(): ");
-        searchRecyclerViewAdapter.notifyItemInserted(searchViewModel.getCityLatLngList().size() - 1);
+        searchRecyclerViewAdapter.setList(event.getCityLatLngs());
+//        searchRecyclerViewAdapter.notifyItemInserted(searchViewModel.getCityLatLngList().size() - 1);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -89,6 +89,10 @@ public class Daily extends BaseObservable {
         }
         return data;
     }
+
+    public List<DailyData> getDataWithoutId() {
+        return data;
+    }
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated(hash = 1283600904)
     public synchronized void resetData() {

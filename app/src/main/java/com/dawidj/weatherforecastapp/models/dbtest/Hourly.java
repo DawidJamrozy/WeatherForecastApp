@@ -5,14 +5,14 @@ import android.databinding.BaseObservable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.DaoException;
 
 /**
  * Created by Dawidj on 24.10.2016.
@@ -88,6 +88,9 @@ public class Hourly extends BaseObservable {
                 }
             }
         }
+        return data;
+    }
+    public List<HourlyData> getHourlyDataWithoutId() {
         return data;
     }
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */

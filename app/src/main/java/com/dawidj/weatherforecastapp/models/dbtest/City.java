@@ -38,10 +38,12 @@ public class City extends BaseObservable {
     @Expose
     @ToOne(joinProperty = "cityID")
     private Currently currently;
+
     @SerializedName("hourly")
     @Expose
     @ToOne(joinProperty = "cityID")
     private Hourly hourly;
+
     @SerializedName("daily")
     @Expose
     @ToOne(joinProperty = "cityID")
@@ -124,6 +126,10 @@ public class City extends BaseObservable {
         }
         return currently;
     }
+
+    public Currently getCurrentylWithoutId() {
+        return currently;
+    }
     /** called by internal mechanisms, do not call yourself. */
     @Generated(hash = 1388942052)
     public void setCurrently(Currently currently) {
@@ -153,6 +159,10 @@ public class City extends BaseObservable {
         }
         return hourly;
     }
+    public Hourly getHourlyWithoutId() {
+        return hourly;
+    }
+
     /** called by internal mechanisms, do not call yourself. */
     @Generated(hash = 444633793)
     public void setHourly(Hourly hourly) {
@@ -164,6 +174,7 @@ public class City extends BaseObservable {
     }
     @Generated(hash = 2017667076)
     private transient Long daily__resolvedKey;
+
     /** To-one relationship, resolved on first access. */
     @Generated(hash = 910336100)
     public Daily getDaily() {
@@ -181,6 +192,10 @@ public class City extends BaseObservable {
             }
         }
         return daily;
+    }
+
+    public Daily getDailyWithoutId() {
+        return  daily;
     }
     /** called by internal mechanisms, do not call yourself. */
     @Generated(hash = 2137349473)

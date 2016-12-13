@@ -84,7 +84,7 @@ public class MyCitiesActivity extends AppCompatActivity {
 
         if (requestCode == 5) {
             Timber.i("onActivityResult(): ");
-            myCitiesViewModel.setCityList(daoSession.getCityDao().queryBuilder().list());
+            myCitiesViewModel.getCityList().addAll(daoSession.getCityDao().queryBuilder().list());
             citiesRecyclerViewAdapter.notifyDataSetChanged();
         }
     }

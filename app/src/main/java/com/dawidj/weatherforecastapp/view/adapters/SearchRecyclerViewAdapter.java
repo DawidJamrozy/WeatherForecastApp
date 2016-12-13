@@ -46,4 +46,9 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     public int getItemCount() {
         return locationList.size();
     }
+
+    public void setList(List<CityLatLng> list) {
+        this.locationList = list;
+        notifyDataSetChanged();
+    }
 }
