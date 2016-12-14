@@ -98,12 +98,11 @@ public class SearchViewModel {
     public void insertCityToDatabase(City city) {
         city.setName(cityLatLngList.get(getPosition()).getResult().getName());
 
+        long currentlyId = daoSession.getCurrentlyDao().insert(city.getCurrentylWithoutId());
+        long dailyId = daoSession.getDailyDao().insert(city.getDailyWithoutId());
+        long hourlyId = daoSession.getHourlyDao().insert(city.getHourlyWithoutId());
+
         long id = daoSession.getCityDao().insert(city);
-
-
-        daoSession.getCurrentlyDao().insert(city.getCurrentylWithoutId());
-        daoSession.getDailyDao().insert(city.getDailyWithoutId());
-        daoSession.getHourlyDao().insert(city.getHourlyWithoutId());
 
         for (HourlyData hourlyData : city.getHourlyWithoutId().getHourlyDataWithoutId()) {
             hourlyData.setHourlyID(id);

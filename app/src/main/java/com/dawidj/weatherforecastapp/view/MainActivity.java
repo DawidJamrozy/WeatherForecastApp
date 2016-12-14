@@ -12,9 +12,12 @@ import android.view.MenuItem;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
 import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
+import com.dawidj.weatherforecastapp.models.dbtest.Hourly;
 import com.dawidj.weatherforecastapp.view.adapters.ViewPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,7 +46,15 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         Timber.i("onCreate(): ");
-        List<City> cities =  daoSession.getCityDao().loadAll();
+        List<City> test = daoSession.getCityDao().loadAll();
+        List<City> cities = new ArrayList<>();
+        for (long i = 0; i < daoSession.getCityDao().loadAll().size(); i++) {
+            cities.add(daoSession.getCityDao().loadDeep(1l));
+        }
+
+        List<DailyData> dailyDatas = cities.get(0).getDaily().getData();
+        cities.get(0).getDaily().setData(daoSession.getDailyDataDao().loadAll());
+        List<Hourly> hourlyList = daoSession.getHourlyDao().loadAll();
         setUpViewPagerAdapter(cities);
         tabLayout.setupWithViewPager(viewPager);
     }

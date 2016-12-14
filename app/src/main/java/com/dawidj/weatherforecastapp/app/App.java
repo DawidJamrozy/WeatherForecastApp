@@ -7,6 +7,7 @@ import com.dawidj.weatherforecastapp.components.WeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherModule;
 import com.dawidj.weatherforecastapp.models.dbtest.DaoMaster;
 import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
+import com.facebook.stetho.Stetho;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -38,6 +39,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Timber.plant(new Timber.DebugTree());
+        Stetho.initializeWithDefaults(this);
 
         instance = this;
 

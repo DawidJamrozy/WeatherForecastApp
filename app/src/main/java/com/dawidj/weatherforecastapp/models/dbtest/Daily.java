@@ -43,6 +43,10 @@ public class Daily extends BaseObservable implements Parcelable {
     @ToMany(referencedJoinProperty = "dailyID")
     private List<DailyData> data = new ArrayList<DailyData>();
 
+    public void setData(List<DailyData> data) {
+        this.data = data;
+    }
+
     /**
      * Used to resolve relations
      */

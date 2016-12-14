@@ -19,11 +19,6 @@ public class Currently extends BaseObservable implements Parcelable {
     @Id
     private Long id;
 
-//    private long cityId;
-//
-//    @ToOne(joinProperty = "cityId")
-//    private City city;
-
     @SerializedName("time")
     @Expose
     private Integer time;
