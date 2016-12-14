@@ -1,6 +1,8 @@
 package com.dawidj.weatherforecastapp.models.dbtest;
 
 import android.databinding.BaseObservable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -19,56 +21,76 @@ import java.util.List;
  */
 
 @Entity
-public class Hourly extends BaseObservable {
+public class Hourly extends BaseObservable implements Parcelable {
 
     @Id
     private Long id;
 
+//    private long cityId;
+//
+//    @ToOne(joinProperty = "cityId")
+//    private City city;
+
     @SerializedName("summary")
     @Expose
     private String summary;
+
     @SerializedName("icon")
     @Expose
     private String icon;
+
     @SerializedName("data")
     @Expose
     @ToMany(referencedJoinProperty = "hourlyID")
     private List<HourlyData> data = new ArrayList<HourlyData>();
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 926480306)
     private transient HourlyDao myDao;
+
     @Generated(hash = 1979606923)
     public Hourly(Long id, String summary, String icon) {
         this.id = id;
         this.summary = summary;
         this.icon = icon;
     }
+
     @Generated(hash = 1506576764)
     public Hourly() {
     }
+
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getSummary() {
         return this.summary;
     }
+
     public void setSummary(String summary) {
         this.summary = summary;
     }
+
     public String getIcon() {
         return this.icon;
     }
+
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
     /**
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
@@ -90,14 +112,19 @@ public class Hourly extends BaseObservable {
         }
         return data;
     }
+
     public List<HourlyData> getHourlyDataWithoutId() {
         return data;
     }
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 1283600904)
     public synchronized void resetData() {
         data = null;
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
@@ -109,6 +136,7 @@ public class Hourly extends BaseObservable {
         }
         myDao.delete(this);
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
@@ -120,6 +148,7 @@ public class Hourly extends BaseObservable {
         }
         myDao.refresh(this);
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
      * Entity must attached to an entity context.
@@ -131,6 +160,20 @@ public class Hourly extends BaseObservable {
         }
         myDao.update(this);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.summary);
+        dest.writeString(this.icon);
+        dest.writeList(this.data);
+    }
+
     /** called by internal mechanisms, do not call yourself. */
     @Generated(hash = 1949101237)
     public void __setDaoSession(DaoSession daoSession) {
@@ -138,4 +181,23 @@ public class Hourly extends BaseObservable {
         myDao = daoSession != null ? daoSession.getHourlyDao() : null;
     }
 
+    protected Hourly(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.summary = in.readString();
+        this.icon = in.readString();
+        this.data = new ArrayList<HourlyData>();
+        in.readList(this.data, HourlyData.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Hourly> CREATOR = new Parcelable.Creator<Hourly>() {
+        @Override
+        public Hourly createFromParcel(Parcel source) {
+            return new Hourly(source);
+        }
+
+        @Override
+        public Hourly[] newArray(int size) {
+            return new Hourly[size];
+        }
+    };
 }

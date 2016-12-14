@@ -1,12 +1,8 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
-import android.content.Context;
-import android.location.Address;
-
 import com.dawidj.weatherforecastapp.R;
-import com.dawidj.weatherforecastapp.models.weather.City;
-import com.dawidj.weatherforecastapp.models.weather.DailyData;
-import com.dawidj.weatherforecastapp.models.weather.DayData;
+import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
 import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
@@ -25,19 +21,19 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 /**
  * Created by Dawidj on 30.11.2016.
  */
 
 public class CityViewModel {
-
-    private Context context;
-    private Address address;
-    private City city = new City();
+    
+    private City city;
     public final static String[] hours = new String[25];
     private DisplayDayView displayDayView;
     private String cityName;
-    private List<DayData> day = new ArrayList<>();
+    private List<com.dawidj.weatherforecastapp.models.weather.DayData> day = new ArrayList<>();
 
     public void setDisplayDayView(DisplayDayView displayDayView) {
         this.displayDayView = displayDayView;
@@ -58,82 +54,29 @@ public class CityViewModel {
     @Inject
     EventBus eventBus;
 
-
-
-    public CityViewModel(Context context) {
-        this.context = context;
+    public CityViewModel(City city) {
+        this.city = city;
     }
 
-    public void getWeatherData() {
-/*
-        try {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-
-            List<Address> addressList = geocoder.getFromLocationName(getCityName(), 1);
-            address = addressList.get(0);
-
-
-
-            String lat = Double.toString(address.getLatitude());
-            String lng = Double.toString(address.getLongitude());
-
-            WeatherApi service = retrofit.create(WeatherApi.class);
-
-            Call<City> call = service.getCity(lat, lng);
-
-            call.enqueue(new Callback<City>() {
-                @Override
-                public void onResponse(Call<City> call, Response<City> response) {
-                    Log.i(TAG, "onResponse: Success");
-
-                    City data = response.body();
-
-                    city.setName(getCityName());
-                    city.setLatitude(data.getLatitude());
-                    city.setLongitude(data.getLongitude());
-                    city.setTimezone(data.getTimezone());
-                    city.setDaily(data.getDaily());
-                    city.setHourly(data.getHourly());
-                    city.setCurrently(data.getCurrently());
-
+    public void getWeatherData(City city) {
                     if(!day.isEmpty()) {
                         day.clear();
                     }
                     for (int i = 0; i < 7; i++) {
-                        DayData dayData = new DayData();
-                        dayData.setIcon(asd(i).getIcon());
-                        dayData.setTempMin(asd(i).getTemperatureMin().intValue());
-                        dayData.setTempMax(asd(i).getTemperatureMax().intValue());
-                        dayData.setTime(asd(i).getTime());
+                        com.dawidj.weatherforecastapp.models.weather.DayData dayData = new com.dawidj.weatherforecastapp.models.weather.DayData();
+                        dayData.setIcon(asd(city, i).getIcon());
+                        dayData.setTempMin(asd(city, i).getTemperatureMin().intValue());
+                        dayData.setTempMax(asd(city, i).getTemperatureMax().intValue());
+                        dayData.setTime(asd(city, i).getTime());
                         day.add(dayData);
                     }
 
                     if (displayDayView != null) {
                         displayDayView.displayDayList(day);
                     }
-
-
-                    //TODO use eventbus to notify view about recyclerViewadapter data change
-                    eventBus.post(new NewCity());
-
-                    setDayChart();
-                }
-
-                @Override
-                public void onFailure(Call<City> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
 
-    public void setDayChart() {
+    public void setDayChart(City city) {
 
         List<Entry> entries = new ArrayList<>();
         ArrayList<Integer> temp = new ArrayList<>();
@@ -159,11 +102,11 @@ public class CityViewModel {
         lineDataSet.setValueFormatter(new ValueFormatter());
         lineDataSet.setColor(R.color.colorAccent);
         lineDataSet.setValueTextColor(R.color.colorPrimary);
-
+        Timber.i("setDayChart(): ");
         eventBus.post(new LineChartEvent(lineDataSet, minTemp, maxTemp));
     }
 
-    public DailyData asd(int i) {
+    public DailyData asd(City city, int i) {
         return city.getDaily().getData().get(i);
     }
 }

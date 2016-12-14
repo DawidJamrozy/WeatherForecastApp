@@ -99,8 +99,7 @@ public class SearchViewModel {
         city.setName(cityLatLngList.get(getPosition()).getResult().getName());
 
         long id = daoSession.getCityDao().insert(city);
-        city.setCityID(id);
-        daoSession.getCityDao().update(city);
+
 
         daoSession.getCurrentlyDao().insert(city.getCurrentylWithoutId());
         daoSession.getDailyDao().insert(city.getDailyWithoutId());

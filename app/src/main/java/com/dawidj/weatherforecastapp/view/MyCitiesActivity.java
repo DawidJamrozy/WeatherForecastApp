@@ -29,7 +29,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 public class MyCitiesActivity extends AppCompatActivity {
 
@@ -54,7 +53,6 @@ public class MyCitiesActivity extends AppCompatActivity {
         myCitiesViewModel = new MyCitiesViewModel();
         binding.setViewModel(myCitiesViewModel);
         ButterKnife.bind(this);
-        Timber.i("onCreate(): ");
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
         setSupportActionBar(toolbar);
@@ -64,7 +62,7 @@ public class MyCitiesActivity extends AppCompatActivity {
     public void setRecycler() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        myCitiesViewModel.getCityList().addAll(daoSession.getCityDao().queryBuilder().list());
+        myCitiesViewModel.getCityList().addAll(daoSession.getCityDao().loadAll());
         citiesRecyclerViewAdapter = new CitiesRecyclerViewAdapter(this, myCitiesViewModel.getCityList());
         recyclerView.setAdapter(citiesRecyclerViewAdapter);
     }
@@ -100,9 +98,9 @@ public class MyCitiesActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Const.ADD_NEW_CITY) {
             if (resultCode == Const.CITY_INSERTED) {
-                long id = data.getIntExtra(Const.POSITION, 0);
+                long id = data.getLongExtra(Const.POSITION, 0);
                 List<City> city = daoSession.getCityDao().queryBuilder()
-                        .where(CityDao.Properties.CityID.eq(id)).limit(1).list();
+                        .where(CityDao.Properties.Id.eq(id)).limit(1).list();
                 myCitiesViewModel.getCityList().add(city.get(0));
                 citiesRecyclerViewAdapter
                         .notifyItemInserted(myCitiesViewModel.getCityList().size() - 1);

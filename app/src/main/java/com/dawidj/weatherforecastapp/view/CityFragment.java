@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityFragmentBinding;
+import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.utils.AxisValueFormatter;
 import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
 import com.dawidj.weatherforecastapp.utils.busevent.NewCity;
@@ -48,7 +49,7 @@ public class CityFragment extends Fragment {
     private DayRecyclerViewAdapter dayRecyclerViewAdapter;
     private CityFragmentBinding binding;
     private CityViewModel cityViewModel;
-    private String cityName;
+    private City city;
 
     @Inject
     EventBus eventBus;
@@ -68,17 +69,18 @@ public class CityFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.city_fragment, container, false);
         View view = binding.getRoot();
         ButterKnife.bind(this, view);
-        cityViewModel = new CityViewModel(getActivity());
+        Bundle args = getArguments();
+        city = args.getParcelable("city");
+        cityViewModel = new CityViewModel(city);
         binding.setCityViewModel(cityViewModel);
         binding.includelayout.setCityViewModel(cityViewModel);
         App.getApplication().getWeatherComponent().inject(cityViewModel);
         App.getApplication().getWeatherComponent().inject(this);
         setRecyclerView();
         cityViewModel.setDisplayDayView(dayRecyclerViewAdapter);
-        Bundle args = getArguments();
-        cityName = args.getString("cityName");
-        cityViewModel.setCityName(cityName);
-        //cityViewModel.getWeatherData();
+        cityViewModel.setCityName(city.getName());
+        cityViewModel.getWeatherData(city);
+        cityViewModel.setDayChart(city);
         return view;
         //TODO Screen is moving to the middle - BUG
     }
@@ -93,6 +95,7 @@ public class CityFragment extends Fragment {
 
     @Subscribe
     public void onLineChartEvent(LineChartEvent event) {
+        Timber.i("onLineChartEvent(): ");
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setDrawLabels(false);
         leftAxis.setDrawGridLines(false);
@@ -120,6 +123,7 @@ public class CityFragment extends Fragment {
         lineChart.setDescription(description);
         lineChart.canScrollHorizontally(1);
         lineChart.invalidate();
+        lineChart.notifyDataSetChanged();
     }
 
     @Subscribe

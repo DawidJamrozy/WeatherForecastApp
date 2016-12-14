@@ -10,7 +10,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.dawidj.weatherforecastapp.R;
+import com.dawidj.weatherforecastapp.app.App;
+import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
 import com.dawidj.weatherforecastapp.view.adapters.ViewPagerAdapter;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,20 +32,20 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tablayout)
     TabLayout tabLayout;
 
-    private String[] cities;
+    @Inject
+    DaoSession daoSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        App.getApplication().getWeatherComponent().inject(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         Timber.i("onCreate(): ");
-        Bundle extras = getIntent().getExtras();
-        cities =  extras.getStringArray("locationList");
+        List<City> cities =  daoSession.getCityDao().loadAll();
         setUpViewPagerAdapter(cities);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 
     @Override
@@ -53,26 +60,25 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_settings:
-                Intent i = new Intent(this, SearchActivity.class);
+                Intent i = new Intent(this, MyCitiesActivity.class);
                 startActivity(i);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void setUpViewPagerAdapter(String[] cityTable) {
+    public void setUpViewPagerAdapter(List<City> cities) {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        for (String cityName : cityTable) {
-            viewPagerAdapter.addFragment(cityViewFragment(cityName), cityName);
+        for (City city : cities) {
+            viewPagerAdapter.addFragment(cityViewFragment(city), city.getName());
         }
         viewPager.setAdapter(viewPagerAdapter);
     }
 
-    public CityFragment cityViewFragment(String city) {
+    public CityFragment cityViewFragment(City city) {
         CityFragment fragment = new CityFragment();
-        // Supply index input as an argument.
         Bundle args = new Bundle();
-        args.putString("cityName", city);
+        args.putParcelable("city", city);
         fragment.setArguments(args);
         return fragment;
     }
