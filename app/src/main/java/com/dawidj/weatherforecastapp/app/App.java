@@ -45,7 +45,7 @@ public class App extends Application {
                 .weatherModule(new WeatherModule())
                 .build();
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db");
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "cities-db");
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
 

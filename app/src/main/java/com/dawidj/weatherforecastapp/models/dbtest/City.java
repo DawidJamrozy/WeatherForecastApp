@@ -34,6 +34,7 @@ public class City extends BaseObservable {
     @SerializedName("timezone")
     @Expose
     private String timezone;
+
     @SerializedName("currently")
     @Expose
     @ToOne(joinProperty = "cityID")

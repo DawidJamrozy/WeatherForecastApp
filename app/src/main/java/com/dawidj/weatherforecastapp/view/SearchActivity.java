@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.view;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,15 +9,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.SearchActivityBinding;
+import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ItemClickSupport;
 import com.dawidj.weatherforecastapp.utils.busevent.AddLocation;
 import com.dawidj.weatherforecastapp.utils.busevent.ClearLocation;
-import com.dawidj.weatherforecastapp.utils.busevent.NotifyRecyclerAdapterEvent;
+import com.dawidj.weatherforecastapp.utils.busevent.NewCity;
 import com.dawidj.weatherforecastapp.view.adapters.SearchRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.SearchViewModel;
 
@@ -36,8 +37,6 @@ public class SearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.start)
-    Button button;
 
     private SearchRecyclerViewAdapter searchRecyclerViewAdapter;
     private SearchViewModel searchViewModel;
@@ -80,18 +79,18 @@ public class SearchActivity extends AppCompatActivity {
     public void notifyAdapterToAdd(AddLocation event) {
         Timber.i("notifyAdapterToAdd(): ");
         searchRecyclerViewAdapter.setList(event.getCityLatLngs());
-//        searchRecyclerViewAdapter.notifyItemInserted(searchViewModel.getCityLatLngList().size() - 1);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void notifyAdapterToClear(ClearLocation event) {
-        Timber.i("notifyAdapterToClear(): ");
         searchRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Subscribe
-    public void finishActivity(NotifyRecyclerAdapterEvent event) {
-        Timber.i("finishActivity(): ");
+    public void finishActivity(NewCity event) {
+        Intent intent = new Intent();
+        intent.putExtra(Const.POSITION, event.getPosition());
+        setResult(Const.CITY_INSERTED, intent);
         finish();
     }
 
@@ -112,5 +111,11 @@ public class SearchActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         searchViewModel.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(Const.ON_BACK_PRESSED);
+        super.onBackPressed();
     }
 }

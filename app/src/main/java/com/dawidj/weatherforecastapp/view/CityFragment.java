@@ -16,7 +16,7 @@ import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityFragmentBinding;
 import com.dawidj.weatherforecastapp.utils.AxisValueFormatter;
 import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
-import com.dawidj.weatherforecastapp.utils.busevent.NotifyRecyclerAdapterEvent;
+import com.dawidj.weatherforecastapp.utils.busevent.NewCity;
 import com.dawidj.weatherforecastapp.view.adapters.DayRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 import com.github.mikephil.charting.charts.LineChart;
@@ -123,7 +123,7 @@ public class CityFragment extends Fragment {
     }
 
     @Subscribe
-    public void onNotifyRecyclerAdapter(NotifyRecyclerAdapterEvent event) {
+    public void onNotifyRecyclerAdapter(NewCity event) {
         Timber.i("onNotifyRecyclerAdapter(): invoked");
         dayRecyclerViewAdapter.notifyDataSetChanged();
     }

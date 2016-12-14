@@ -15,7 +15,7 @@ import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.busevent.AddLocation;
 import com.dawidj.weatherforecastapp.utils.busevent.ClearLocation;
-import com.dawidj.weatherforecastapp.utils.busevent.NotifyRecyclerAdapterEvent;
+import com.dawidj.weatherforecastapp.utils.busevent.NewCity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -47,19 +47,22 @@ import timber.log.Timber;
 public class SearchViewModel {
 
     private List<CityLatLng> cityLatLngList = new ArrayList<>();
-    private String name = "Location List";
     private ObservableField<String> cityName = new ObservableField<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final PublishSubject<String> textWatcherObservable = PublishSubject.create();
     private final PublishSubject<CityLatLng> cityWeatherDataObservable = PublishSubject.create();
-    private int listPosition;
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     public ObservableField<String> getCityName() {
         return cityName;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public List<CityLatLng> getCityLatLngList() {
@@ -88,8 +91,31 @@ public class SearchViewModel {
     }
 
     public void addCity(final int position) {
-        listPosition = position;
+        setPosition(position);
         cityWeatherDataObservable.onNext(cityLatLngList.get(position));
+    }
+
+    public void insertCityToDatabase(City city) {
+        city.setName(cityLatLngList.get(getPosition()).getResult().getName());
+
+        long id = daoSession.getCityDao().insert(city);
+        city.setCityID(id);
+        daoSession.getCityDao().update(city);
+
+        daoSession.getCurrentlyDao().insert(city.getCurrentylWithoutId());
+        daoSession.getDailyDao().insert(city.getDailyWithoutId());
+        daoSession.getHourlyDao().insert(city.getHourlyWithoutId());
+
+        for (HourlyData hourlyData : city.getHourlyWithoutId().getHourlyDataWithoutId()) {
+            hourlyData.setHourlyID(id);
+            daoSession.getHourlyDataDao().insert(hourlyData);
+        }
+        for (DailyData dailyData : city.getDailyWithoutId().getDataWithoutId()) {
+            dailyData.setDailyID(id);
+            daoSession.getDailyDataDao().insert(dailyData);
+        }
+
+        eventBus.post(new NewCity(id));
     }
 
     public void rxQueryBuilder() {
@@ -108,38 +134,19 @@ public class SearchViewModel {
                         return serviceWeather.getCity(cityLatLng.getResult().getGeometry().getLocation().getLat().toString(),
                                 cityLatLng.getResult().getGeometry().getLocation().getLng().toString(),
                                 "pl", "flags,alerts,minutely", "ca");
-
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<com.dawidj.weatherforecastapp.models.dbtest.City>() {
+                .subscribe(new Observer<City>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(com.dawidj.weatherforecastapp.models.dbtest.City value) {
-                        value.setName(cityLatLngList.get(listPosition).getResult().getName());
-
-                        long id = daoSession.getCityDao().insert(value);
-
-                        daoSession.getCurrentlyDao().insert(value.getCurrentylWithoutId());
-                        daoSession.getDailyDao().insert(value.getDailyWithoutId());
-                        daoSession.getHourlyDao().insert(value.getHourlyWithoutId());
-
-                        for (HourlyData hourlyData : value.getHourlyWithoutId().getHourlyDataWithoutId()) {
-                            hourlyData.setHourlyID(id);
-                            daoSession.getHourlyDataDao().insert(hourlyData);
-                        }
-                        for (DailyData dailyData : value.getDailyWithoutId().getDataWithoutId()) {
-                            dailyData.setDailyID(id);
-                            daoSession.getDailyDataDao().insert(dailyData);
-                        }
-                        Timber.i("onNext(): ");
-
-                        eventBus.post(new NotifyRecyclerAdapterEvent());
+                    public void onNext(City value) {
+                      insertCityToDatabase(value);
                     }
 
                     @Override
@@ -154,7 +161,7 @@ public class SearchViewModel {
                 });
 
         textWatcherObservable
-                .debounce(800, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .filter(new Predicate<String>() {
                     @Override
                     public boolean test(String s) throws Exception {
@@ -165,11 +172,9 @@ public class SearchViewModel {
                     @Override
                     public SingleSource<List<CityLatLng>> apply(String s) throws Exception {
                         return serviceAutocomplete.getCityName(s, "(cities)", Const.GOOGLE_PLACES_KEY)
-
                                 .onErrorResumeNext(new Function<Throwable, ObservableSource<CityID>>() {
                                     @Override
                                     public ObservableSource<CityID> apply(Throwable throwable) throws Exception {
-                                        Timber.d("First onErrorResumeNext");
                                         return Observable.empty();
                                     }
                                 })
@@ -197,7 +202,6 @@ public class SearchViewModel {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-
                 .subscribe(new Observer<List<CityLatLng>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -206,7 +210,6 @@ public class SearchViewModel {
 
                     @Override
                     public void onNext(List<CityLatLng> value) {
-                        Timber.d("Single subscribe");
                         cityLatLngList = value;
                         eventBus.post(new AddLocation(value));
                     }
@@ -225,25 +228,25 @@ public class SearchViewModel {
     public TextWatcher getTextWatcher() {
         return new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!cityLatLngList.isEmpty()) {
-                    cityLatLngList.clear();
-                    eventBus.post(new ClearLocation());
-                    Timber.i("onNext(): clear list");
-                }
+                clearCityList();
                 textWatcherObservable.onNext(charSequence.toString());
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) {}
         };
+    }
+
+    public void clearCityList() {
+        if (!cityLatLngList.isEmpty()) {
+            cityLatLngList.clear();
+            eventBus.post(new ClearLocation());
+            Timber.i("onNext(): clear list");
+        }
     }
 
     public void onDestroy() {

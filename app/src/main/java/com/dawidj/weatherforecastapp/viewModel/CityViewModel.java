@@ -114,7 +114,7 @@ public class CityViewModel {
 
 
                     //TODO use eventbus to notify view about recyclerViewadapter data change
-                    eventBus.post(new NotifyRecyclerAdapterEvent());
+                    eventBus.post(new NewCity());
 
                     setDayChart();
                 }

@@ -21,10 +21,6 @@ public class MyCitiesViewModel {
         return cityList;
     }
 
-    public void setCityList(List<City> cityList) {
-        this.cityList = cityList;
-    }
-
     @Inject
     DaoSession daoSession;
 

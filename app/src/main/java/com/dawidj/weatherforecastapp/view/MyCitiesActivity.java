@@ -9,18 +9,26 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesActivityBinding;
+import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.dbtest.CityDao;
 import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
+import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 public class MyCitiesActivity extends AppCompatActivity {
@@ -33,6 +41,8 @@ public class MyCitiesActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.startSearchActivity)
+    Button button;
 
     @Inject
     DaoSession daoSession;
@@ -44,6 +54,7 @@ public class MyCitiesActivity extends AppCompatActivity {
         myCitiesViewModel = new MyCitiesViewModel();
         binding.setViewModel(myCitiesViewModel);
         ButterKnife.bind(this);
+        Timber.i("onCreate(): ");
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
         setSupportActionBar(toolbar);
@@ -53,8 +64,14 @@ public class MyCitiesActivity extends AppCompatActivity {
     public void setRecycler() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        myCitiesViewModel.getCityList().addAll(daoSession.getCityDao().queryBuilder().list());
         citiesRecyclerViewAdapter = new CitiesRecyclerViewAdapter(this, myCitiesViewModel.getCityList());
         recyclerView.setAdapter(citiesRecyclerViewAdapter);
+    }
+    
+    @OnClick(R.id.startSearchActivity)
+    public void startMainActivity(View view) {
+        startActivity(new Intent(this, MainActivity.class));
     }
 
 
@@ -71,7 +88,7 @@ public class MyCitiesActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_settings:
                 Intent i = new Intent(this, SearchActivity.class);
-                startActivityForResult(i, 5);
+                startActivityForResult(i, Const.ADD_NEW_CITY);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -81,11 +98,17 @@ public class MyCitiesActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 5) {
-            Timber.i("onActivityResult(): ");
-            myCitiesViewModel.getCityList().addAll(daoSession.getCityDao().queryBuilder().list());
-            citiesRecyclerViewAdapter.notifyDataSetChanged();
+        if (requestCode == Const.ADD_NEW_CITY) {
+            if (resultCode == Const.CITY_INSERTED) {
+                long id = data.getIntExtra(Const.POSITION, 0);
+                List<City> city = daoSession.getCityDao().queryBuilder()
+                        .where(CityDao.Properties.CityID.eq(id)).limit(1).list();
+                myCitiesViewModel.getCityList().add(city.get(0));
+                citiesRecyclerViewAdapter
+                        .notifyItemInserted(myCitiesViewModel.getCityList().size() - 1);
+            } else if (requestCode == Const.ON_BACK_PRESSED) {
+                //do nothing
+            }
         }
     }
 }
