@@ -52,9 +52,17 @@ public class MainActivity extends AppCompatActivity {
             cities.add(daoSession.getCityDao().loadDeep(1l));
         }
 
+//        QueryBuilder<City> queryBuilder = daoSession.getCityDao().queryBuilder().where(CityDao.Properties.Id.eq(1));
+//        Join daily = queryBuilder.join(DailyDao.Properties.Id, Daily.class);
+//        Join dailyData = queryBuilder.join(DailyDataDao.Properties.DataTag)
+
+//        QueryBuilder<Daily> queryBuilder = daoSession.getDailyDao().queryBuilder();
+//        queryBuilder.join(DailyData.class, DailyDataDao.Properties.DataTag).where(DailyDataDao.Properties.Ta)
+
         List<DailyData> dailyDatas = cities.get(0).getDaily().getData();
         cities.get(0).getDaily().setData(daoSession.getDailyDataDao().loadAll());
         List<Hourly> hourlyList = daoSession.getHourlyDao().loadAll();
+        cities.get(0).getHourly().setData(daoSession.getHourlyDataDao().loadAll());
         setUpViewPagerAdapter(cities);
         tabLayout.setupWithViewPager(viewPager);
     }

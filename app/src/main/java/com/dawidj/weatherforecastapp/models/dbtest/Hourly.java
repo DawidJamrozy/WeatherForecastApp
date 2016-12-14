@@ -11,7 +11,9 @@ import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.JoinProperty;
 import org.greenrobot.greendao.annotation.ToMany;
+import org.greenrobot.greendao.annotation.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +28,8 @@ public class Hourly extends BaseObservable implements Parcelable {
     @Id
     private Long id;
 
-//    private long cityId;
-//
-//    @ToOne(joinProperty = "cityId")
-//    private City city;
+    @Unique
+    private String tag;
 
     @SerializedName("summary")
     @Expose
@@ -41,8 +41,13 @@ public class Hourly extends BaseObservable implements Parcelable {
 
     @SerializedName("data")
     @Expose
-    @ToMany(referencedJoinProperty = "hourlyID")
+    @ToMany(joinProperties = {
+            @JoinProperty(name = "tag", referencedName = "dataTag")})
     private List<HourlyData> data = new ArrayList<HourlyData>();
+
+    public void setData(List<HourlyData> data) {
+        this.data = data;
+    }
 
     /**
      * Used to resolve relations
@@ -56,9 +61,10 @@ public class Hourly extends BaseObservable implements Parcelable {
     @Generated(hash = 926480306)
     private transient HourlyDao myDao;
 
-    @Generated(hash = 1979606923)
-    public Hourly(Long id, String summary, String icon) {
+    @Generated(hash = 1916801449)
+    public Hourly(Long id, String tag, String summary, String icon) {
         this.id = id;
+        this.tag = tag;
         this.summary = summary;
         this.icon = icon;
     }
@@ -95,7 +101,7 @@ public class Hourly extends BaseObservable implements Parcelable {
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
      */
-    @Generated(hash = 666966986)
+    @Generated(hash = 1681578764)
     public List<HourlyData> getData() {
         if (data == null) {
             final DaoSession daoSession = this.daoSession;
@@ -103,7 +109,7 @@ public class Hourly extends BaseObservable implements Parcelable {
                 throw new DaoException("Entity is detached from DAO context");
             }
             HourlyDataDao targetDao = daoSession.getHourlyDataDao();
-            List<HourlyData> dataNew = targetDao._queryHourly_Data(id);
+            List<HourlyData> dataNew = targetDao._queryHourly_Data(tag);
             synchronized (this) {
                 if (data == null) {
                     data = dataNew;
@@ -172,6 +178,14 @@ public class Hourly extends BaseObservable implements Parcelable {
         dest.writeString(this.summary);
         dest.writeString(this.icon);
         dest.writeList(this.data);
+    }
+
+    public String getTag() {
+        return this.tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     /** called by internal mechanisms, do not call yourself. */

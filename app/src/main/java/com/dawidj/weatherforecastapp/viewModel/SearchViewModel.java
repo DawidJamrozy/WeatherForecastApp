@@ -96,21 +96,25 @@ public class SearchViewModel {
     }
 
     public void insertCityToDatabase(City city) {
+
         city.setName(cityLatLngList.get(getPosition()).getResult().getName());
 
-        long currentlyId = daoSession.getCurrentlyDao().insert(city.getCurrentylWithoutId());
-        long dailyId = daoSession.getDailyDao().insert(city.getDailyWithoutId());
-        long hourlyId = daoSession.getHourlyDao().insert(city.getHourlyWithoutId());
+        city.getDailyWithoutId().setTag(city.getName());
+        city.getHourlyWithoutId().setTag(city.getName());
+
+        daoSession.insert(city.getHourly());
+        daoSession.insert(city.getDaily());
+        daoSession.insert(city.getCurrently());
 
         long id = daoSession.getCityDao().insert(city);
 
         for (HourlyData hourlyData : city.getHourlyWithoutId().getHourlyDataWithoutId()) {
-            hourlyData.setHourlyID(id);
-            daoSession.getHourlyDataDao().insert(hourlyData);
+            hourlyData.setDataTag(city.getName());
+            daoSession.insert(hourlyData);
         }
         for (DailyData dailyData : city.getDailyWithoutId().getDataWithoutId()) {
-            dailyData.setDailyID(id);
-            daoSession.getDailyDataDao().insert(dailyData);
+            dailyData.setDataTag(city.getName());
+            daoSession.insert(dailyData);
         }
 
         eventBus.post(new NewCity(id));

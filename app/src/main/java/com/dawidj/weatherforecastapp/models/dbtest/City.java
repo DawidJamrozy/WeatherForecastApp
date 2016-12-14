@@ -22,10 +22,6 @@ public class City extends BaseObservable implements Parcelable {
     @Id
     private Long id;
 
-    private Long currentlyId;
-    private Long hourlyId;
-    private Long dailyId;
-
     @SerializedName("name")
     @Expose
     private String name;
@@ -44,17 +40,17 @@ public class City extends BaseObservable implements Parcelable {
 
     @SerializedName("currently")
     @Expose
-    @ToOne(joinProperty = "currentlyId")
+    @ToOne(joinProperty = "id")
     private Currently currently;
 
     @SerializedName("hourly")
     @Expose
-    @ToOne(joinProperty = "hourlyId")
+    @ToOne(joinProperty = "id")
     private Hourly hourly;
 
     @SerializedName("daily")
     @Expose
-    @ToOne(joinProperty = "dailyId")
+    @ToOne(joinProperty = "id")
     private Daily daily;
 
     /** Used to resolve relations */
@@ -65,13 +61,9 @@ public class City extends BaseObservable implements Parcelable {
     @Generated(hash = 448079911)
     private transient CityDao myDao;
 
-    @Generated(hash = 316870783)
-    public City(Long id, Long currentlyId, Long hourlyId, Long dailyId, String name, Double latitude,
-            Double longitude, String timezone) {
+    @Generated(hash = 1339016982)
+    public City(Long id, String name, Double latitude, Double longitude, String timezone) {
         this.id = id;
-        this.currentlyId = currentlyId;
-        this.hourlyId = hourlyId;
-        this.dailyId = dailyId;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -88,30 +80,6 @@ public class City extends BaseObservable implements Parcelable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getCurrentlyId() {
-        return this.currentlyId;
-    }
-
-    public void setCurrentlyId(long currentlyId) {
-        this.currentlyId = currentlyId;
-    }
-
-    public Long getHourlyId() {
-        return this.hourlyId;
-    }
-
-    public void setHourlyId(long hourlyId) {
-        this.hourlyId = hourlyId;
-    }
-
-    public Long getDailyId() {
-        return this.dailyId;
-    }
-
-    public void setDailyId(long dailyId) {
-        this.dailyId = dailyId;
     }
 
     public String getName() {
@@ -150,9 +118,9 @@ public class City extends BaseObservable implements Parcelable {
     private transient Long currently__resolvedKey;
 
     /** To-one relationship, resolved on first access. */
-    @Generated(hash = 919952678)
+    @Generated(hash = 1087511340)
     public Currently getCurrently() {
-        Long __key = this.currentlyId;
+        Long __key = this.id;
         if (currently__resolvedKey == null || !currently__resolvedKey.equals(__key)) {
             final DaoSession daoSession = this.daoSession;
             if (daoSession == null) {
@@ -169,12 +137,12 @@ public class City extends BaseObservable implements Parcelable {
     }
 
     /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 728240908)
+    @Generated(hash = 893711170)
     public void setCurrently(Currently currently) {
         synchronized (this) {
             this.currently = currently;
-            currentlyId = currently == null ? null : currently.getId();
-            currently__resolvedKey = currentlyId;
+            id = currently == null ? null : currently.getId();
+            currently__resolvedKey = id;
         }
     }
 
@@ -182,9 +150,9 @@ public class City extends BaseObservable implements Parcelable {
     private transient Long hourly__resolvedKey;
 
     /** To-one relationship, resolved on first access. */
-    @Generated(hash = 666329495)
+    @Generated(hash = 1721955440)
     public Hourly getHourly() {
-        Long __key = this.hourlyId;
+        Long __key = this.id;
         if (hourly__resolvedKey == null || !hourly__resolvedKey.equals(__key)) {
             final DaoSession daoSession = this.daoSession;
             if (daoSession == null) {
@@ -201,12 +169,12 @@ public class City extends BaseObservable implements Parcelable {
     }
 
     /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 838344679)
+    @Generated(hash = 1280890718)
     public void setHourly(Hourly hourly) {
         synchronized (this) {
             this.hourly = hourly;
-            hourlyId = hourly == null ? null : hourly.getId();
-            hourly__resolvedKey = hourlyId;
+            id = hourly == null ? null : hourly.getId();
+            hourly__resolvedKey = id;
         }
     }
 
@@ -214,9 +182,9 @@ public class City extends BaseObservable implements Parcelable {
     private transient Long daily__resolvedKey;
 
     /** To-one relationship, resolved on first access. */
-    @Generated(hash = 1512245693)
+    @Generated(hash = 595147050)
     public Daily getDaily() {
-        Long __key = this.dailyId;
+        Long __key = this.id;
         if (daily__resolvedKey == null || !daily__resolvedKey.equals(__key)) {
             final DaoSession daoSession = this.daoSession;
             if (daoSession == null) {
@@ -233,12 +201,12 @@ public class City extends BaseObservable implements Parcelable {
     }
 
     /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 432336100)
+    @Generated(hash = 1533481190)
     public void setDaily(Daily daily) {
         synchronized (this) {
             this.daily = daily;
-            dailyId = daily == null ? null : daily.getId();
-            daily__resolvedKey = dailyId;
+            id = daily == null ? null : daily.getId();
+            daily__resolvedKey = id;
         }
     }
 
@@ -286,9 +254,6 @@ public class City extends BaseObservable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
-        dest.writeLong(this.currentlyId);
-        dest.writeLong(this.hourlyId);
-        dest.writeLong(this.dailyId);
         dest.writeString(this.name);
         dest.writeValue(this.latitude);
         dest.writeValue(this.longitude);
@@ -300,9 +265,6 @@ public class City extends BaseObservable implements Parcelable {
 
     protected City(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.currentlyId = in.readLong();
-        this.hourlyId = in.readLong();
-        this.dailyId = in.readLong();
         this.name = in.readString();
         this.latitude = (Double) in.readValue(Double.class.getClassLoader());
         this.longitude = (Double) in.readValue(Double.class.getClassLoader());
@@ -334,18 +296,6 @@ public class City extends BaseObservable implements Parcelable {
 
     public Hourly getHourlyWithoutId() {
         return hourly;
-    }
-
-    public void setCurrentlyId(Long currentlyId) {
-        this.currentlyId = currentlyId;
-    }
-
-    public void setHourlyId(Long hourlyId) {
-        this.hourlyId = hourlyId;
-    }
-
-    public void setDailyId(Long dailyId) {
-        this.dailyId = dailyId;
     }
 
     /** called by internal mechanisms, do not call yourself. */

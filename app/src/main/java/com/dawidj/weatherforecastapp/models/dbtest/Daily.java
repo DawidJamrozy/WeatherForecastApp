@@ -11,7 +11,9 @@ import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.JoinProperty;
 import org.greenrobot.greendao.annotation.ToMany;
+import org.greenrobot.greendao.annotation.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +27,8 @@ public class Daily extends BaseObservable implements Parcelable {
     @Id
     private Long id;
 
-//    private long cityId;
-//
-//    @ToOne(joinProperty = "cityId")
-//    private City city;
+    @Unique
+    private String tag;
 
     @SerializedName("summary")
     @Expose
@@ -40,7 +40,9 @@ public class Daily extends BaseObservable implements Parcelable {
 
     @SerializedName("data")
     @Expose
-    @ToMany(referencedJoinProperty = "dailyID")
+    @ToMany(joinProperties = {
+            @JoinProperty(name = "tag", referencedName = "dataTag")})
+    //@ToMany(referencedJoinProperty = "dailyID")
     private List<DailyData> data = new ArrayList<DailyData>();
 
     public void setData(List<DailyData> data) {
@@ -59,9 +61,10 @@ public class Daily extends BaseObservable implements Parcelable {
     @Generated(hash = 870068004)
     private transient DailyDao myDao;
 
-    @Generated(hash = 965242085)
-    public Daily(Long id, String summary, String icon) {
+    @Generated(hash = 193581422)
+    public Daily(Long id, String tag, String summary, String icon) {
         this.id = id;
+        this.tag = tag;
         this.summary = summary;
         this.icon = icon;
     }
@@ -98,7 +101,7 @@ public class Daily extends BaseObservable implements Parcelable {
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
      */
-    @Generated(hash = 1786049125)
+    @Generated(hash = 301253637)
     public List<DailyData> getData() {
         if (data == null) {
             final DaoSession daoSession = this.daoSession;
@@ -106,7 +109,7 @@ public class Daily extends BaseObservable implements Parcelable {
                 throw new DaoException("Entity is detached from DAO context");
             }
             DailyDataDao targetDao = daoSession.getDailyDataDao();
-            List<DailyData> dataNew = targetDao._queryDaily_Data(id);
+            List<DailyData> dataNew = targetDao._queryDaily_Data(tag);
             synchronized (this) {
                 if (data == null) {
                     data = dataNew;
@@ -175,6 +178,14 @@ public class Daily extends BaseObservable implements Parcelable {
         dest.writeString(this.summary);
         dest.writeString(this.icon);
         dest.writeList(this.data);
+    }
+
+    public String getTag() {
+        return this.tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     /** called by internal mechanisms, do not call yourself. */

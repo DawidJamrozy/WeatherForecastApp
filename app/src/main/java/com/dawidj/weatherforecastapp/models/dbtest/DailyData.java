@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.NotNull;
 
 /**
  * Created by Dawidj on 25.10.2016.
@@ -20,7 +21,9 @@ public class DailyData extends BaseObservable implements Parcelable {
     @Id
     private Long id;
 
-    private Long dailyID;
+    //private Long dailyID;
+
+    @NotNull private String dataTag;
 
     @SerializedName("time")
     @Expose
@@ -126,19 +129,17 @@ public class DailyData extends BaseObservable implements Parcelable {
     @Expose
     private Double ozone;
 
-    @Generated(hash = 1936653682)
-    public DailyData(Long id, Long dailyID, Integer time, String summary,
-                     String icon, Double sunriseTime, Double sunsetTime, Double moonPhase,
-                     Double precipIntensity, Double precipIntensityMax,
-                     Double precipIntensityMaxTime, Double precipProbability,
-                     String precipType, Double temperatureMin, Double temperatureMinTime,
-                     Double temperatureMax, Double temperatureMaxTime,
-                     Double apparentTemperatureMin, Double apparentTemperatureMinTime,
-                     Double apparentTemperatureMax, Double apparentTemperatureMaxTime,
-                     Double dewPoint, Double humidity, Double windSpeed, Double windBearing,
-                     Double cloudCover, Double pressure, Double ozone) {
+    @Generated(hash = 608508725)
+    public DailyData(Long id, @NotNull String dataTag, Integer time, String summary, String icon,
+            Double sunriseTime, Double sunsetTime, Double moonPhase, Double precipIntensity,
+            Double precipIntensityMax, Double precipIntensityMaxTime, Double precipProbability,
+            String precipType, Double temperatureMin, Double temperatureMinTime, Double temperatureMax,
+            Double temperatureMaxTime, Double apparentTemperatureMin, Double apparentTemperatureMinTime,
+            Double apparentTemperatureMax, Double apparentTemperatureMaxTime, Double dewPoint,
+            Double humidity, Double windSpeed, Double windBearing, Double cloudCover, Double pressure,
+            Double ozone) {
         this.id = id;
-        this.dailyID = dailyID;
+        this.dataTag = dataTag;
         this.time = time;
         this.summary = summary;
         this.icon = icon;
@@ -171,20 +172,20 @@ public class DailyData extends BaseObservable implements Parcelable {
     public DailyData() {
     }
 
+    public String getDataTag() {
+        return dataTag;
+    }
+
+    public void setDataTag(String dataTag) {
+        this.dataTag = dataTag;
+    }
+
     public Long getId() {
         return this.id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getDailyID() {
-        return this.dailyID;
-    }
-
-    public void setDailyID(Long dailyID) {
-        this.dailyID = dailyID;
     }
 
     public Integer getTime() {
@@ -404,7 +405,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
-        dest.writeValue(this.dailyID);
+        dest.writeString(this.dataTag);
         dest.writeValue(this.time);
         dest.writeString(this.summary);
         dest.writeString(this.icon);
@@ -435,7 +436,7 @@ public class DailyData extends BaseObservable implements Parcelable {
 
     protected DailyData(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.dailyID = (Long) in.readValue(Long.class.getClassLoader());
+        this.dataTag = in.readString();
         this.time = (Integer) in.readValue(Integer.class.getClassLoader());
         this.summary = in.readString();
         this.icon = in.readString();
@@ -464,7 +465,7 @@ public class DailyData extends BaseObservable implements Parcelable {
         this.ozone = (Double) in.readValue(Double.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<DailyData> CREATOR = new Parcelable.Creator<DailyData>() {
+    public static final Creator<DailyData> CREATOR = new Creator<DailyData>() {
         @Override
         public DailyData createFromParcel(Parcel source) {
             return new DailyData(source);

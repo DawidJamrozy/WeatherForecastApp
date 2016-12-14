@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.NotNull;
 
 /**
  * Created by Dawidj on 25.10.2016.
@@ -21,7 +22,10 @@ public class HourlyData extends BaseObservable implements Parcelable {
     @Id
     private Long id;
 
-    private Long hourlyID;
+    //private Long hourlyID;
+
+    @NotNull
+    private String dataTag;
 
     @SerializedName("time")
     @Expose
@@ -83,14 +87,13 @@ public class HourlyData extends BaseObservable implements Parcelable {
     @Expose
     private String precipType;
 
-    @Generated(hash = 1210503856)
-    public HourlyData(Long id, Long hourlyID, Integer time, String summary,
-                      String icon, Double precipIntensity, Double precipProbability,
-                      Double temperature, Double apparentTemperature, Double dewPoint,
-                      Double humidity, Double windSpeed, Double windBearing,
-                      Double cloudCover, Double pressure, Double ozone, String precipType) {
+    @Generated(hash = 1013799781)
+    public HourlyData(Long id, @NotNull String dataTag, Integer time, String summary, String icon,
+            Double precipIntensity, Double precipProbability, Double temperature,
+            Double apparentTemperature, Double dewPoint, Double humidity, Double windSpeed,
+            Double windBearing, Double cloudCover, Double pressure, Double ozone, String precipType) {
         this.id = id;
-        this.hourlyID = hourlyID;
+        this.dataTag = dataTag;
         this.time = time;
         this.summary = summary;
         this.icon = icon;
@@ -112,6 +115,14 @@ public class HourlyData extends BaseObservable implements Parcelable {
     public HourlyData() {
     }
 
+    public String getDataTag() {
+        return dataTag;
+    }
+
+    public void setDataTag(String dataTag) {
+        this.dataTag = dataTag;
+    }
+
     public Long getId() {
         return this.id;
     }
@@ -120,13 +131,6 @@ public class HourlyData extends BaseObservable implements Parcelable {
         this.id = id;
     }
 
-    public Long getHourlyID() {
-        return this.hourlyID;
-    }
-
-    public void setHourlyID(Long hourlyID) {
-        this.hourlyID = hourlyID;
-    }
 
     public Integer getTime() {
         return this.time;
@@ -257,7 +261,7 @@ public class HourlyData extends BaseObservable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
-        dest.writeValue(this.hourlyID);
+        dest.writeString(this.dataTag);
         dest.writeValue(this.time);
         dest.writeString(this.summary);
         dest.writeString(this.icon);
@@ -277,7 +281,7 @@ public class HourlyData extends BaseObservable implements Parcelable {
 
     protected HourlyData(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.hourlyID = (Long) in.readValue(Long.class.getClassLoader());
+        this.dataTag = in.readString();
         this.time = (Integer) in.readValue(Integer.class.getClassLoader());
         this.summary = in.readString();
         this.icon = in.readString();
@@ -295,7 +299,7 @@ public class HourlyData extends BaseObservable implements Parcelable {
         this.precipType = in.readString();
     }
 
-    public static final Parcelable.Creator<HourlyData> CREATOR = new Parcelable.Creator<HourlyData>() {
+    public static final Creator<HourlyData> CREATOR = new Creator<HourlyData>() {
         @Override
         public HourlyData createFromParcel(Parcel source) {
             return new HourlyData(source);
