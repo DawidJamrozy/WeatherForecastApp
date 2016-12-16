@@ -1,80 +1,37 @@
 package com.dawidj.weatherforecastapp.models.dbtest;
 
-import android.databinding.BaseObservable;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.dawidj.weatherforecastapp.utils.DailyDataParcelConverter;
+import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
-import org.greenrobot.greendao.DaoException;
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.JoinProperty;
-import org.greenrobot.greendao.annotation.ToMany;
-import org.greenrobot.greendao.annotation.Unique;
+import org.parceler.ParcelPropertyConverter;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Dawidj on 24.10.2016.
  */
-@Entity
-public class Daily extends BaseObservable implements Parcelable {
+@org.parceler.Parcel(implementations = { Daily.class },
+        value = org.parceler.Parcel.Serialization.BEAN,
+        analyze = { Daily.class })
+public class Daily extends RealmObject implements Observable, RealmDataBinding {
 
-    @Id
+    @PrimaryKey
     private Long id;
 
-    @Unique
-    private String tag;
-
-    @SerializedName("summary")
-    @Expose
     private String summary;
 
-    @SerializedName("icon")
-    @Expose
     private String icon;
 
-    @SerializedName("data")
-    @Expose
-    @ToMany(joinProperties = {
-            @JoinProperty(name = "tag", referencedName = "dataTag")})
-    //@ToMany(referencedJoinProperty = "dailyID")
-    private List<DailyData> data = new ArrayList<DailyData>();
-
-    public void setData(List<DailyData> data) {
-        this.data = data;
-    }
-
-    /**
-     * Used to resolve relations
-     */
-    @Generated(hash = 2040040024)
-    private transient DaoSession daoSession;
-
-    /**
-     * Used for active entity operations.
-     */
-    @Generated(hash = 870068004)
-    private transient DailyDao myDao;
-
-    @Generated(hash = 193581422)
-    public Daily(Long id, String tag, String summary, String icon) {
-        this.id = id;
-        this.tag = tag;
-        this.summary = summary;
-        this.icon = icon;
-    }
-
-    @Generated(hash = 2135515054)
-    public Daily() {
-    }
+    private RealmList<DailyData> data;
 
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
@@ -82,7 +39,7 @@ public class Daily extends BaseObservable implements Parcelable {
     }
 
     public String getSummary() {
-        return this.summary;
+        return summary;
     }
 
     public void setSummary(String summary) {
@@ -90,128 +47,50 @@ public class Daily extends BaseObservable implements Parcelable {
     }
 
     public String getIcon() {
-        return this.icon;
+        return icon;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
-    /**
-     * To-many relationship, resolved on first access (and after reset).
-     * Changes to to-many relations are not persisted, make changes to the target entity.
-     */
-    @Generated(hash = 301253637)
-    public List<DailyData> getData() {
-        if (data == null) {
-            final DaoSession daoSession = this.daoSession;
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            DailyDataDao targetDao = daoSession.getDailyDataDao();
-            List<DailyData> dataNew = targetDao._queryDaily_Data(tag);
-            synchronized (this) {
-                if (data == null) {
-                    data = dataNew;
-                }
-            }
-        }
+    public RealmList<DailyData> getData() {
         return data;
     }
 
-    public List<DailyData> getDataWithoutId() {
-        return data;
+    @ParcelPropertyConverter(DailyDataParcelConverter.class)
+    public void setData(RealmList<DailyData> data) {
+        this.data = data;
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
-    @Generated(hash = 1283600904)
-    public synchronized void resetData() {
-        data = null;
-    }
+    @Ignore
+    private transient PropertyChangeRegistry mCallbacks;
 
-    /**
-     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
-     * Entity must attached to an entity context.
-     */
-    @Generated(hash = 128553479)
-    public void delete() {
-        if (myDao == null) {
-            throw new DaoException("Entity is detached from DAO context");
+    @Override
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        if (mCallbacks == null) {
+            mCallbacks = new PropertyChangeRegistry();
         }
-        myDao.delete(this);
-    }
-
-    /**
-     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
-     * Entity must attached to an entity context.
-     */
-    @Generated(hash = 1942392019)
-    public void refresh() {
-        if (myDao == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }
-        myDao.refresh(this);
-    }
-
-    /**
-     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
-     * Entity must attached to an entity context.
-     */
-    @Generated(hash = 713229351)
-    public void update() {
-        if (myDao == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }
-        myDao.update(this);
+        mCallbacks.add(callback);
     }
 
     @Override
-    public int describeContents() {
-        return 0;
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        if (mCallbacks != null) {
+            mCallbacks.remove(callback);
+        }
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.id);
-        dest.writeString(this.summary);
-        dest.writeString(this.icon);
-        dest.writeList(this.data);
-    }
-
-    public String getTag() {
-        return this.tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 445972336)
-    public void __setDaoSession(DaoSession daoSession) {
-        this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getDailyDao() : null;
-    }
-
-    protected Daily(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.summary = in.readString();
-        this.icon = in.readString();
-        this.data = new ArrayList<DailyData>();
-        in.readList(this.data, DailyData.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<Daily> CREATOR = new Parcelable.Creator<Daily>() {
-        @Override
-        public Daily createFromParcel(Parcel source) {
-            return new Daily(source);
+    public synchronized void notifyChange() {
+        if (mCallbacks != null) {
+            mCallbacks.notifyCallbacks(this, 0, null);
         }
+    }
 
-        @Override
-        public Daily[] newArray(int size) {
-            return new Daily[size];
+    public void notifyPropertyChanged(int fieldId) {
+        if (mCallbacks != null) {
+            mCallbacks.notifyCallbacks(this, fieldId, null);
         }
-    };
+    }
 }

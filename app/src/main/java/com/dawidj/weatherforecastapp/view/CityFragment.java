@@ -16,6 +16,7 @@ import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityFragmentBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.utils.AxisValueFormatter;
+import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
 import com.dawidj.weatherforecastapp.utils.busevent.NewCity;
 import com.dawidj.weatherforecastapp.view.adapters.DayRecyclerViewAdapter;
@@ -70,6 +71,8 @@ public class CityFragment extends Fragment {
         View view = binding.getRoot();
         ButterKnife.bind(this, view);
         Bundle args = getArguments();
+
+        city.addChangeListener(RealmDataBinding.FACTORY.create());
         city = args.getParcelable("city");
         cityViewModel = new CityViewModel(city);
         binding.setCityViewModel(cityViewModel);

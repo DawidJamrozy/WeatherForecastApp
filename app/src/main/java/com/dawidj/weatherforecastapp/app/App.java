@@ -5,12 +5,10 @@ import android.app.Application;
 import com.dawidj.weatherforecastapp.components.DaggerWeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherModule;
-import com.dawidj.weatherforecastapp.models.dbtest.DaoMaster;
-import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
 import com.facebook.stetho.Stetho;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
-import org.greenrobot.greendao.database.Database;
-
+import io.realm.Realm;
 import timber.log.Timber;
 
 /**
@@ -21,11 +19,6 @@ public class App extends Application {
 
     private static App instance;
     private WeatherComponent weatherComponent;
-    private DaoSession daoSession;
-
-    public DaoSession getDaoSession() {
-        return daoSession;
-    }
 
     public WeatherComponent getWeatherComponent() {
         return weatherComponent;
@@ -39,7 +32,13 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Timber.plant(new Timber.DebugTree());
-        Stetho.initializeWithDefaults(this);
+        Realm.init(this);
+
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                        .build());
 
         instance = this;
 
@@ -47,9 +46,6 @@ public class App extends Application {
                 .weatherModule(new WeatherModule())
                 .build();
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "cities-db");
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
 
     }
 }

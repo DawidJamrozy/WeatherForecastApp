@@ -12,15 +12,9 @@ import android.view.MenuItem;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
-import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
-import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
-import com.dawidj.weatherforecastapp.models.dbtest.Hourly;
 import com.dawidj.weatherforecastapp.view.adapters.ViewPagerAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tablayout)
     TabLayout tabLayout;
 
-    @Inject
-    DaoSession daoSession;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,24 +37,26 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         Timber.i("onCreate(): ");
-        List<City> test = daoSession.getCityDao().loadAll();
-        List<City> cities = new ArrayList<>();
-        for (long i = 0; i < daoSession.getCityDao().loadAll().size(); i++) {
-            cities.add(daoSession.getCityDao().loadDeep(1l));
-        }
 
-//        QueryBuilder<City> queryBuilder = daoSession.getCityDao().queryBuilder().where(CityDao.Properties.Id.eq(1));
-//        Join daily = queryBuilder.join(DailyDao.Properties.Id, Daily.class);
-//        Join dailyData = queryBuilder.join(DailyDataDao.Properties.DataTag)
-
-//        QueryBuilder<Daily> queryBuilder = daoSession.getDailyDao().queryBuilder();
-//        queryBuilder.join(DailyData.class, DailyDataDao.Properties.DataTag).where(DailyDataDao.Properties.Ta)
-
-        List<DailyData> dailyDatas = cities.get(0).getDaily().getData();
-        cities.get(0).getDaily().setData(daoSession.getDailyDataDao().loadAll());
-        List<Hourly> hourlyList = daoSession.getHourlyDao().loadAll();
-        cities.get(0).getHourly().setData(daoSession.getHourlyDataDao().loadAll());
-        setUpViewPagerAdapter(cities);
+//        List<City> test = daoSession.getCityDao().loadAll();
+//        List<City> cities = new ArrayList<>();
+//        for (long i = 1; i <= daoSession.getCityDao().loadAll().size(); i++) {
+//            cities.add(daoSession.getCityDao().loadDeep(i));
+//        }
+//
+//        List<DailyData> dailyDatas = cities.get(0).getDaily().getData();
+////        QueryBuilder<City> queryBuilder = daoSession.getCityDao().queryBuilder().where(CityDao.Properties.Id.eq(1));
+////        Join daily = queryBuilder.join(DailyDao.Properties.Id, Daily.class);
+////        Join dailyData = queryBuilder.join(DailyDataDao.Properties.DataTag)
+//
+////        QueryBuilder<Daily> queryBuilder = daoSession.getDailyDao().queryBuilder();
+////        queryBuilder.join(DailyData.class, DailyDataDao.Properties.DataTag).where(DailyDataDao.Properties.Ta)
+//
+//        //List<DailyData> dailyDatas = cities.get(0).getDaily().getData();
+//        cities.get(0).getDaily().setData(daoSession.getDailyDataDao().loadAll());
+//        List<Hourly> hourlyList = daoSession.getHourlyDao().loadAll();
+//        cities.get(0).getHourly().setData(daoSession.getHourlyDataDao().loadAll());
+        //setUpViewPagerAdapter(cities);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -97,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     public CityFragment cityViewFragment(City city) {
         CityFragment fragment = new CityFragment();
         Bundle args = new Bundle();
-        args.putParcelable("city", city);
+        //args.putParcelable("city", city);
         fragment.setArguments(args);
         return fragment;
     }

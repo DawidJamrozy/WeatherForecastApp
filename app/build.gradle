@@ -1,10 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.dawidj.weatherforecastapp"
         minSdkVersion 18
@@ -12,18 +23,16 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.bottom_specific_data.runner.AndroidJUnitRunner"
+    }
 
-        packagingOptions {
-            exclude 'META-INF/rxjava.properties'
-        }
-        buildTypes {
-            release {
-                minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            }
-        }
-        dataBinding {
-            enabled = true
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -56,4 +65,8 @@ dependencies {
     compile 'com.google.dagger:dagger-compiler:2.7'
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.facebook.stetho:stetho:1.4.1'
+    compile 'com.uphyca:stetho_realm:2.0.0'
+    apt 'com.google.guava:guava:19.0'
+    compile "org.parceler:parceler-api:1.0.3"
+    apt "org.parceler:parceler:1.0.3"
 }

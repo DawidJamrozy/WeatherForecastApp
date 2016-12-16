@@ -1,187 +1,81 @@
 package com.dawidj.weatherforecastapp.models.dbtest;
 
-import android.databinding.BaseObservable;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.NotNull;
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Dawidj on 25.10.2016.
  */
-@Entity
-public class DailyData extends BaseObservable implements Parcelable {
+@org.parceler.Parcel(implementations = { DailyData.class },
+        value = org.parceler.Parcel.Serialization.BEAN,
+        analyze = { DailyData.class })
+public class DailyData extends RealmObject implements Observable, RealmDataBinding {
 
-    @Id
+    @PrimaryKey
     private Long id;
 
-    //private Long dailyID;
-
-    @NotNull private String dataTag;
-
-    @SerializedName("time")
-    @Expose
     private Integer time;
 
-    @SerializedName("summary")
-    @Expose
     private String summary;
 
-    @SerializedName("icon")
-    @Expose
     private String icon;
 
-    @SerializedName("sunriseTime")
-    @Expose
     private Double sunriseTime;
 
-    @SerializedName("sunsetTime")
-    @Expose
     private Double sunsetTime;
 
-    @SerializedName("moonPhase")
-    @Expose
     private Double moonPhase;
 
-    @SerializedName("precipIntensity")
-    @Expose
     private Double precipIntensity;
 
-    @SerializedName("precipIntensityMax")
-    @Expose
     private Double precipIntensityMax;
 
-    @SerializedName("precipIntensityMaxTime")
-    @Expose
     private Double precipIntensityMaxTime;
 
-    @SerializedName("precipProbability")
-    @Expose
     private Double precipProbability;
 
-    @SerializedName("precipType")
-    @Expose
     private String precipType;
 
-    @SerializedName("temperatureMin")
-    @Expose
     private Double temperatureMin;
 
-    @SerializedName("temperatureMinTime")
-    @Expose
     private Double temperatureMinTime;
 
-    @SerializedName("temperatureMax")
-    @Expose
     private Double temperatureMax;
 
-    @SerializedName("temperatureMaxTime")
-    @Expose
     private Double temperatureMaxTime;
 
-    @SerializedName("apparentTemperatureMin")
-    @Expose
     private Double apparentTemperatureMin;
 
-    @SerializedName("apparentTemperatureMinTime")
-    @Expose
     private Double apparentTemperatureMinTime;
 
-    @SerializedName("apparentTemperatureMax")
-    @Expose
     private Double apparentTemperatureMax;
 
-    @SerializedName("apparentTemperatureMaxTime")
-    @Expose
     private Double apparentTemperatureMaxTime;
 
-    @SerializedName("dewPoint")
-    @Expose
     private Double dewPoint;
 
-    @SerializedName("humidity")
-    @Expose
     private Double humidity;
 
-    @SerializedName("windSpeed")
-    @Expose
     private Double windSpeed;
 
-    @SerializedName("windBearing")
-    @Expose
     private Double windBearing;
 
-    @SerializedName("cloudCover")
-    @Expose
     private Double cloudCover;
 
-    @SerializedName("pressure")
-    @Expose
     private Double pressure;
 
-    @SerializedName("ozone")
-    @Expose
     private Double ozone;
 
-    @Generated(hash = 608508725)
-    public DailyData(Long id, @NotNull String dataTag, Integer time, String summary, String icon,
-            Double sunriseTime, Double sunsetTime, Double moonPhase, Double precipIntensity,
-            Double precipIntensityMax, Double precipIntensityMaxTime, Double precipProbability,
-            String precipType, Double temperatureMin, Double temperatureMinTime, Double temperatureMax,
-            Double temperatureMaxTime, Double apparentTemperatureMin, Double apparentTemperatureMinTime,
-            Double apparentTemperatureMax, Double apparentTemperatureMaxTime, Double dewPoint,
-            Double humidity, Double windSpeed, Double windBearing, Double cloudCover, Double pressure,
-            Double ozone) {
-        this.id = id;
-        this.dataTag = dataTag;
-        this.time = time;
-        this.summary = summary;
-        this.icon = icon;
-        this.sunriseTime = sunriseTime;
-        this.sunsetTime = sunsetTime;
-        this.moonPhase = moonPhase;
-        this.precipIntensity = precipIntensity;
-        this.precipIntensityMax = precipIntensityMax;
-        this.precipIntensityMaxTime = precipIntensityMaxTime;
-        this.precipProbability = precipProbability;
-        this.precipType = precipType;
-        this.temperatureMin = temperatureMin;
-        this.temperatureMinTime = temperatureMinTime;
-        this.temperatureMax = temperatureMax;
-        this.temperatureMaxTime = temperatureMaxTime;
-        this.apparentTemperatureMin = apparentTemperatureMin;
-        this.apparentTemperatureMinTime = apparentTemperatureMinTime;
-        this.apparentTemperatureMax = apparentTemperatureMax;
-        this.apparentTemperatureMaxTime = apparentTemperatureMaxTime;
-        this.dewPoint = dewPoint;
-        this.humidity = humidity;
-        this.windSpeed = windSpeed;
-        this.windBearing = windBearing;
-        this.cloudCover = cloudCover;
-        this.pressure = pressure;
-        this.ozone = ozone;
-    }
-
-    @Generated(hash = 556979270)
-    public DailyData() {
-    }
-
-    public String getDataTag() {
-        return dataTag;
-    }
-
-    public void setDataTag(String dataTag) {
-        this.dataTag = dataTag;
-    }
-
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
@@ -189,7 +83,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Integer getTime() {
-        return this.time;
+        return time;
     }
 
     public void setTime(Integer time) {
@@ -197,7 +91,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public String getSummary() {
-        return this.summary;
+        return summary;
     }
 
     public void setSummary(String summary) {
@@ -205,7 +99,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public String getIcon() {
-        return this.icon;
+        return icon;
     }
 
     public void setIcon(String icon) {
@@ -213,7 +107,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getSunriseTime() {
-        return this.sunriseTime;
+        return sunriseTime;
     }
 
     public void setSunriseTime(Double sunriseTime) {
@@ -221,7 +115,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getSunsetTime() {
-        return this.sunsetTime;
+        return sunsetTime;
     }
 
     public void setSunsetTime(Double sunsetTime) {
@@ -229,7 +123,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getMoonPhase() {
-        return this.moonPhase;
+        return moonPhase;
     }
 
     public void setMoonPhase(Double moonPhase) {
@@ -237,7 +131,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getPrecipIntensity() {
-        return this.precipIntensity;
+        return precipIntensity;
     }
 
     public void setPrecipIntensity(Double precipIntensity) {
@@ -245,7 +139,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getPrecipIntensityMax() {
-        return this.precipIntensityMax;
+        return precipIntensityMax;
     }
 
     public void setPrecipIntensityMax(Double precipIntensityMax) {
@@ -253,7 +147,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getPrecipIntensityMaxTime() {
-        return this.precipIntensityMaxTime;
+        return precipIntensityMaxTime;
     }
 
     public void setPrecipIntensityMaxTime(Double precipIntensityMaxTime) {
@@ -261,7 +155,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getPrecipProbability() {
-        return this.precipProbability;
+        return precipProbability;
     }
 
     public void setPrecipProbability(Double precipProbability) {
@@ -269,7 +163,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public String getPrecipType() {
-        return this.precipType;
+        return precipType;
     }
 
     public void setPrecipType(String precipType) {
@@ -277,7 +171,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getTemperatureMin() {
-        return this.temperatureMin;
+        return temperatureMin;
     }
 
     public void setTemperatureMin(Double temperatureMin) {
@@ -285,7 +179,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getTemperatureMinTime() {
-        return this.temperatureMinTime;
+        return temperatureMinTime;
     }
 
     public void setTemperatureMinTime(Double temperatureMinTime) {
@@ -293,7 +187,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getTemperatureMax() {
-        return this.temperatureMax;
+        return temperatureMax;
     }
 
     public void setTemperatureMax(Double temperatureMax) {
@@ -301,7 +195,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getTemperatureMaxTime() {
-        return this.temperatureMaxTime;
+        return temperatureMaxTime;
     }
 
     public void setTemperatureMaxTime(Double temperatureMaxTime) {
@@ -309,7 +203,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getApparentTemperatureMin() {
-        return this.apparentTemperatureMin;
+        return apparentTemperatureMin;
     }
 
     public void setApparentTemperatureMin(Double apparentTemperatureMin) {
@@ -317,7 +211,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getApparentTemperatureMinTime() {
-        return this.apparentTemperatureMinTime;
+        return apparentTemperatureMinTime;
     }
 
     public void setApparentTemperatureMinTime(Double apparentTemperatureMinTime) {
@@ -325,7 +219,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getApparentTemperatureMax() {
-        return this.apparentTemperatureMax;
+        return apparentTemperatureMax;
     }
 
     public void setApparentTemperatureMax(Double apparentTemperatureMax) {
@@ -333,7 +227,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getApparentTemperatureMaxTime() {
-        return this.apparentTemperatureMaxTime;
+        return apparentTemperatureMaxTime;
     }
 
     public void setApparentTemperatureMaxTime(Double apparentTemperatureMaxTime) {
@@ -341,7 +235,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getDewPoint() {
-        return this.dewPoint;
+        return dewPoint;
     }
 
     public void setDewPoint(Double dewPoint) {
@@ -349,7 +243,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getHumidity() {
-        return this.humidity;
+        return humidity;
     }
 
     public void setHumidity(Double humidity) {
@@ -357,7 +251,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getWindSpeed() {
-        return this.windSpeed;
+        return windSpeed;
     }
 
     public void setWindSpeed(Double windSpeed) {
@@ -365,7 +259,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getWindBearing() {
-        return this.windBearing;
+        return windBearing;
     }
 
     public void setWindBearing(Double windBearing) {
@@ -373,7 +267,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getCloudCover() {
-        return this.cloudCover;
+        return cloudCover;
     }
 
     public void setCloudCover(Double cloudCover) {
@@ -381,7 +275,7 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getPressure() {
-        return this.pressure;
+        return pressure;
     }
 
     public void setPressure(Double pressure) {
@@ -389,91 +283,41 @@ public class DailyData extends BaseObservable implements Parcelable {
     }
 
     public Double getOzone() {
-        return this.ozone;
+        return ozone;
     }
 
     public void setOzone(Double ozone) {
         this.ozone = ozone;
     }
 
+    @Ignore
+    private transient PropertyChangeRegistry mCallbacks;
 
     @Override
-    public int describeContents() {
-        return 0;
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        if (mCallbacks == null) {
+            mCallbacks = new PropertyChangeRegistry();
+        }
+        mCallbacks.add(callback);
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.id);
-        dest.writeString(this.dataTag);
-        dest.writeValue(this.time);
-        dest.writeString(this.summary);
-        dest.writeString(this.icon);
-        dest.writeValue(this.sunriseTime);
-        dest.writeValue(this.sunsetTime);
-        dest.writeValue(this.moonPhase);
-        dest.writeValue(this.precipIntensity);
-        dest.writeValue(this.precipIntensityMax);
-        dest.writeValue(this.precipIntensityMaxTime);
-        dest.writeValue(this.precipProbability);
-        dest.writeString(this.precipType);
-        dest.writeValue(this.temperatureMin);
-        dest.writeValue(this.temperatureMinTime);
-        dest.writeValue(this.temperatureMax);
-        dest.writeValue(this.temperatureMaxTime);
-        dest.writeValue(this.apparentTemperatureMin);
-        dest.writeValue(this.apparentTemperatureMinTime);
-        dest.writeValue(this.apparentTemperatureMax);
-        dest.writeValue(this.apparentTemperatureMaxTime);
-        dest.writeValue(this.dewPoint);
-        dest.writeValue(this.humidity);
-        dest.writeValue(this.windSpeed);
-        dest.writeValue(this.windBearing);
-        dest.writeValue(this.cloudCover);
-        dest.writeValue(this.pressure);
-        dest.writeValue(this.ozone);
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        if (mCallbacks != null) {
+            mCallbacks.remove(callback);
+        }
     }
 
-    protected DailyData(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.dataTag = in.readString();
-        this.time = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.summary = in.readString();
-        this.icon = in.readString();
-        this.sunriseTime = (Double) in.readValue(Double.class.getClassLoader());
-        this.sunsetTime = (Double) in.readValue(Double.class.getClassLoader());
-        this.moonPhase = (Double) in.readValue(Double.class.getClassLoader());
-        this.precipIntensity = (Double) in.readValue(Double.class.getClassLoader());
-        this.precipIntensityMax = (Double) in.readValue(Double.class.getClassLoader());
-        this.precipIntensityMaxTime = (Double) in.readValue(Double.class.getClassLoader());
-        this.precipProbability = (Double) in.readValue(Double.class.getClassLoader());
-        this.precipType = in.readString();
-        this.temperatureMin = (Double) in.readValue(Double.class.getClassLoader());
-        this.temperatureMinTime = (Double) in.readValue(Double.class.getClassLoader());
-        this.temperatureMax = (Double) in.readValue(Double.class.getClassLoader());
-        this.temperatureMaxTime = (Double) in.readValue(Double.class.getClassLoader());
-        this.apparentTemperatureMin = (Double) in.readValue(Double.class.getClassLoader());
-        this.apparentTemperatureMinTime = (Double) in.readValue(Double.class.getClassLoader());
-        this.apparentTemperatureMax = (Double) in.readValue(Double.class.getClassLoader());
-        this.apparentTemperatureMaxTime = (Double) in.readValue(Double.class.getClassLoader());
-        this.dewPoint = (Double) in.readValue(Double.class.getClassLoader());
-        this.humidity = (Double) in.readValue(Double.class.getClassLoader());
-        this.windSpeed = (Double) in.readValue(Double.class.getClassLoader());
-        this.windBearing = (Double) in.readValue(Double.class.getClassLoader());
-        this.cloudCover = (Double) in.readValue(Double.class.getClassLoader());
-        this.pressure = (Double) in.readValue(Double.class.getClassLoader());
-        this.ozone = (Double) in.readValue(Double.class.getClassLoader());
+    @Override
+    public synchronized void notifyChange() {
+        if (mCallbacks != null) {
+            mCallbacks.notifyCallbacks(this, 0, null);
+        }
     }
 
-    public static final Creator<DailyData> CREATOR = new Creator<DailyData>() {
-        @Override
-        public DailyData createFromParcel(Parcel source) {
-            return new DailyData(source);
+    public void notifyPropertyChanged(int fieldId) {
+        if (mCallbacks != null) {
+            mCallbacks.notifyCallbacks(this, fieldId, null);
         }
-
-        @Override
-        public DailyData[] newArray(int size) {
-            return new DailyData[size];
-        }
-    };
+    }
 }

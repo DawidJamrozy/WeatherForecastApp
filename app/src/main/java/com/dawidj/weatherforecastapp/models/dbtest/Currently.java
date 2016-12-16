@@ -1,22 +1,25 @@
 package com.dawidj.weatherforecastapp.models.dbtest;
 
-import android.databinding.BaseObservable;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Dawidj on 24.10.2016.
  */
-@Entity
-public class Currently extends BaseObservable implements Parcelable {
-    @Id
+
+public class Currently extends RealmObject implements Observable, Parcelable, RealmDataBinding {
+
+    @PrimaryKey
     private Long id;
 
     @SerializedName("time")
@@ -74,154 +77,201 @@ public class Currently extends BaseObservable implements Parcelable {
     @SerializedName("ozone")
     @Expose
     private Double ozone;
+    @Ignore
+    private transient PropertyChangeRegistry mCallbacks;
 
-    @Generated(hash = 1624391316)
-    public Currently(Long id, Integer time, String summary, String icon,
-                     Double precipIntensity, Double precipProbability, Double temperature,
-                     Double apparentTemperature, Double dewPoint, Double humidity,
-                     Double windSpeed, Double windBearing, Double cloudCover,
-                     Double pressure, Double ozone) {
-        this.id = id;
-        this.time = time;
-        this.summary = summary;
-        this.icon = icon;
-        this.precipIntensity = precipIntensity;
-        this.precipProbability = precipProbability;
-        this.temperature = temperature;
-        this.apparentTemperature = apparentTemperature;
-        this.dewPoint = dewPoint;
-        this.humidity = humidity;
-        this.windSpeed = windSpeed;
-        this.windBearing = windBearing;
-        this.cloudCover = cloudCover;
-        this.pressure = pressure;
-        this.ozone = ozone;
+    @Override
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        if (mCallbacks == null) {
+            mCallbacks = new PropertyChangeRegistry();
+        }
+        mCallbacks.add(callback);
     }
 
-    @Generated(hash = 814712062)
-    public Currently() {
+    @Override
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        if (mCallbacks != null) {
+            mCallbacks.remove(callback);
+        }
+    }
+
+    @Override
+    public synchronized void notifyChange() {
+        if (mCallbacks != null) {
+            mCallbacks.notifyCallbacks(this, 0, null);
+        }
+    }
+
+    public void notifyPropertyChanged(int fieldId) {
+        if (mCallbacks != null) {
+            mCallbacks.notifyCallbacks(this, fieldId, null);
+        }
     }
 
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Integer getTime() {
-        return this.time;
+        return time;
     }
 
     public void setTime(Integer time) {
         this.time = time;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public String getSummary() {
-        return this.summary;
+        return summary;
     }
 
     public void setSummary(String summary) {
         this.summary = summary;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public String getIcon() {
-        return this.icon;
+        return icon;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getPrecipIntensity() {
-        return this.precipIntensity;
+        return precipIntensity;
     }
 
     public void setPrecipIntensity(Double precipIntensity) {
         this.precipIntensity = precipIntensity;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getPrecipProbability() {
-        return this.precipProbability;
+        return precipProbability;
     }
 
     public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getTemperature() {
-        return this.temperature;
+        return temperature;
     }
 
     public void setTemperature(Double temperature) {
         this.temperature = temperature;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getApparentTemperature() {
-        return this.apparentTemperature;
+        return apparentTemperature;
     }
 
     public void setApparentTemperature(Double apparentTemperature) {
         this.apparentTemperature = apparentTemperature;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getDewPoint() {
-        return this.dewPoint;
+        return dewPoint;
     }
 
     public void setDewPoint(Double dewPoint) {
         this.dewPoint = dewPoint;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getHumidity() {
-        return this.humidity;
+        return humidity;
     }
 
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getWindSpeed() {
-        return this.windSpeed;
+        return windSpeed;
     }
 
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getWindBearing() {
-        return this.windBearing;
+        return windBearing;
     }
 
     public void setWindBearing(Double windBearing) {
         this.windBearing = windBearing;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getCloudCover() {
-        return this.cloudCover;
+        return cloudCover;
     }
 
     public void setCloudCover(Double cloudCover) {
         this.cloudCover = cloudCover;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getPressure() {
-        return this.pressure;
+        return pressure;
     }
 
     public void setPressure(Double pressure) {
         this.pressure = pressure;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
 
     public Double getOzone() {
-        return this.ozone;
+        return ozone;
     }
 
     public void setOzone(Double ozone) {
         this.ozone = ozone;
+        if (!isManaged()) {
+            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+        }
     }
-
 
     @Override
     public int describeContents() {
@@ -247,6 +297,9 @@ public class Currently extends BaseObservable implements Parcelable {
         dest.writeValue(this.ozone);
     }
 
+    public Currently() {
+    }
+
     protected Currently(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.time = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -265,7 +318,7 @@ public class Currently extends BaseObservable implements Parcelable {
         this.ozone = (Double) in.readValue(Double.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Currently> CREATOR = new Parcelable.Creator<Currently>() {
+    public static final Creator<Currently> CREATOR = new Creator<Currently>() {
         @Override
         public Currently createFromParcel(Parcel source) {
             return new Currently(source);

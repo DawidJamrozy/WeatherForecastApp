@@ -8,9 +8,6 @@ import com.dawidj.weatherforecastapp.api.WeatherApi;
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
 import com.dawidj.weatherforecastapp.models.autocomplete.Prediction;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
-import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
-import com.dawidj.weatherforecastapp.models.dbtest.DaoSession;
-import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.busevent.AddLocation;
@@ -39,6 +36,8 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import retrofit2.Retrofit;
 import timber.log.Timber;
+
+import static android.R.attr.id;
 
 /**
  * Created by Dawidj on 04.12.2016.
@@ -73,9 +72,6 @@ public class SearchViewModel {
     EventBus eventBus;
 
     @Inject
-    DaoSession daoSession;
-
-    @Inject
     @Named("darksky")
     Retrofit retrofitDarksky;
 
@@ -99,23 +95,23 @@ public class SearchViewModel {
 
         city.setName(cityLatLngList.get(getPosition()).getResult().getName());
 
-        city.getDailyWithoutId().setTag(city.getName());
-        city.getHourlyWithoutId().setTag(city.getName());
+//        city.getDailyWithoutId().setTag(city.getName());
+//        city.getHourlyWithoutId().setTag(city.getName());
+//
+//        for (HourlyData hourlyData : city.getHourlyWithoutId().getHourlyDataWithoutId()) {
+//            hourlyData.setDataTag(city.getName());
+//            daoSession.insert(hourlyData);
+//        }
+//        for (DailyData dailyData : city.getDailyWithoutId().getDataWithoutId()) {
+//            dailyData.setDataTag(city.getName());
+//            daoSession.insert(dailyData);
+//        }
+//
+//        daoSession.insert(city.getHourlyWithoutId());
+//        daoSession.insert(city.getDailyWithoutId());
+//        daoSession.insert(city.getCurrentlyWithoutId());
 
-        daoSession.insert(city.getHourly());
-        daoSession.insert(city.getDaily());
-        daoSession.insert(city.getCurrently());
-
-        long id = daoSession.getCityDao().insert(city);
-
-        for (HourlyData hourlyData : city.getHourlyWithoutId().getHourlyDataWithoutId()) {
-            hourlyData.setDataTag(city.getName());
-            daoSession.insert(hourlyData);
-        }
-        for (DailyData dailyData : city.getDailyWithoutId().getDataWithoutId()) {
-            dailyData.setDataTag(city.getName());
-            daoSession.insert(dailyData);
-        }
+//        long id = daoSession.insert(city);
 
         eventBus.post(new NewCity(id));
     }
@@ -148,7 +144,7 @@ public class SearchViewModel {
 
                     @Override
                     public void onNext(City value) {
-                      insertCityToDatabase(value);
+                        insertCityToDatabase(value);
                     }
 
                     @Override
@@ -230,7 +226,8 @@ public class SearchViewModel {
     public TextWatcher getTextWatcher() {
         return new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -239,7 +236,8 @@ public class SearchViewModel {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable) {
+            }
         };
     }
 
