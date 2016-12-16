@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.models.dbtest;
 
+import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
@@ -20,7 +21,7 @@ import io.realm.annotations.PrimaryKey;
 
 @org.parceler.Parcel(implementations = {Hourly.class},
         value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = { Hourly.class })
+        analyze = {Hourly.class})
 public class Hourly extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
@@ -32,41 +33,54 @@ public class Hourly extends RealmObject implements Observable, RealmDataBinding 
 
     private RealmList<HourlyData> data;
 
+    public Hourly() {
+    }
+
+    @Bindable
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
+    @Bindable
     public String getSummary() {
         return summary;
     }
 
     public void setSummary(String summary) {
-        this.summary = summary; if (!isManaged()) {
+        this.summary = summary;
+        if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }
     }
 
+    @Bindable
     public String getIcon() {
         return icon;
     }
 
     public void setIcon(String icon) {
-        this.icon = icon; if (!isManaged()) {
+        this.icon = icon;
+        if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }
     }
 
+    @Bindable
     public RealmList<HourlyData> getData() {
         return data;
     }
 
     @ParcelPropertyConverter(HourlyDataParcelConverter.class)
     public void setData(RealmList<HourlyData> data) {
-        this.data = data; if (!isManaged()) {
+        this.data = data;
+        if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }
     }

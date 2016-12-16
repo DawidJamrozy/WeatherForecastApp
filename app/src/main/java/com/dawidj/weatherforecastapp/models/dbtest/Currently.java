@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.models.dbtest;
 
+import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
@@ -50,6 +51,9 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
 
     private Double ozone;
 
+    public Currently() {
+    }
+
     @Ignore
     private transient PropertyChangeRegistry mCallbacks;
 
@@ -80,15 +84,19 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             mCallbacks.notifyCallbacks(this, fieldId, null);
         }
     }
-
+    @Bindable
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
+    @Bindable
     public Integer getTime() {
         return time;
     }
@@ -99,7 +107,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public String getSummary() {
         return summary;
     }
@@ -110,7 +118,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public String getIcon() {
         return icon;
     }
@@ -121,7 +129,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getPrecipIntensity() {
         return precipIntensity;
     }
@@ -132,7 +140,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getPrecipProbability() {
         return precipProbability;
     }
@@ -143,7 +151,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getTemperature() {
         return temperature;
     }
@@ -154,7 +162,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getApparentTemperature() {
         return apparentTemperature;
     }
@@ -165,7 +173,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getDewPoint() {
         return dewPoint;
     }
@@ -176,7 +184,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getHumidity() {
         return humidity;
     }
@@ -187,7 +195,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getWindSpeed() {
         return windSpeed;
     }
@@ -198,7 +206,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getWindBearing() {
         return windBearing;
     }
@@ -209,7 +217,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getCloudCover() {
         return cloudCover;
     }
@@ -220,7 +228,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getPressure() {
         return pressure;
     }
@@ -231,7 +239,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-
+    @Bindable
     public Double getOzone() {
         return ozone;
     }

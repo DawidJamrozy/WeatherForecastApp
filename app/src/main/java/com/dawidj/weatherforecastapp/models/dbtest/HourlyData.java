@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.models.dbtest;
 
+import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
@@ -20,47 +21,39 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     @PrimaryKey
     private int id;
-
     private String dataTag;
-
     private Integer time;
-
     private String summary;
-
     private String icon;
-
     private Double precipIntensity;
-
     private Double precipProbability;
-
     private Double temperature;
-
     private Double apparentTemperature;
-
     private Double dewPoint;
-
     private Double humidity;
-
     private Double windSpeed;
-
     private Double windBearing;
-
     private Double cloudCover;
-
     private Double pressure;
-
     private Double ozone;
-
     private String precipType;
 
+    public HourlyData() {
+    }
+
+    @Bindable
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
+    @Bindable
     public String getDataTag() {
         return dataTag;
     }
@@ -72,6 +65,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Integer getTime() {
         return time;
     }
@@ -83,6 +77,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public String getSummary() {
         return summary;
     }
@@ -94,6 +89,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public String getIcon() {
         return icon;
     }
@@ -105,6 +101,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getPrecipIntensity() {
         return precipIntensity;
     }
@@ -116,6 +113,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getPrecipProbability() {
         return precipProbability;
     }
@@ -127,6 +125,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getTemperature() {
         return temperature;
     }
@@ -138,6 +137,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getApparentTemperature() {
         return apparentTemperature;
     }
@@ -149,6 +149,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getDewPoint() {
         return dewPoint;
     }
@@ -160,6 +161,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getHumidity() {
         return humidity;
     }
@@ -171,6 +173,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getWindSpeed() {
         return windSpeed;
     }
@@ -182,6 +185,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getWindBearing() {
         return windBearing;
     }
@@ -193,6 +197,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getCloudCover() {
         return cloudCover;
     }
@@ -204,6 +209,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getPressure() {
         return pressure;
     }
@@ -215,6 +221,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public Double getOzone() {
         return ozone;
     }
@@ -226,6 +233,7 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    @Bindable
     public String getPrecipType() {
         return precipType;
     }

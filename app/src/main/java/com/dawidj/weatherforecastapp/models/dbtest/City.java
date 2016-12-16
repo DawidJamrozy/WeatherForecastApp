@@ -36,6 +36,9 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
 
     private Daily daily;
 
+    public City() {
+    }
+
     public int getId() {
         return id;
     }

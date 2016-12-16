@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.models.dbtest;
 
+import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
@@ -31,14 +32,22 @@ public class Daily extends RealmObject implements Observable, RealmDataBinding {
 
     private RealmList<DailyData> data;
 
+    public Daily() {
+    }
+
+    @Bindable
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
+    @Bindable
     public String getSummary() {
         return summary;
     }
@@ -50,6 +59,7 @@ public class Daily extends RealmObject implements Observable, RealmDataBinding {
         }
     }
 
+    @Bindable
     public String getIcon() {
         return icon;
     }
@@ -61,6 +71,7 @@ public class Daily extends RealmObject implements Observable, RealmDataBinding {
         }
     }
 
+    @Bindable
     public RealmList<DailyData> getData() {
         return data;
     }
