@@ -34,10 +34,9 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import io.realm.Realm;
 import retrofit2.Retrofit;
 import timber.log.Timber;
-
-import static android.R.attr.id;
 
 /**
  * Created by Dawidj on 04.12.2016.
@@ -51,6 +50,7 @@ public class SearchViewModel {
     private final PublishSubject<String> textWatcherObservable = PublishSubject.create();
     private final PublishSubject<CityLatLng> cityWeatherDataObservable = PublishSubject.create();
     private int position;
+    Realm realm;
 
     public int getPosition() {
         return position;
@@ -83,7 +83,8 @@ public class SearchViewModel {
     @Named("details")
     Retrofit retrofitDetails;
 
-    public SearchViewModel() {
+    public SearchViewModel(Realm realm) {
+        this.realm = realm;
     }
 
     public void addCity(final int position) {
@@ -91,10 +92,14 @@ public class SearchViewModel {
         cityWeatherDataObservable.onNext(cityLatLngList.get(position));
     }
 
-    public void insertCityToDatabase(City city) {
+    public void insertCityToDatabase(City value) {
 
-        city.setName(cityLatLngList.get(getPosition()).getResult().getName());
+        value.setName(cityLatLngList.get(getPosition()).getResult().getName());
+        realm.beginTransaction();
 
+        City city = realm.copyToRealmOrUpdate(value);
+
+        realm.commitTransaction();
 //        city.getDailyWithoutId().setTag(city.getName());
 //        city.getHourlyWithoutId().setTag(city.getName());
 //
@@ -113,7 +118,7 @@ public class SearchViewModel {
 
 //        long id = daoSession.insert(city);
 
-        eventBus.post(new NewCity(id));
+        eventBus.post(new NewCity(value.getId()));
     }
 
     public void rxQueryBuilder() {

@@ -4,6 +4,7 @@ import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
+import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
 import io.realm.RealmObject;
@@ -19,7 +20,7 @@ import io.realm.annotations.PrimaryKey;
 public class City extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
-    private Long id;
+    private int id;
 
     private String name;
 
@@ -35,15 +36,12 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
 
     private Daily daily;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
-        if (!isManaged()) {
-            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
-        }
     }
 
     @Bindable
@@ -54,7 +52,7 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
     public void setName(String name) {
         this.name = name;
         if (!isManaged()) {
-            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+            notifyPropertyChanged(BR._all);
         }
     }
 
@@ -66,7 +64,7 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
         if (!isManaged()) {
-            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+            notifyPropertyChanged(BR._all);
         }
     }
 
@@ -78,7 +76,7 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
         if (!isManaged()) {
-            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+            notifyPropertyChanged(BR._all);
         }
     }
 
@@ -90,7 +88,7 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
     public void setTimezone(String timezone) {
         this.timezone = timezone;
         if (!isManaged()) {
-            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+            notifyPropertyChanged(BR._all);
         }
     }
 
@@ -102,7 +100,7 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
     public void setCurrently(Currently currently) {
         this.currently = currently;
         if (!isManaged()) {
-            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+            notifyPropertyChanged(BR._all);
         }
     }
 
@@ -114,7 +112,7 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
     public void setHourly(Hourly hourly) {
         this.hourly = hourly;
         if (!isManaged()) {
-            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+            notifyPropertyChanged(BR._all);
         }
     }
 
@@ -126,7 +124,7 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
     public void setDaily(Daily daily) {
         this.daily = daily;
         if (!isManaged()) {
-            notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+            notifyPropertyChanged(BR._all);
         }
     }
 

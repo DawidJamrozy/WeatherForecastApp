@@ -2,9 +2,8 @@ package com.dawidj.weatherforecastapp.models.dbtest;
 
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
-import android.os.Parcel;
-import android.os.Parcelable;
 
+import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
 import io.realm.RealmObject;
@@ -14,13 +13,13 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 25.10.2016.
  */
-@org.parceler.Parcel(implementations = { HourlyData.class },
+@org.parceler.Parcel(implementations = {HourlyData.class},
         value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = { HourlyData.class })
+        analyze = {HourlyData.class})
 public class HourlyData extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
-    private Long id;
+    private int id;
 
     private String dataTag;
 
@@ -54,11 +53,11 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     private String precipType;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -68,6 +67,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setDataTag(String dataTag) {
         this.dataTag = dataTag;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Integer getTime() {
@@ -76,6 +78,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setTime(Integer time) {
         this.time = time;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public String getSummary() {
@@ -84,6 +89,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setSummary(String summary) {
         this.summary = summary;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public String getIcon() {
@@ -92,6 +100,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setIcon(String icon) {
         this.icon = icon;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getPrecipIntensity() {
@@ -100,6 +111,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setPrecipIntensity(Double precipIntensity) {
         this.precipIntensity = precipIntensity;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getPrecipProbability() {
@@ -108,6 +122,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getTemperature() {
@@ -116,6 +133,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setTemperature(Double temperature) {
         this.temperature = temperature;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getApparentTemperature() {
@@ -124,6 +144,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setApparentTemperature(Double apparentTemperature) {
         this.apparentTemperature = apparentTemperature;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getDewPoint() {
@@ -132,6 +155,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setDewPoint(Double dewPoint) {
         this.dewPoint = dewPoint;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getHumidity() {
@@ -140,6 +166,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getWindSpeed() {
@@ -148,6 +177,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getWindBearing() {
@@ -156,6 +188,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setWindBearing(Double windBearing) {
         this.windBearing = windBearing;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getCloudCover() {
@@ -164,6 +199,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setCloudCover(Double cloudCover) {
         this.cloudCover = cloudCover;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getPressure() {
@@ -172,6 +210,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setPressure(Double pressure) {
         this.pressure = pressure;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getOzone() {
@@ -180,6 +221,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setOzone(Double ozone) {
         this.ozone = ozone;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public String getPrecipType() {
@@ -188,6 +232,9 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setPrecipType(String precipType) {
         this.precipType = precipType;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     @Ignore

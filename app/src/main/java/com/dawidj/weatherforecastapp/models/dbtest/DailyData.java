@@ -2,9 +2,8 @@ package com.dawidj.weatherforecastapp.models.dbtest;
 
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
-import android.os.Parcel;
-import android.os.Parcelable;
 
+import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
 import io.realm.RealmObject;
@@ -14,13 +13,13 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 25.10.2016.
  */
-@org.parceler.Parcel(implementations = { DailyData.class },
+@org.parceler.Parcel(implementations = {DailyData.class},
         value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = { DailyData.class })
+        analyze = {DailyData.class})
 public class DailyData extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
-    private Long id;
+    private int id;
 
     private Integer time;
 
@@ -74,11 +73,11 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     private Double ozone;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -88,6 +87,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setTime(Integer time) {
         this.time = time;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public String getSummary() {
@@ -96,6 +98,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setSummary(String summary) {
         this.summary = summary;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public String getIcon() {
@@ -104,6 +109,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setIcon(String icon) {
         this.icon = icon;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getSunriseTime() {
@@ -112,6 +120,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setSunriseTime(Double sunriseTime) {
         this.sunriseTime = sunriseTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getSunsetTime() {
@@ -120,6 +131,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setSunsetTime(Double sunsetTime) {
         this.sunsetTime = sunsetTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getMoonPhase() {
@@ -128,6 +142,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setMoonPhase(Double moonPhase) {
         this.moonPhase = moonPhase;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getPrecipIntensity() {
@@ -136,6 +153,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setPrecipIntensity(Double precipIntensity) {
         this.precipIntensity = precipIntensity;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getPrecipIntensityMax() {
@@ -144,6 +164,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setPrecipIntensityMax(Double precipIntensityMax) {
         this.precipIntensityMax = precipIntensityMax;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getPrecipIntensityMaxTime() {
@@ -152,6 +175,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setPrecipIntensityMaxTime(Double precipIntensityMaxTime) {
         this.precipIntensityMaxTime = precipIntensityMaxTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getPrecipProbability() {
@@ -160,6 +186,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public String getPrecipType() {
@@ -168,6 +197,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setPrecipType(String precipType) {
         this.precipType = precipType;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getTemperatureMin() {
@@ -176,6 +208,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setTemperatureMin(Double temperatureMin) {
         this.temperatureMin = temperatureMin;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getTemperatureMinTime() {
@@ -184,6 +219,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setTemperatureMinTime(Double temperatureMinTime) {
         this.temperatureMinTime = temperatureMinTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getTemperatureMax() {
@@ -192,6 +230,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setTemperatureMax(Double temperatureMax) {
         this.temperatureMax = temperatureMax;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getTemperatureMaxTime() {
@@ -200,6 +241,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setTemperatureMaxTime(Double temperatureMaxTime) {
         this.temperatureMaxTime = temperatureMaxTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getApparentTemperatureMin() {
@@ -208,6 +252,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setApparentTemperatureMin(Double apparentTemperatureMin) {
         this.apparentTemperatureMin = apparentTemperatureMin;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getApparentTemperatureMinTime() {
@@ -216,6 +263,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setApparentTemperatureMinTime(Double apparentTemperatureMinTime) {
         this.apparentTemperatureMinTime = apparentTemperatureMinTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getApparentTemperatureMax() {
@@ -224,6 +274,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setApparentTemperatureMax(Double apparentTemperatureMax) {
         this.apparentTemperatureMax = apparentTemperatureMax;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getApparentTemperatureMaxTime() {
@@ -232,6 +285,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setApparentTemperatureMaxTime(Double apparentTemperatureMaxTime) {
         this.apparentTemperatureMaxTime = apparentTemperatureMaxTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getDewPoint() {
@@ -240,6 +296,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setDewPoint(Double dewPoint) {
         this.dewPoint = dewPoint;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getHumidity() {
@@ -248,6 +307,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getWindSpeed() {
@@ -256,6 +318,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getWindBearing() {
@@ -264,6 +329,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setWindBearing(Double windBearing) {
         this.windBearing = windBearing;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getCloudCover() {
@@ -272,6 +340,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setCloudCover(Double cloudCover) {
         this.cloudCover = cloudCover;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getPressure() {
@@ -280,6 +351,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setPressure(Double pressure) {
         this.pressure = pressure;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public Double getOzone() {
@@ -288,6 +362,9 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     public void setOzone(Double ozone) {
         this.ozone = ozone;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     @Ignore

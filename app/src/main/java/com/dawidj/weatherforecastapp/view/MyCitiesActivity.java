@@ -15,6 +15,7 @@ import android.widget.Button;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesActivityBinding;
+import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel;
@@ -22,12 +23,15 @@ import com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MyCitiesActivity extends AppCompatActivity {
 
     private MyCitiesActivityBinding binding;
     private MyCitiesViewModel myCitiesViewModel;
     private CitiesRecyclerViewAdapter citiesRecyclerViewAdapter;
+    private Realm realm;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -43,6 +47,10 @@ public class MyCitiesActivity extends AppCompatActivity {
         myCitiesViewModel = new MyCitiesViewModel();
         binding.setViewModel(myCitiesViewModel);
         ButterKnife.bind(this);
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
+        RealmResults<City> cities = realm.where(City.class).findAll();
+        myCitiesViewModel.getCityList().addAll(cities);
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
         setSupportActionBar(toolbar);
@@ -88,12 +96,13 @@ public class MyCitiesActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Const.ADD_NEW_CITY) {
             if (resultCode == Const.CITY_INSERTED) {
-                long id = data.getLongExtra(Const.POSITION, 0);
+                //int id = data.getIntExtra(Const.POSITION, 0);
+                RealmResults<City> cities = realm.where(City.class).findAll();
                // List<City> city = daoSession.getCityDao().queryBuilder()
                        // .where(CityDao.Properties.Id.eq(id)).limit(1).list();
-                //myCitiesViewModel.getCityList().add(city.get(0));
-                citiesRecyclerViewAdapter
-                        .notifyItemInserted(myCitiesViewModel.getCityList().size() - 1);
+                myCitiesViewModel.getCityList().addAll(cities);
+
+                citiesRecyclerViewAdapter.notifyDataSetChanged();
             } else if (requestCode == Const.ON_BACK_PRESSED) {
                 //do nothing
             }

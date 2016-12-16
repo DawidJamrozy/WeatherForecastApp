@@ -3,6 +3,7 @@ package com.dawidj.weatherforecastapp.models.dbtest;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
+import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.utils.HourlyDataParcelConverter;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
@@ -23,7 +24,7 @@ import io.realm.annotations.PrimaryKey;
 public class Hourly extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
-    private Long id;
+    private int id;
 
     private String summary;
 
@@ -31,11 +32,11 @@ public class Hourly extends RealmObject implements Observable, RealmDataBinding 
 
     private RealmList<HourlyData> data;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -44,7 +45,9 @@ public class Hourly extends RealmObject implements Observable, RealmDataBinding 
     }
 
     public void setSummary(String summary) {
-        this.summary = summary;
+        this.summary = summary; if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public String getIcon() {
@@ -52,7 +55,9 @@ public class Hourly extends RealmObject implements Observable, RealmDataBinding 
     }
 
     public void setIcon(String icon) {
-        this.icon = icon;
+        this.icon = icon; if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     public RealmList<HourlyData> getData() {
@@ -61,7 +66,9 @@ public class Hourly extends RealmObject implements Observable, RealmDataBinding 
 
     @ParcelPropertyConverter(HourlyDataParcelConverter.class)
     public void setData(RealmList<HourlyData> data) {
-        this.data = data;
+        this.data = data; if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
     }
 
     @Ignore

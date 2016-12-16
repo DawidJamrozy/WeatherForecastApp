@@ -6,13 +6,13 @@ package com.dawidj.weatherforecastapp.utils.busevent;
 
 public class NewCity {
 
-    private long position;
+    private int position;
 
-    public long getPosition() {
+    public int getPosition() {
         return position;
     }
 
-    public NewCity(long position) {
+    public NewCity(int position) {
         this.position = position;
     }
 }

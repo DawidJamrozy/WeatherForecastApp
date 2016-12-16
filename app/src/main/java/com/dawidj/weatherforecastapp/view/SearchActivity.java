@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import timber.log.Timber;
 
 public class SearchActivity extends AppCompatActivity {
@@ -38,6 +39,7 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    private Realm realm;
     private SearchRecyclerViewAdapter searchRecyclerViewAdapter;
     private SearchViewModel searchViewModel;
     private SearchActivityBinding binding;
@@ -53,7 +55,9 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        searchViewModel = new SearchViewModel();
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
+        searchViewModel = new SearchViewModel(realm);
         binding.setSearchViewModel(searchViewModel);
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(searchViewModel);
@@ -67,11 +71,8 @@ public class SearchActivity extends AppCompatActivity {
         searchRecyclerViewAdapter = new SearchRecyclerViewAdapter(this, searchViewModel.getCityLatLngList());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(searchRecyclerViewAdapter);
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((RecyclerView r, int position, View v) -> {
                 searchViewModel.addCity(position);
-            }
         });
     }
 
