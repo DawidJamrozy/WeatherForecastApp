@@ -8,8 +8,10 @@ import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.utils.DailyDataParcelConverter;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
+import org.parceler.Parcel;
 import org.parceler.ParcelPropertyConverter;
 
+import io.realm.DailyRealmProxy;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -18,7 +20,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 24.10.2016.
  */
-@org.parceler.Parcel(implementations = {Daily.class},
+@Parcel(implementations = {DailyRealmProxy.class},
         value = org.parceler.Parcel.Serialization.BEAN,
         analyze = {Daily.class})
 public class Daily extends RealmObject implements Observable, RealmDataBinding {

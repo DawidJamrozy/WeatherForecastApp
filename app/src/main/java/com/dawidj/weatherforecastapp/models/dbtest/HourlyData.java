@@ -7,6 +7,9 @@ import android.databinding.PropertyChangeRegistry;
 import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
+import org.parceler.Parcel;
+
+import io.realm.HourlyDataRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -14,14 +17,13 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 25.10.2016.
  */
-@org.parceler.Parcel(implementations = {HourlyData.class},
+@Parcel(implementations = {HourlyDataRealmProxy.class},
         value = org.parceler.Parcel.Serialization.BEAN,
         analyze = {HourlyData.class})
 public class HourlyData extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
     private int id;
-    private String dataTag;
     private Integer time;
     private String summary;
     private String icon;
@@ -48,18 +50,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setId(int id) {
         this.id = id;
-        if (!isManaged()) {
-            notifyPropertyChanged(BR._all);
-        }
-    }
-
-    @Bindable
-    public String getDataTag() {
-        return dataTag;
-    }
-
-    public void setDataTag(String dataTag) {
-        this.dataTag = dataTag;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }

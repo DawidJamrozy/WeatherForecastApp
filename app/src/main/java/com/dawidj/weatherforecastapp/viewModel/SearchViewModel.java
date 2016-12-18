@@ -8,11 +8,15 @@ import com.dawidj.weatherforecastapp.api.WeatherApi;
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
 import com.dawidj.weatherforecastapp.models.autocomplete.Prediction;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.dbtest.Currently;
+import com.dawidj.weatherforecastapp.models.dbtest.Daily;
+import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
+import com.dawidj.weatherforecastapp.models.dbtest.Hourly;
+import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
-import com.dawidj.weatherforecastapp.utils.Const;
-import com.dawidj.weatherforecastapp.utils.busevent.AddLocation;
-import com.dawidj.weatherforecastapp.utils.busevent.ClearLocation;
-import com.dawidj.weatherforecastapp.utils.busevent.NewCity;
+import com.dawidj.weatherforecastapp.utils.eventbus.AddLocation;
+import com.dawidj.weatherforecastapp.utils.eventbus.ClearLocation;
+import com.dawidj.weatherforecastapp.utils.eventbus.NewCity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -31,12 +35,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import retrofit2.Retrofit;
 import timber.log.Timber;
+
+import static com.dawidj.weatherforecastapp.utils.Const.*;
 
 /**
  * Created by Dawidj on 04.12.2016.
@@ -50,7 +55,6 @@ public class SearchViewModel {
     private final PublishSubject<String> textWatcherObservable = PublishSubject.create();
     private final PublishSubject<CityLatLng> cityWeatherDataObservable = PublishSubject.create();
     private int position;
-    Realm realm;
 
     public int getPosition() {
         return position;
@@ -69,6 +73,9 @@ public class SearchViewModel {
     }
 
     @Inject
+    Realm realm;
+
+    @Inject
     EventBus eventBus;
 
     @Inject
@@ -83,9 +90,7 @@ public class SearchViewModel {
     @Named("details")
     Retrofit retrofitDetails;
 
-    public SearchViewModel(Realm realm) {
-        this.realm = realm;
-    }
+    public SearchViewModel() {}
 
     public void addCity(final int position) {
         setPosition(position);
@@ -93,30 +98,29 @@ public class SearchViewModel {
     }
 
     public void insertCityToDatabase(City value) {
+        realm.executeTransaction(realm -> {
+            value.setName(cityLatLngList.get(getPosition()).getResult().getName());
 
-        value.setName(cityLatLngList.get(getPosition()).getResult().getName());
-        realm.beginTransaction();
+            value.setId(getKey(City.class));
+            value.getCurrently().setId(getKey(Currently.class));
+            value.getDaily().setId(getKey(Daily.class));
+            value.getHourly().setId(getKey(Hourly.class));
 
-        City city = realm.copyToRealmOrUpdate(value);
+            int idDailyData = getKey(DailyData.class);
+            int idHourlyData = getKey(HourlyData.class);
 
-        realm.commitTransaction();
-//        city.getDailyWithoutId().setTag(city.getName());
-//        city.getHourlyWithoutId().setTag(city.getName());
-//
-//        for (HourlyData hourlyData : city.getHourlyWithoutId().getHourlyDataWithoutId()) {
-//            hourlyData.setDataTag(city.getName());
-//            daoSession.insert(hourlyData);
-//        }
-//        for (DailyData dailyData : city.getDailyWithoutId().getDataWithoutId()) {
-//            dailyData.setDataTag(city.getName());
-//            daoSession.insert(dailyData);
-//        }
-//
-//        daoSession.insert(city.getHourlyWithoutId());
-//        daoSession.insert(city.getDailyWithoutId());
-//        daoSession.insert(city.getCurrentlyWithoutId());
+            for (DailyData data : value.getDaily().getData()) {
+                data.setId(idDailyData);
+                idDailyData++;
+            }
 
-//        long id = daoSession.insert(city);
+            for (HourlyData data : value.getHourly().getData()) {
+                data.setId(idHourlyData);
+                idHourlyData++;
+            }
+
+            realm.copyToRealmOrUpdate(value);
+        });
 
         eventBus.post(new NewCity(value.getId()));
     }
@@ -136,7 +140,7 @@ public class SearchViewModel {
                     public ObservableSource<City> apply(CityLatLng cityLatLng) throws Exception {
                         return serviceWeather.getCity(cityLatLng.getResult().getGeometry().getLocation().getLat().toString(),
                                 cityLatLng.getResult().getGeometry().getLocation().getLng().toString(),
-                                "pl", "flags,alerts,minutely", "ca");
+                                KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -165,16 +169,11 @@ public class SearchViewModel {
 
         textWatcherObservable
                 .debounce(500, TimeUnit.MILLISECONDS)
-                .filter(new Predicate<String>() {
-                    @Override
-                    public boolean test(String s) throws Exception {
-                        return !s.isEmpty();
-                    }
-                })
+                .filter(s -> !s.isEmpty())
                 .flatMapSingle(new Function<String, SingleSource<List<CityLatLng>>>() {
                     @Override
                     public SingleSource<List<CityLatLng>> apply(String s) throws Exception {
-                        return serviceAutocomplete.getCityName(s, "(cities)", Const.GOOGLE_PLACES_KEY)
+                        return serviceAutocomplete.getCityName(s, KEY_CITIES, GOOGLE_PLACES_KEY)
                                 .onErrorResumeNext(new Function<Throwable, ObservableSource<CityID>>() {
                                     @Override
                                     public ObservableSource<CityID> apply(Throwable throwable) throws Exception {
@@ -190,7 +189,7 @@ public class SearchViewModel {
                                 .flatMap(new Function<Prediction, ObservableSource<CityLatLng>>() {
                                     @Override
                                     public ObservableSource<CityLatLng> apply(Prediction prediction) throws Exception {
-                                        return serviceDetails.getCityLatLng(prediction.getPlaceId(), Const.GOOGLE_PLACES_KEY);
+                                        return serviceDetails.getCityLatLng(prediction.getPlaceId(), GOOGLE_PLACES_KEY);
                                     }
                                 })
                                 .onErrorResumeNext(new Function<Throwable, ObservableSource<CityLatLng>>() {
@@ -258,4 +257,15 @@ public class SearchViewModel {
         compositeDisposable.clear();
     }
 
+    public int getKey(Class data) {
+        int key;
+        try {
+            key = realm.where(data).max("id").intValue() + 1;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            key = 0;
+        } catch (NullPointerException ex) {
+            key = 0;
+        }
+        return key;
+    }
 }

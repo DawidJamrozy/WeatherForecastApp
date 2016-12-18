@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -69,6 +70,12 @@ public class WeatherModule {
     @Singleton
     EventBus eventBus() {
         return new EventBus().getDefault();
+    }
+
+    @Provides
+    @Singleton
+    Realm realm() {
+        return Realm.getDefaultInstance();
     }
 
 }

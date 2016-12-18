@@ -46,6 +46,6 @@ public class App extends Application {
                 .weatherModule(new WeatherModule())
                 .build();
 
-
+        Realm.init(this);
     }
 }

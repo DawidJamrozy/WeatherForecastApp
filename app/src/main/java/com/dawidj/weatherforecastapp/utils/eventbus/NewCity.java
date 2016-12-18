@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.utils.busevent;
+package com.dawidj.weatherforecastapp.utils.eventbus;
 
 /**
  * Created by djamrozy on 02.12.2016.

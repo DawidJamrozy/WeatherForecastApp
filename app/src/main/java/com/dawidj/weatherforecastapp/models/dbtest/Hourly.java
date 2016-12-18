@@ -8,8 +8,10 @@ import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.utils.HourlyDataParcelConverter;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
+import org.parceler.Parcel;
 import org.parceler.ParcelPropertyConverter;
 
+import io.realm.HourlyRealmProxy;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -19,7 +21,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Dawidj on 24.10.2016.
  */
 
-@org.parceler.Parcel(implementations = {Hourly.class},
+@Parcel(implementations = {HourlyRealmProxy.class},
         value = org.parceler.Parcel.Serialization.BEAN,
         analyze = {Hourly.class})
 public class Hourly extends RealmObject implements Observable, RealmDataBinding {

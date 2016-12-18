@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.utils.busevent;
+package com.dawidj.weatherforecastapp.utils.eventbus;
 
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 

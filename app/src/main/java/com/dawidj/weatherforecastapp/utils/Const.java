@@ -14,5 +14,10 @@ public class Const {
     public static final int CITY_INSERTED = 2000;
     public static final String POSITION = "position";
     public static final int ON_BACK_PRESSED = 2001;
+    public static final String KEY_CITY = "keyCity";
+    public static final String KEY_PL_LNG = "pl";
+    public static final String KEY_EXCLUDE = "flags,alerts,minutely";
+    public static final String KEY_UNITS = "ca";
+    public static final String KEY_CITIES = "(cities)";
 
 }

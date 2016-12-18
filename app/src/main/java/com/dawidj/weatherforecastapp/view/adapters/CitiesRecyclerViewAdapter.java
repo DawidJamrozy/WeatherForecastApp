@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Dawidj on 10.12.2016.
  */
 
-public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecyclerViewHolder> {
+public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecyclerViewHolder> implements DeleteItem{
 
     private List<City> cityList;
 
@@ -45,5 +45,10 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
     @Override
     public int getItemCount() {
         return cityList.size();
+    }
+
+    @Override
+    public void delete() {
+
     }
 }

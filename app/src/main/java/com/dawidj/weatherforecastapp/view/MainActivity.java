@@ -1,33 +1,33 @@
 package com.dawidj.weatherforecastapp.view;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.view.adapters.ViewPagerAdapter;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
-    @BindView(R.id.tablayout)
-    TabLayout tabLayout;
+
+    @Inject
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,48 +35,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         App.getApplication().getWeatherComponent().inject(this);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        Timber.i("onCreate(): ");
-
-//        List<City> test = daoSession.getCityDao().loadAll();
-//        List<City> cities = new ArrayList<>();
-//        for (long i = 1; i <= daoSession.getCityDao().loadAll().size(); i++) {
-//            cities.add(daoSession.getCityDao().loadDeep(i));
-//        }
-//
-//        List<DailyData> dailyDatas = cities.get(0).getDaily().getData();
-////        QueryBuilder<City> queryBuilder = daoSession.getCityDao().queryBuilder().where(CityDao.Properties.Id.eq(1));
-////        Join daily = queryBuilder.join(DailyDao.Properties.Id, Daily.class);
-////        Join dailyData = queryBuilder.join(DailyDataDao.Properties.DataTag)
-//
-////        QueryBuilder<Daily> queryBuilder = daoSession.getDailyDao().queryBuilder();
-////        queryBuilder.join(DailyData.class, DailyDataDao.Properties.DataTag).where(DailyDataDao.Properties.Ta)
-//
-//        //List<DailyData> dailyDatas = cities.get(0).getDaily().getData();
-//        cities.get(0).getDaily().setData(daoSession.getDailyDataDao().loadAll());
-//        List<Hourly> hourlyList = daoSession.getHourlyDao().loadAll();
-//        cities.get(0).getHourly().setData(daoSession.getHourlyDataDao().loadAll());
-        //setUpViewPagerAdapter(cities);
-        tabLayout.setupWithViewPager(viewPager);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_settings:
-                Intent i = new Intent(this, MyCitiesActivity.class);
-                startActivity(i);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+        realm.beginTransaction();
+        RealmResults<City> cities = realm.where(City.class).findAll();
+        setUpViewPagerAdapter(cities);
+        realm.cancelTransaction();
     }
 
     public void setUpViewPagerAdapter(List<City> cities) {
@@ -90,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     public CityFragment cityViewFragment(City city) {
         CityFragment fragment = new CityFragment();
         Bundle args = new Bundle();
-        //args.putParcelable("city", city);
+        args.putParcelable(Const.KEY_CITY, Parcels.wrap(city));
         fragment.setArguments(args);
         return fragment;
     }

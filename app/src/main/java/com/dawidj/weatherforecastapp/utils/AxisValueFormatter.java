@@ -10,7 +10,6 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 public class AxisValueFormatter implements IAxisValueFormatter {
 
-
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
         return CityViewModel.hours[(int) value];

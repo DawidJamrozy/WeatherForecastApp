@@ -16,9 +16,10 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesActivityBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
-import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,12 +27,16 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.dawidj.weatherforecastapp.utils.Const.ADD_NEW_CITY;
+import static com.dawidj.weatherforecastapp.utils.Const.CITY_INSERTED;
+import static com.dawidj.weatherforecastapp.utils.Const.ON_BACK_PRESSED;
+import static com.dawidj.weatherforecastapp.utils.Const.POSITION;
+
 public class MyCitiesActivity extends AppCompatActivity {
 
     private MyCitiesActivityBinding binding;
     private MyCitiesViewModel myCitiesViewModel;
     private CitiesRecyclerViewAdapter citiesRecyclerViewAdapter;
-    private Realm realm;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -40,6 +45,9 @@ public class MyCitiesActivity extends AppCompatActivity {
     @BindView(R.id.startSearchActivity)
     Button button;
 
+    @Inject
+    Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +55,12 @@ public class MyCitiesActivity extends AppCompatActivity {
         myCitiesViewModel = new MyCitiesViewModel();
         binding.setViewModel(myCitiesViewModel);
         ButterKnife.bind(this);
-        Realm.init(this);
-        realm = Realm.getDefaultInstance();
-        RealmResults<City> cities = realm.where(City.class).findAll();
-        myCitiesViewModel.getCityList().addAll(cities);
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
+        realm.beginTransaction();
+        RealmResults<City> cities = realm.where(City.class).findAll();
+        realm.cancelTransaction();
+        myCitiesViewModel.getCityList().addAll(cities);
         setSupportActionBar(toolbar);
         setRecycler();
     }
@@ -60,16 +68,14 @@ public class MyCitiesActivity extends AppCompatActivity {
     public void setRecycler() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-       // myCitiesViewModel.getCityList().addAll(daoSession.getCityDao().loadAll());
         citiesRecyclerViewAdapter = new CitiesRecyclerViewAdapter(this, myCitiesViewModel.getCityList());
         recyclerView.setAdapter(citiesRecyclerViewAdapter);
     }
-    
+
     @OnClick(R.id.startSearchActivity)
     public void startMainActivity(View view) {
         startActivity(new Intent(this, MainActivity.class));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,26 +90,24 @@ public class MyCitiesActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_settings:
                 Intent i = new Intent(this, SearchActivity.class);
-                startActivityForResult(i, Const.ADD_NEW_CITY);
+                startActivityForResult(i, ADD_NEW_CITY);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Const.ADD_NEW_CITY) {
-            if (resultCode == Const.CITY_INSERTED) {
-                //int id = data.getIntExtra(Const.POSITION, 0);
-                RealmResults<City> cities = realm.where(City.class).findAll();
-               // List<City> city = daoSession.getCityDao().queryBuilder()
-                       // .where(CityDao.Properties.Id.eq(id)).limit(1).list();
-                myCitiesViewModel.getCityList().addAll(cities);
-
+        if (requestCode == ADD_NEW_CITY) {
+            if (resultCode == CITY_INSERTED) {
+                int position = data.getIntExtra(POSITION, 0);
+                realm.beginTransaction();
+                City city = realm.where(City.class).equalTo("id", position).findFirst();
+                realm.cancelTransaction();
+                myCitiesViewModel.getCityList().add(city);
                 citiesRecyclerViewAdapter.notifyDataSetChanged();
-            } else if (requestCode == Const.ON_BACK_PRESSED) {
+            } else if (requestCode == ON_BACK_PRESSED) {
                 //do nothing
             }
         }

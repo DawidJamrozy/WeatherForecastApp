@@ -1,16 +1,23 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
 import com.dawidj.weatherforecastapp.R;
+import com.dawidj.weatherforecastapp.api.WeatherApi;
+import com.dawidj.weatherforecastapp.models.CityDetails;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
+import com.dawidj.weatherforecastapp.models.dbtest.DayData;
+import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
+import com.dawidj.weatherforecastapp.utils.AxisValueFormatter;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
-import com.dawidj.weatherforecastapp.utils.busevent.LineChartEvent;
-import com.dawidj.weatherforecastapp.view.adapters.DisplayDayView;
+import com.dawidj.weatherforecastapp.utils.eventbus.ChangeListener;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,29 +25,52 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
+import io.realm.Realm;
+import retrofit2.Retrofit;
 import timber.log.Timber;
+
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_PL_LNG;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
 
 /**
  * Created by Dawidj on 30.11.2016.
  */
 
 public class CityViewModel {
-    
+
     private City city;
     public final static String[] hours = new String[25];
-    private DisplayDayView displayDayView;
     private String cityName;
-    private List<com.dawidj.weatherforecastapp.models.weather.DayData> day = new ArrayList<>();
+    private List<DayData> dayDatasList = new ArrayList<>();
+    private PublishSubject<CityDetails> refreshObservable = PublishSubject.create();
+    private CompositeDisposable compositDisposable = new CompositeDisposable();
+    private ChangeListener changeListener;
 
-    public void setDisplayDayView(DisplayDayView displayDayView) {
-        this.displayDayView = displayDayView;
+    public void setChangeListener(ChangeListener changeListener) {
+        this.changeListener = changeListener;
     }
 
     public City getCity() {
         return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 
     public String getCityName() {
@@ -51,32 +81,36 @@ public class CityViewModel {
         this.cityName = cityName;
     }
 
+    public List<DayData> getDayDatasList() {
+        return dayDatasList;
+    }
+
     @Inject
-    EventBus eventBus;
+    Realm realm;
+
+    @Inject
+    @Named("darksky")
+    Retrofit retrofitDarksky;
 
     public CityViewModel(City city) {
         this.city = city;
     }
 
-    public void getWeatherData(City city) {
-                    if(!day.isEmpty()) {
-                        day.clear();
-                    }
-                    for (int i = 0; i < 7; i++) {
-                        com.dawidj.weatherforecastapp.models.weather.DayData dayData = new com.dawidj.weatherforecastapp.models.weather.DayData();
-                        dayData.setIcon(asd(city, i).getIcon());
-                        dayData.setTempMin(asd(city, i).getTemperatureMin().intValue());
-                        dayData.setTempMax(asd(city, i).getTemperatureMax().intValue());
-                        dayData.setTime(asd(city, i).getTime());
-                        day.add(dayData);
-                    }
-
-                    if (displayDayView != null) {
-                        displayDayView.displayDayList(day);
-                    }
+    public void getWeatherData() {
+        if (!dayDatasList.isEmpty()) {
+            dayDatasList.clear();
+        }
+        for (int i = 0; i < 7; i++) {
+            DayData dayData = new DayData();
+            dayData.setIcon(getDataToRecycelerView(i).getIcon());
+            dayData.setTempMin(getDataToRecycelerView(i).getTemperatureMin().intValue());
+            dayData.setTempMax(getDataToRecycelerView(i).getTemperatureMax().intValue());
+            dayData.setTime(getDataToRecycelerView(i).getTime());
+            dayDatasList.add(dayData);
+        }
     }
 
-    public void setDayChart(City city) {
+    public void setDayChart(LineChart lineChart) {
 
         List<Entry> entries = new ArrayList<>();
         ArrayList<Integer> temp = new ArrayList<>();
@@ -103,10 +137,121 @@ public class CityViewModel {
         lineDataSet.setColor(R.color.colorAccent);
         lineDataSet.setValueTextColor(R.color.colorPrimary);
         Timber.i("setDayChart(): ");
-        eventBus.post(new LineChartEvent(lineDataSet, minTemp, maxTemp));
+
+        YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setDrawLabels(false);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setAxisMinimum(minTemp);
+        leftAxis.setAxisMaximum(maxTemp);
+
+        YAxis rightAxis = lineChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setDrawLabels(false);
+        rightAxis.setAxisMinimum(minTemp);
+        rightAxis.setAxisMaximum(maxTemp);
+
+        XAxis downAxis = lineChart.getXAxis();
+        downAxis.setLabelCount(25);
+        downAxis.setDrawGridLines(false);
+        downAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        downAxis.setValueFormatter(new AxisValueFormatter());
+
+        Description description = new Description();
+        description.setText("");
+        LineData lineData = new LineData(lineDataSet);
+        lineChart.setData(lineData);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.setTouchEnabled(false);
+        lineChart.setDescription(description);
+        lineChart.canScrollHorizontally(1);
+        lineChart.invalidate();
+        lineChart.notifyDataSetChanged();
     }
 
-    public DailyData asd(City city, int i) {
+    public DailyData getDataToRecycelerView(int i) {
         return city.getDaily().getData().get(i);
+    }
+
+    public void refreshData() {
+        CityDetails cityDetails = new CityDetails();
+        cityDetails.setName(city.getName());
+        cityDetails.setLat(city.getLatitude().toString());
+        cityDetails.setLng(city.getLongitude().toString());
+        refreshObservable.onNext(cityDetails);
+    }
+
+    public void refreshWeatherData() {
+        WeatherApi serviceWeather = retrofitDarksky.create(WeatherApi.class);
+
+        refreshObservable.debounce(100, TimeUnit.MILLISECONDS)
+                .flatMap(new Function<CityDetails, ObservableSource<City>>() {
+                    @Override
+                    public ObservableSource<City> apply(CityDetails city) throws Exception {
+                        return serviceWeather.getCity(city.getLat(),
+                                city.getLng(), KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS);
+                    }
+                })
+                .onErrorResumeNext(new Function<Throwable, ObservableSource<City>>() {
+                    @Override
+                    public ObservableSource<City> apply(Throwable throwable) throws Exception {
+                        return Observable.empty();
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<City>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(City value) {
+                        replaceDataInDatabase(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Timber.i("onComplete(): ");
+                    }
+                });
+    }
+
+    public void replaceDataInDatabase(City value) {
+        value.setName(city.getName());
+        value.setId(city.getId());
+        value.getCurrently().setId(city.getCurrently().getId());
+        value.getDaily().setId(city.getDaily().getId());
+        value.getHourly().setId(city.getHourly().getId());
+
+        int idDailyData = city.getDaily().getData().get(0).getId();
+        int idHourlyData = city.getHourly().getData().get(0).getId();
+
+        for (DailyData data : value.getDaily().getData()) {
+            data.setId(idDailyData);
+            idDailyData++;
+        }
+
+        for (HourlyData data : value.getHourly().getData()) {
+            data.setId(idHourlyData);
+            idHourlyData++;
+        }
+
+        setCity(value);
+
+        if (changeListener != null) {
+            changeListener.change();
+        }
+
+        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(value));
+    }
+
+    public void onDestroy() {
+        compositDisposable.clear();
     }
 }

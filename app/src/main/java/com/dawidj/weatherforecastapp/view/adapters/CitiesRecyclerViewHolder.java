@@ -10,6 +10,7 @@ import com.dawidj.weatherforecastapp.databinding.CityModelBinding;
 
 public class CitiesRecyclerViewHolder extends RecyclerView.ViewHolder {
 
+
     private CityModelBinding binding;
 
     public CitiesRecyclerViewHolder(CityModelBinding binding) {
@@ -20,4 +21,6 @@ public class CitiesRecyclerViewHolder extends RecyclerView.ViewHolder {
     public CityModelBinding getBinding() {
         return binding;
     }
+
+
 }

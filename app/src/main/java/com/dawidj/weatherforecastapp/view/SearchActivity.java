@@ -13,11 +13,10 @@ import android.view.View;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.SearchActivityBinding;
-import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ItemClickSupport;
-import com.dawidj.weatherforecastapp.utils.busevent.AddLocation;
-import com.dawidj.weatherforecastapp.utils.busevent.ClearLocation;
-import com.dawidj.weatherforecastapp.utils.busevent.NewCity;
+import com.dawidj.weatherforecastapp.utils.eventbus.AddLocation;
+import com.dawidj.weatherforecastapp.utils.eventbus.ClearLocation;
+import com.dawidj.weatherforecastapp.utils.eventbus.NewCity;
 import com.dawidj.weatherforecastapp.view.adapters.SearchRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.SearchViewModel;
 
@@ -29,8 +28,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import timber.log.Timber;
+
+import static com.dawidj.weatherforecastapp.utils.Const.*;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -39,7 +39,6 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    private Realm realm;
     private SearchRecyclerViewAdapter searchRecyclerViewAdapter;
     private SearchViewModel searchViewModel;
     private SearchActivityBinding binding;
@@ -55,9 +54,7 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        Realm.init(this);
-        realm = Realm.getDefaultInstance();
-        searchViewModel = new SearchViewModel(realm);
+        searchViewModel = new SearchViewModel();
         binding.setSearchViewModel(searchViewModel);
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(searchViewModel);
@@ -90,8 +87,8 @@ public class SearchActivity extends AppCompatActivity {
     @Subscribe
     public void finishActivity(NewCity event) {
         Intent intent = new Intent();
-        intent.putExtra(Const.POSITION, event.getPosition());
-        setResult(Const.CITY_INSERTED, intent);
+        intent.putExtra(POSITION, event.getPosition());
+        setResult(CITY_INSERTED, intent);
         finish();
     }
 
@@ -116,7 +113,7 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(Const.ON_BACK_PRESSED);
+        setResult(ON_BACK_PRESSED);
         super.onBackPressed();
     }
 }

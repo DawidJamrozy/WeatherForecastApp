@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/humidityDetailName"
             android:layout_below="@+id/humidityDetailName"
-            android:text="@{String.valueOf(CityViewModel.city.currently.humidity.intValue()) + @string/percent}" />
+            android:text="@{String.valueOf((CityViewModel.city.currently.humidity*100).intValue()) + @string/percent}" />
 
         <ImageView
             android:id="@+id/humidityDetailIcon"
@@ -126,7 +126,6 @@
             android:layout_alignBottom="@+id/tempDetailValue"
             android:layout_alignStart="@+id/humidityDetailIcon"
             android:src="@drawable/wind" />
-
 
     </RelativeLayout>
 </layout>
