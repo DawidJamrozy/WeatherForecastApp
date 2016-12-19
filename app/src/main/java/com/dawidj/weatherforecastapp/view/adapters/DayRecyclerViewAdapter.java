@@ -1,6 +1,5 @@
 package com.dawidj.weatherforecastapp.view.adapters;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,16 +19,14 @@ import java.util.List;
 public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerViewHolder> {
 
     private List<DayData> dayDataList = new ArrayList<>();
-    private LayoutInflater inflater;
 
-    public DayRecyclerViewAdapter(Context context, List<DayData> dayDatasList) {
+    public DayRecyclerViewAdapter(List<DayData> dayDatasList) {
         this.dayDataList = dayDatasList;
-        inflater = LayoutInflater.from(context);
     }
 
     @Override
     public DayRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        DayModelBinding binder = DataBindingUtil.inflate(inflater, R.layout.day_model, parent, false);
+        DayModelBinding binder = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.day_model, parent, false);
         return new DayRecyclerViewHolder(binder);
     }
 

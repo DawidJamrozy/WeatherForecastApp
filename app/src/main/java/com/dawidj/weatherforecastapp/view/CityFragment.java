@@ -66,9 +66,7 @@ public class CityFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         binding.setCityViewModel(cityViewModel);
         binding.includelayout.setCityViewModel(cityViewModel);
         App.getApplication().getWeatherComponent().inject(cityViewModel);
-
         cityViewModel.setChangeListener(this);
-
         setRecyclerView();
         cityViewModel.setCityName(city.getName());
         cityViewModel.setDayChart(lineChart);
@@ -78,7 +76,6 @@ public class CityFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipeRefreshLayout.setOnRefreshListener(this);
         Timber.i("onCreateView(): ");
         return view;
-        //TODO Screen is moving to the middle - BUG
     }
 
     @Override
@@ -89,10 +86,10 @@ public class CityFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     public void setRecyclerView() {
+        dayRecyclerViewAdapter = new DayRecyclerViewAdapter(cityViewModel.getDayDatasList());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        dayRecyclerViewAdapter = new DayRecyclerViewAdapter(getActivity(), cityViewModel.getDayDatasList());
         recyclerView.setAdapter(dayRecyclerViewAdapter);
     }
 

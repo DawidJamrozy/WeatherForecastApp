@@ -69,6 +69,7 @@ public class MyCitiesActivity extends AppCompatActivity implements NotifyAdapter
         }
         setSupportActionBar(toolbar);
         setRecycler();
+        // TODO: 19.12.2016 Fix drag & drop - position of cities in fragments
     }
 
     public void setRecycler() {

@@ -24,6 +24,7 @@
             android:id="@+id/content_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
             app:elevation="4dp">
 
 
@@ -78,10 +79,26 @@
                 android:layout_below="@id/imageLayout"
                 android:background="@android:color/white">
 
-                <include
-                    android:id="@+id/weeklyInfo"
-                    layout="@layout/weekly_info" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/weekly"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/weekly"/>
+                    <View
+                        android:layout_width="wrap_content"
+                        android:id="@+id/separator_day_list"
+                        android:layout_marginBottom="0dp"
+                        android:layout_below="@id/weekly"
+                        android:layout_height="wrap_content"
+                        style="@style/HorizontalDivider"/>
 
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/dayrecyclerview"
+                        android:layout_below="@id/separator_day_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
             </RelativeLayout>
 

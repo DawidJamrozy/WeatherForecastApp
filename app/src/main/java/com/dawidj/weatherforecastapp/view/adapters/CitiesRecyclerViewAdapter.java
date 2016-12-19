@@ -13,6 +13,8 @@ import com.dawidj.weatherforecastapp.utils.ItemTouchHelperAdapter;
 import java.util.Collections;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by Dawidj on 18.12.2016.
  */
@@ -37,7 +39,7 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
     @Override
     public void onBindViewHolder(CitiesRecyclerViewHolder citiesRecyclerViewHolder, int position) {
         City city = cityList.get(position);
-        citiesRecyclerViewHolder.getBinding().setCityModel(city);
+        citiesRecyclerViewHolder.getBinding().setCity(city);
         citiesRecyclerViewHolder.getBinding().setDeleteCity(deleteItem);
         citiesRecyclerViewHolder.getBinding().executePendingBindings();
     }
@@ -58,6 +60,8 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
                 Collections.swap(cityList, i, i - 1);
             }
         }
+        Timber.i("onItemMove(): from " + fromPosition);
+        Timber.i("onItemMove(): to " + toPosition);
         notifyItemMoved(fromPosition, toPosition);
     }
 

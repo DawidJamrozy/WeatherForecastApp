@@ -7,5 +7,5 @@ import com.dawidj.weatherforecastapp.models.dbtest.City;
  */
 
 public interface DeleteItem {
-    void delete(City city);
+    void deleteCityFromList(City city);
 }

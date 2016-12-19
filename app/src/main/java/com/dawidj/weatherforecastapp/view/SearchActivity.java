@@ -68,9 +68,8 @@ public class SearchActivity extends AppCompatActivity {
         searchRecyclerViewAdapter = new SearchRecyclerViewAdapter(this, searchViewModel.getCityLatLngList());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(searchRecyclerViewAdapter);
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((RecyclerView r, int position, View v) -> {
-                searchViewModel.addCity(position);
-        });
+        ItemClickSupport.addTo(recyclerView)
+                .setOnItemClickListener((RecyclerView r, int position, View v) -> searchViewModel.addCity(position));
     }
 
     @Subscribe

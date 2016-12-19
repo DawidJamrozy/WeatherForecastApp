@@ -136,7 +136,6 @@ public class CityViewModel {
         lineDataSet.setValueFormatter(new ValueFormatter());
         lineDataSet.setColor(R.color.colorAccent);
         lineDataSet.setValueTextColor(R.color.colorPrimary);
-        Timber.i("setDayChart(): ");
 
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setDrawLabels(false);

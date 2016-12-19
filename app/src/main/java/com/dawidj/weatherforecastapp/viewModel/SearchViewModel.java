@@ -6,7 +6,6 @@ import android.text.TextWatcher;
 
 import com.dawidj.weatherforecastapp.api.WeatherApi;
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
-import com.dawidj.weatherforecastapp.models.autocomplete.Prediction;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.models.dbtest.Currently;
 import com.dawidj.weatherforecastapp.models.dbtest.Daily;
@@ -41,7 +40,11 @@ import io.realm.Realm;
 import retrofit2.Retrofit;
 import timber.log.Timber;
 
-import static com.dawidj.weatherforecastapp.utils.Const.*;
+import static com.dawidj.weatherforecastapp.utils.Const.GOOGLE_PLACES_KEY;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_CITIES;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_PL_LNG;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
 
 /**
  * Created by Dawidj on 04.12.2016.
@@ -90,7 +93,8 @@ public class SearchViewModel {
     @Named("details")
     Retrofit retrofitDetails;
 
-    public SearchViewModel() {}
+    public SearchViewModel() {
+    }
 
     public void addCity(final int position) {
         setPosition(position);
@@ -119,18 +123,13 @@ public class SearchViewModel {
                 data.setMainId(getKey(City.class));
                 idDailyData++;
             }
-            for (int i = 0; i < 26 ; i++) {
-                value.getHourly().getData().get(i).setId(idHourlyData);
-                value.getHourly().getData().get(i).setName(name);
-                value.getHourly().getData().get(i).setMainId(getKey(City.class));
+
+            for (HourlyData data : value.getHourly().getData()) {
+                data.setId(idHourlyData);
+                data.setName(name);
+                data.setMainId(getKey(City.class));
                 idHourlyData++;
             }
-//            for (HourlyData data : value.getHourly().getData()) {
-//                data.setId(idHourlyData);
-//                data.setName(name);
-//                data.setMainId(getKey(City.class));
-//                idHourlyData++;
-//            }
 
             realm.copyToRealmOrUpdate(value);
         });
@@ -148,14 +147,7 @@ public class SearchViewModel {
 
         cityWeatherDataObservable
                 .debounce(100, TimeUnit.MILLISECONDS)
-                .flatMap(new Function<CityLatLng, ObservableSource<City>>() {
-                    @Override
-                    public ObservableSource<City> apply(CityLatLng cityLatLng) throws Exception {
-                        return serviceWeather.getCity(cityLatLng.getResult().getGeometry().getLocation().getLat().toString(),
-                                cityLatLng.getResult().getGeometry().getLocation().getLng().toString(),
-                                KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS);
-                    }
-                })
+                .flatMap(cityLatLng -> serviceWeather.getCity(getLat(cityLatLng), getLng(cityLatLng), KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<City>() {
@@ -193,18 +185,8 @@ public class SearchViewModel {
                                         return Observable.empty();
                                     }
                                 })
-                                .flatMapIterable(new Function<CityID, Iterable<Prediction>>() {
-                                    @Override
-                                    public Iterable<Prediction> apply(CityID cityID) throws Exception {
-                                        return cityID.getPredictions();
-                                    }
-                                })
-                                .flatMap(new Function<Prediction, ObservableSource<CityLatLng>>() {
-                                    @Override
-                                    public ObservableSource<CityLatLng> apply(Prediction prediction) throws Exception {
-                                        return serviceDetails.getCityLatLng(prediction.getPlaceId(), GOOGLE_PLACES_KEY);
-                                    }
-                                })
+                                .flatMapIterable(cityID -> cityID.getPredictions())
+                                .flatMap(prediction -> serviceDetails.getCityLatLng(prediction.getPlaceId(), GOOGLE_PLACES_KEY))
                                 .onErrorResumeNext(new Function<Throwable, ObservableSource<CityLatLng>>() {
                                     @Override
                                     public ObservableSource<CityLatLng> apply(Throwable throwable) throws Exception {
@@ -280,5 +262,13 @@ public class SearchViewModel {
             key = 0;
         }
         return key;
+    }
+
+    public String getLat(CityLatLng cityLatLng) {
+        return cityLatLng.getResult().getGeometry().getLocation().getLat().toString();
+    }
+
+    public String getLng(CityLatLng cityLatLng) {
+        return cityLatLng.getResult().getGeometry().getLocation().getLng().toString();
     }
 }

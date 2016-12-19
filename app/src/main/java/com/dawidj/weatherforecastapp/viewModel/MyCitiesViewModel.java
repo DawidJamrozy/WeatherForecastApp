@@ -34,21 +34,22 @@ public class MyCitiesViewModel implements DeleteItem {
     @Inject
     Realm realm;
 
-    public MyCitiesViewModel() {}
+    public MyCitiesViewModel() {
+    }
 
 
     @Override
-    public void delete(City city) {
+    public void deleteCityFromList(City city) {
 
         int position = cityList.indexOf(city);
 
         realm.executeTransaction(realm1 -> {
 
-            for(DailyData data : realm.where(DailyData.class).equalTo("mainId", city.getId()).findAll()) {
+            for (DailyData data : realm.where(DailyData.class).equalTo("mainId", city.getId()).findAll()) {
                 data.deleteFromRealm();
             }
 
-            for(HourlyData data : realm.where(HourlyData.class).equalTo("mainId", city.getId()).findAll()) {
+            for (HourlyData data : realm.where(HourlyData.class).equalTo("mainId", city.getId()).findAll()) {
                 data.deleteFromRealm();
             }
 
@@ -57,7 +58,7 @@ public class MyCitiesViewModel implements DeleteItem {
             city.getCurrently().deleteFromRealm();
             city.deleteFromRealm();
         });
-
+        // TODO: 19.12.2016 Realm is not deleting inside class data
         if (notifyAdapter != null) {
             notifyAdapter.notifyAdapter(position);
             cityList.remove(position);
