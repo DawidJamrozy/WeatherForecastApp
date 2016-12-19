@@ -24,20 +24,29 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     @PrimaryKey
     private int id;
+    private String name;
+    private Integer mainId;
     private Integer time;
     private String summary;
     private String icon;
+    @Ignore
     private Double precipIntensity;
+    @Ignore
     private Double precipProbability;
     private Double temperature;
     private Double apparentTemperature;
+    @Ignore
     private Double dewPoint;
     private Double humidity;
     private Double windSpeed;
+    @Ignore
     private Double windBearing;
+    @Ignore
     private Double cloudCover;
     private Double pressure;
+    @Ignore
     private Double ozone;
+    @Ignore
     private String precipType;
 
     public HourlyData() {
@@ -50,6 +59,29 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setId(int id) {
         this.id = id;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Integer getMainId() {
+        return mainId;
+    }
+
+    public void setMainId(Integer mainId) {
+        this.mainId = mainId;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+
+    @Bindable
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }

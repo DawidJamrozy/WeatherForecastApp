@@ -13,6 +13,8 @@
 # and specify the fully qualified class name to the JavaScript interface
 # class:
 #-keepattributes EnclosingMethod
+#-keepattributes InnerClasses
+#-dontwarn InnerClasses
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}

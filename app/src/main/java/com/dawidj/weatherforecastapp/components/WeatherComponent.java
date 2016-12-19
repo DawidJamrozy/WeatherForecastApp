@@ -3,7 +3,7 @@ package com.dawidj.weatherforecastapp.components;
 import com.dawidj.weatherforecastapp.view.MainActivity;
 import com.dawidj.weatherforecastapp.view.MyCitiesActivity;
 import com.dawidj.weatherforecastapp.view.SearchActivity;
-import com.dawidj.weatherforecastapp.view.adapters.Holder;
+import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewHolder;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 import com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel;
 import com.dawidj.weatherforecastapp.viewModel.SearchViewModel;
@@ -30,5 +30,5 @@ public interface WeatherComponent {
 
     void inject(MyCitiesActivity myCitiesActivity);
 
-    void inject(Holder holder);
+    void inject(CitiesRecyclerViewHolder citiesRecyclerViewHolder);
 }

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,9 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesActivityBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.utils.RecyclerHelper;
 import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewAdapter;
+import com.dawidj.weatherforecastapp.view.adapters.NotifyAdapter;
 import com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel;
 
 import javax.inject.Inject;
@@ -32,7 +35,7 @@ import static com.dawidj.weatherforecastapp.utils.Const.CITY_INSERTED;
 import static com.dawidj.weatherforecastapp.utils.Const.ON_BACK_PRESSED;
 import static com.dawidj.weatherforecastapp.utils.Const.POSITION;
 
-public class MyCitiesActivity extends AppCompatActivity {
+public class MyCitiesActivity extends AppCompatActivity implements NotifyAdapter {
 
     private MyCitiesActivityBinding binding;
     private MyCitiesViewModel myCitiesViewModel;
@@ -57,10 +60,13 @@ public class MyCitiesActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
-        realm.beginTransaction();
-        RealmResults<City> cities = realm.where(City.class).findAll();
-        realm.cancelTransaction();
-        myCitiesViewModel.getCityList().addAll(cities);
+        myCitiesViewModel.setNotifyAdapter(this);
+        if(savedInstanceState == null) {
+            realm.beginTransaction();
+            RealmResults<City> cities = realm.where(City.class).findAll();
+            realm.cancelTransaction();
+            myCitiesViewModel.getCityList().addAll(cities);
+        }
         setSupportActionBar(toolbar);
         setRecycler();
     }
@@ -68,8 +74,11 @@ public class MyCitiesActivity extends AppCompatActivity {
     public void setRecycler() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        citiesRecyclerViewAdapter = new CitiesRecyclerViewAdapter(this, myCitiesViewModel.getCityList());
+        citiesRecyclerViewAdapter = new CitiesRecyclerViewAdapter(myCitiesViewModel.getCityList(), myCitiesViewModel);
         recyclerView.setAdapter(citiesRecyclerViewAdapter);
+        ItemTouchHelper.Callback callback = new RecyclerHelper(citiesRecyclerViewAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
     }
 
     @OnClick(R.id.startSearchActivity)
@@ -106,10 +115,15 @@ public class MyCitiesActivity extends AppCompatActivity {
                 City city = realm.where(City.class).equalTo("id", position).findFirst();
                 realm.cancelTransaction();
                 myCitiesViewModel.getCityList().add(city);
-                citiesRecyclerViewAdapter.notifyDataSetChanged();
+                citiesRecyclerViewAdapter.notifyItemInserted(position);
             } else if (requestCode == ON_BACK_PRESSED) {
                 //do nothing
             }
         }
+    }
+
+    @Override
+    public void notifyAdapter(int position) {
+        citiesRecyclerViewAdapter.notifyItemRemoved(position);
     }
 }

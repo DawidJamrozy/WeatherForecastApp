@@ -66,7 +66,9 @@ public class CityFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         binding.setCityViewModel(cityViewModel);
         binding.includelayout.setCityViewModel(cityViewModel);
         App.getApplication().getWeatherComponent().inject(cityViewModel);
+
         cityViewModel.setChangeListener(this);
+
         setRecyclerView();
         cityViewModel.setCityName(city.getName());
         cityViewModel.setDayChart(lineChart);

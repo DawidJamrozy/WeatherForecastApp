@@ -99,11 +99,15 @@ public class SearchViewModel {
 
     public void insertCityToDatabase(City value) {
         realm.executeTransaction(realm -> {
-            value.setName(cityLatLngList.get(getPosition()).getResult().getName());
+            String name = cityLatLngList.get(getPosition()).getResult().getName();
+            value.setName(name);
 
             value.setId(getKey(City.class));
+            value.getCurrently().setName(name);
             value.getCurrently().setId(getKey(Currently.class));
+            value.getDaily().setName(name);
             value.getDaily().setId(getKey(Daily.class));
+            value.getHourly().setName(name);
             value.getHourly().setId(getKey(Hourly.class));
 
             int idDailyData = getKey(DailyData.class);
@@ -111,13 +115,22 @@ public class SearchViewModel {
 
             for (DailyData data : value.getDaily().getData()) {
                 data.setId(idDailyData);
+                data.setName(name);
+                data.setMainId(getKey(City.class));
                 idDailyData++;
             }
-
-            for (HourlyData data : value.getHourly().getData()) {
-                data.setId(idHourlyData);
+            for (int i = 0; i < 26 ; i++) {
+                value.getHourly().getData().get(i).setId(idHourlyData);
+                value.getHourly().getData().get(i).setName(name);
+                value.getHourly().getData().get(i).setMainId(getKey(City.class));
                 idHourlyData++;
             }
+//            for (HourlyData data : value.getHourly().getData()) {
+//                data.setId(idHourlyData);
+//                data.setName(name);
+//                data.setMainId(getKey(City.class));
+//                idHourlyData++;
+//            }
 
             realm.copyToRealmOrUpdate(value);
         });

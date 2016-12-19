@@ -17,41 +17,33 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 24.10.2016.
  */
-@Parcel(implementations = { CurrentlyRealmProxy.class },
+@Parcel(implementations = {CurrentlyRealmProxy.class},
         value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = { Currently.class })
+        analyze = {Currently.class})
 public class Currently extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
     private int id;
-
     private Integer time;
-
+    private String name;
     private String summary;
-
     private String icon;
-
+    @Ignore
     private Double precipIntensity;
-
+    @Ignore
     private Double precipProbability;
-
     private Double temperature;
-
     private Double apparentTemperature;
-
+    @Ignore
     private Double dewPoint;
-
     private Double humidity;
-
-
     private Double windSpeed;
-
+    @Ignore
     private Double windBearing;
-
+    @Ignore
     private Double cloudCover;
-
     private Double pressure;
-
+    @Ignore
     private Double ozone;
 
     public Currently() {
@@ -87,6 +79,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             mCallbacks.notifyCallbacks(this, fieldId, null);
         }
     }
+
     @Bindable
     public int getId() {
         return id;
@@ -94,6 +87,18 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
 
     public void setId(int id) {
         this.id = id;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+
+    @Bindable
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }
@@ -110,6 +115,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public String getSummary() {
         return summary;
@@ -121,6 +127,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public String getIcon() {
         return icon;
@@ -132,6 +139,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getPrecipIntensity() {
         return precipIntensity;
@@ -143,6 +151,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getPrecipProbability() {
         return precipProbability;
@@ -154,6 +163,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getTemperature() {
         return temperature;
@@ -165,6 +175,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getApparentTemperature() {
         return apparentTemperature;
@@ -176,6 +187,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getDewPoint() {
         return dewPoint;
@@ -187,6 +199,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getHumidity() {
         return humidity;
@@ -198,6 +211,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getWindSpeed() {
         return windSpeed;
@@ -209,6 +223,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getWindBearing() {
         return windBearing;
@@ -220,6 +235,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getCloudCover() {
         return cloudCover;
@@ -231,6 +247,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getPressure() {
         return pressure;
@@ -242,6 +259,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
     @Bindable
     public Double getOzone() {
         return ozone;

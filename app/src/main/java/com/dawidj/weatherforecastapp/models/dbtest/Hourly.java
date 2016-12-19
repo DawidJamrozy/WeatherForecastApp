@@ -28,9 +28,8 @@ public class Hourly extends RealmObject implements Observable, RealmDataBinding 
 
     @PrimaryKey
     private int id;
-
+    private String name;
     private String summary;
-
     private String icon;
 
     private RealmList<HourlyData> data;
@@ -49,7 +48,17 @@ public class Hourly extends RealmObject implements Observable, RealmDataBinding 
             notifyPropertyChanged(BR._all);
         }
     }
+    @Bindable
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
     @Bindable
     public String getSummary() {
         return summary;
