@@ -1,5 +1,7 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
+import android.view.View;
+
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.api.WeatherApi;
 import com.dawidj.weatherforecastapp.models.CityDetails;
@@ -10,7 +12,7 @@ import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
 import com.dawidj.weatherforecastapp.utils.AxisValueFormatter;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
-import com.dawidj.weatherforecastapp.utils.eventbus.ChangeListener;
+import com.dawidj.weatherforecastapp.utils.listeners.CityViewDataListener;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -59,11 +61,8 @@ public class CityViewModel {
     private List<DayData> dayDatasList = new ArrayList<>();
     private PublishSubject<CityDetails> refreshObservable = PublishSubject.create();
     private CompositeDisposable compositDisposable = new CompositeDisposable();
-    private ChangeListener changeListener;
+    private CityViewDataListener cityViewDataListener;
 
-    public void setChangeListener(ChangeListener changeListener) {
-        this.changeListener = changeListener;
-    }
 
     public City getCity() {
         return city;
@@ -92,8 +91,9 @@ public class CityViewModel {
     @Named("darksky")
     Retrofit retrofitDarksky;
 
-    public CityViewModel(City city) {
+    public CityViewModel(City city, CityViewDataListener cityViewDataListener) {
         this.city = city;
+        this.cityViewDataListener = cityViewDataListener;
     }
 
     public void getWeatherData() {
@@ -136,7 +136,6 @@ public class CityViewModel {
         lineDataSet.setValueFormatter(new ValueFormatter());
         lineDataSet.setColor(R.color.colorAccent);
         lineDataSet.setValueTextColor(R.color.colorPrimary);
-        Timber.i("setDayChart(): ");
 
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setDrawLabels(false);
@@ -244,9 +243,7 @@ public class CityViewModel {
 
         setCity(value);
 
-        if (changeListener != null) {
-            changeListener.change();
-        }
+        cityViewDataListener.notifyDataChanged();
 
         realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(value));
     }
@@ -254,4 +251,9 @@ public class CityViewModel {
     public void onDestroy() {
         compositDisposable.clear();
     }
+
+    public void startMyCitiesActivity(View view) {
+        cityViewDataListener.startMyCitiesActivity();
+    }
+
 }

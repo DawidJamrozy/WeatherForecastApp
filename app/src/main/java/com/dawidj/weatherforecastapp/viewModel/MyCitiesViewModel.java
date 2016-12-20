@@ -1,10 +1,14 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
+import android.databinding.BaseObservable;
+import android.view.View;
+
+import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
 import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
+import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesViewDataListener;
 import com.dawidj.weatherforecastapp.view.adapters.DeleteItem;
-import com.dawidj.weatherforecastapp.view.adapters.NotifyAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,38 +21,43 @@ import io.realm.Realm;
  * Created by Dawidj on 10.12.2016.
  */
 
-public class MyCitiesViewModel implements DeleteItem {
+public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
 
-    private NotifyAdapter notifyAdapter;
-
+    private boolean textVisible;
     private List<City> cityList = new ArrayList<>();
+    private MyCitiesViewDataListener myCitiesViewDataListener;
+
+    public boolean isTextVisible() {
+        return textVisible;
+    }
+
+    public void setTextVisible(boolean textVisible) {
+        this.textVisible = textVisible;
+        notifyPropertyChanged(BR._all);
+    }
 
     public List<City> getCityList() {
         return cityList;
     }
 
-    public void setNotifyAdapter(NotifyAdapter notifyAdapter) {
-        this.notifyAdapter = notifyAdapter;
-    }
-
     @Inject
     Realm realm;
 
-    public MyCitiesViewModel() {}
-
+    public MyCitiesViewModel(MyCitiesViewDataListener myCitiesViewDataListener) {
+        this.myCitiesViewDataListener = myCitiesViewDataListener;
+    }
 
     @Override
-    public void delete(City city) {
+    public void deleteCityFromList(City city) {
 
         int position = cityList.indexOf(city);
 
         realm.executeTransaction(realm1 -> {
-
-            for(DailyData data : realm.where(DailyData.class).equalTo("mainId", city.getId()).findAll()) {
+            for (DailyData data : realm.where(DailyData.class).equalTo("mainId", city.getId()).findAll()) {
                 data.deleteFromRealm();
             }
 
-            for(HourlyData data : realm.where(HourlyData.class).equalTo("mainId", city.getId()).findAll()) {
+            for (HourlyData data : realm.where(HourlyData.class).equalTo("mainId", city.getId()).findAll()) {
                 data.deleteFromRealm();
             }
 
@@ -57,10 +66,23 @@ public class MyCitiesViewModel implements DeleteItem {
             city.getCurrently().deleteFromRealm();
             city.deleteFromRealm();
         });
+        // TODO: 19.12.2016 Realm is not deleting inside class data
 
-        if (notifyAdapter != null) {
-            notifyAdapter.notifyAdapter(position);
-            cityList.remove(position);
+        myCitiesViewDataListener.removeCity(position);
+        cityList.remove(position);
+        checkListSize();
+
+    }
+
+    public void checkListSize() {
+        if (cityList.isEmpty()) {
+            setTextVisible(true);
+        } else {
+            setTextVisible(false);
         }
+    }
+
+    public void fabClicked(View view) {
+        myCitiesViewDataListener.onClickFab();
     }
 }

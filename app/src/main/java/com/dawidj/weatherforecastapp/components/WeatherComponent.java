@@ -1,8 +1,9 @@
 package com.dawidj.weatherforecastapp.components;
 
 import com.dawidj.weatherforecastapp.view.MainActivity;
-import com.dawidj.weatherforecastapp.view.MyCitiesActivity;
+import com.dawidj.weatherforecastapp.view.MyCitiesViewActivity;
 import com.dawidj.weatherforecastapp.view.SearchActivity;
+import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewHolder;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 import com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel;
@@ -22,13 +23,15 @@ public interface WeatherComponent {
 
     void inject(MainActivity mainActivity);
 
+    void inject(CitiesRecyclerViewAdapter citiesRecyclerViewAdapter);
+
     void inject(SearchViewModel searchViewModel);
 
     void inject(SearchActivity searchActivity);
 
     void inject(MyCitiesViewModel myCitiesViewModel);
 
-    void inject(MyCitiesActivity myCitiesActivity);
+    void inject(MyCitiesViewActivity myCitiesActivity);
 
     void inject(CitiesRecyclerViewHolder citiesRecyclerViewHolder);
 }

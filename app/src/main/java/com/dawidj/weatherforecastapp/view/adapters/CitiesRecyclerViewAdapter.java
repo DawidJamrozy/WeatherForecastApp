@@ -6,12 +6,17 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.dawidj.weatherforecastapp.R;
+import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityModelBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.utils.ItemTouchHelperAdapter;
 
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import io.realm.Realm;
 
 /**
  * Created by Dawidj on 18.12.2016.
@@ -23,9 +28,13 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
 
     private DeleteItem deleteItem;
 
+    @Inject
+    Realm realm;
+
     public CitiesRecyclerViewAdapter(List<City> cityList, DeleteItem deleteItem) {
         this.cityList = cityList;
         this.deleteItem = deleteItem;
+        App.getApplication().getWeatherComponent().inject(this);
     }
 
     @Override
@@ -37,7 +46,7 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
     @Override
     public void onBindViewHolder(CitiesRecyclerViewHolder citiesRecyclerViewHolder, int position) {
         City city = cityList.get(position);
-        citiesRecyclerViewHolder.getBinding().setCityModel(city);
+        citiesRecyclerViewHolder.getBinding().setCity(city);
         citiesRecyclerViewHolder.getBinding().setDeleteCity(deleteItem);
         citiesRecyclerViewHolder.getBinding().executePendingBindings();
     }
@@ -59,6 +68,13 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
             }
         }
         notifyItemMoved(fromPosition, toPosition);
+
+        realm.executeTransaction(realm1 -> {
+            for(City city : cityList) {
+                city.setSortPosition(cityList.indexOf(city));
+            }
+            realm1.copyToRealmOrUpdate(cityList);
+        });
     }
 
     @Override

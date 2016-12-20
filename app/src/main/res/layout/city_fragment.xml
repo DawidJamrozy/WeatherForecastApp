@@ -1,149 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-
     <data>
-
         <variable
             name="CityViewModel"
             type="com.dawidj.weatherforecastapp.viewModel.CityViewModel" />
     </data>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-    <android.support.v4.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/costsNestedScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/background"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/content_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:elevation="4dp">
-
+        <android.support.v4.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/costsNestedScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <RelativeLayout
-                android:id="@+id/imageLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/main_background" />
-
-                <TextView
-                    android:id="@+id/cityText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@{CityViewModel.cityName}"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/temp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/cityEditText"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="30dp"
-                    android:text="@{String.valueOf(CityViewModel.city.currently.temperature.intValue()) + @string/degree}"
-                    android:textSize="40sp" />
-
-                <TextView
-                    android:id="@+id/condition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/temp"
-                    android:layout_marginStart="10dp"
-                    android:text="@{CityViewModel.city.currently.summary}"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/dayListLayout"
+                android:id="@+id/content_main"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/imageLayout"
-                android:background="@android:color/white">
+                android:layout_height="match_parent"
+                android:focusableInTouchMode="true"
+                app:elevation="4dp">
 
-                <include
-                    android:id="@+id/weeklyInfo"
-                    layout="@layout/weekly_info" />
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/chartsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/dayListLayout"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/white">
-
-                <include
-                    android:id="@+id/chart"
-                    layout="@layout/city_chart" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/chartsLayout"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/white">
-
-                <TextView
-                    android:id="@+id/detailHeader"
+                <RelativeLayout
+                    android:id="@+id/image_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="Szczegóły" />
+                    android:layout_height="wrap_content">
 
-                <View
-                    android:id="@+id/verticalDivider"
-                    style="@style/VerticalDivider"
-                    android:layout_width="1dp"
-                    android:layout_height="117dp"
-                    android:layout_below="@id/detailHeader"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="6dp" />
+                    <ImageView
+                        android:id="@+id/start_my_cities"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/main_background" />
 
-                <View
-                    android:id="@id/separator"
-                    style="@style/HorizontalDivider"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/detailHeader" />
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="15dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:onClick="@{CityViewModel::startMyCitiesActivity}"
+                        android:src="@drawable/more_icon" />
+
+                    <TextView
+                        android:id="@+id/temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="10dp"
+                        android:text="@{String.valueOf(CityViewModel.city.currently.temperature.intValue()) + @string/degree}"
+                        android:textSize="40sp" />
+
+                    <TextView
+                        android:id="@+id/city_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/white"
+                        android:layout_below="@+id/temp"
+                        android:text="@{CityViewModel.cityName + @string/vertical_line + CityViewModel.city.currently.summary}"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
 
 
-                <include
-                    android:id="@+id/includelayout"
-                    layout="@layout/details"
+                <RelativeLayout
+                    android:id="@+id/day_list_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/separator" />
+                    android:layout_below="@id/image_layout"
+                    android:background="@android:color/white">
 
+                    <TextView
+                        android:id="@+id/weekly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/weekly" />
+
+                    <View
+                        android:id="@+id/separator_day_list"
+                        style="@style/HorizontalDivider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/weekly"
+                        android:layout_marginBottom="0dp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/day_recycler_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/separator_day_list" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/chart_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/day_list_layout"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/white">
+
+                    <TextView
+                        android:id="@+id/chart_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/hours" />
+
+                    <View
+                        android:id="@+id/chart_separator"
+                        style="@style/HorizontalDivider"
+                        android:layout_below="@id/chart_description" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/line_chart_horizontal_scroll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/chart_description"
+                        android:scrollbars="none">
+
+                        <RelativeLayout
+                            android:id="@+id/line_chart_relative_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <com.github.mikephil.charting.charts.LineChart
+                                android:id="@+id/line_chart"
+                                android:layout_width="1000dp"
+                                android:layout_height="150dp"
+                                android:layout_marginBottom="5dp" />
+                        </RelativeLayout>
+                    </HorizontalScrollView>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/chart_layout"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/white">
+
+                    <TextView
+                        android:id="@+id/detail_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Szczegóły" />
+
+                    <View
+                        android:id="@+id/vertical_divider"
+                        style="@style/VerticalDivider"
+                        android:layout_width="1dp"
+                        android:layout_height="117dp"
+                        android:layout_below="@id/detail_header"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="6dp" />
+
+                    <View
+                        android:id="@id/separator"
+                        style="@style/HorizontalDivider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/detail_header" />
+
+
+                    <include
+                        android:id="@+id/include_layout"
+                        layout="@layout/details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/separator" />
+
+                </RelativeLayout>
             </RelativeLayout>
-
-
-        </RelativeLayout>
-
-
-    </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </layout>

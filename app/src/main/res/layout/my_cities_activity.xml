@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-<data>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <variable
-        name="viewModel"
-        type="com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel"/>
-</data>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.dawidj.weatherforecastapp.viewModel.MyCitiesViewModel" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/my_cities_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/coordinator"
-        tools:context="com.dawidj.weatherforecastapp.view.MyCitiesActivity">
+        tools:context="com.dawidj.weatherforecastapp.view.MyCitiesViewActivity">
 
         <RelativeLayout
             android:id="@+id/appBarLayout"
@@ -32,35 +35,38 @@
                     android:background="?attr/colorPrimary" />
 
             </android.support.design.widget.AppBarLayout>
-        </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_bar"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/appBarLayout"/>
-
-
-        <RelativeLayout
-            android:id="@+id/bottom_bar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/white">
-
-            <Button
-                android:id="@+id/startSearchActivity"
+            <TextView
+                android:id="@+id/add_city_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="5dp"
-                android:text="start" />
+                android:layout_below="@id/appbar"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="Dodaj miasto"
+                android:textSize="20sp"
+                android:visibility="@{viewModel.textVisible ? View.VISIBLE : View.GONE}" />
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/appbar" />
         </RelativeLayout>
 
-    </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:onClick="@{viewModel::fabClicked}"
+            android:src="@drawable/ic_add_white_24dp"
+            app:fabSize="normal"
+            app:layout_anchor="@id/recyclerView"
+            app:layout_anchorGravity="bottom|right|end" />
+    </android.support.design.widget.CoordinatorLayout>
 
 </layout>

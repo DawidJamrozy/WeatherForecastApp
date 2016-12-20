@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeatherForecastApp</string>
+    <string name="app_name">Pogoda</string>
     <string name="empty_city_name">Empty city name</string>
     <string name="space">&#160;</string>
     <string name="windSpeed">&#160;km/h</string>
@@ -13,4 +13,5 @@
     <string name="humidity">Wilgotność</string>
     <string name="pressure">Ciśnienie</string>
     <string name="add_location">Dodaj lokalizacje</string>
+    <string name="vertical_line">&#160;|&#160;</string>
 </resources>
