@@ -20,6 +20,7 @@ import com.dawidj.weatherforecastapp.utils.eventbus.NewCity;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +38,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Retrofit;
 import timber.log.Timber;
 
@@ -107,6 +109,8 @@ public class SearchViewModel {
             value.setName(name);
 
             value.setId(getKey(City.class));
+
+            value.setSortPosition(getLastSortedPosition());
             value.getCurrently().setName(name);
             value.getCurrently().setId(getKey(Currently.class));
             value.getDaily().setName(name);
@@ -270,5 +274,15 @@ public class SearchViewModel {
 
     public String getLng(CityLatLng cityLatLng) {
         return cityLatLng.getResult().getGeometry().getLocation().getLng().toString();
+    }
+
+    public Integer getLastSortedPosition() {
+        RealmResults<City> cityList = realm.where(City.class).findAll();
+        if(cityList.isEmpty()) {
+            return 0;
+        } else {
+            City city = Collections.max(cityList, (city1, city2) -> city1.getSortPosition() - city2.getSortPosition());
+            return city.getSortPosition();
+        }
     }
 }

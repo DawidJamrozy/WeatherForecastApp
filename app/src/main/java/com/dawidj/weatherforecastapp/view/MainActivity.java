@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -32,13 +33,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         App.getApplication().getWeatherComponent().inject(this);
-        ButterKnife.bind(this);
-        realm.beginTransaction();
-        RealmResults<City> cities = realm.where(City.class).findAll();
-        setUpViewPagerAdapter(cities);
-        realm.cancelTransaction();
+        if(realm.where(City.class).findAll().size() == 0) {
+            startActivity(new Intent(this, MyCitiesActivity.class));
+            finish();
+        } else {
+            setContentView(R.layout.activity_main);
+            ButterKnife.bind(this);
+            realm.beginTransaction();
+            RealmResults<City> cities = realm.where(City.class).findAll();
+            setUpViewPagerAdapter(cities);
+            realm.cancelTransaction();
+        }
     }
 
     public void setUpViewPagerAdapter(List<City> cities) {

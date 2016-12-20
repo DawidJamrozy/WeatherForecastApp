@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.dawidj.weatherforecastapp.R;
@@ -58,11 +59,11 @@ public class SearchActivity extends AppCompatActivity {
         binding.setSearchViewModel(searchViewModel);
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(searchViewModel);
-        setRecyclerView();
+        setRecycler();
         searchViewModel.rxQueryBuilder();
     }
 
-    public void setRecyclerView() {
+    public void setRecycler() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         searchRecyclerViewAdapter = new SearchRecyclerViewAdapter(this, searchViewModel.getCityLatLngList());
@@ -81,6 +82,15 @@ public class SearchActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void notifyAdapterToClear(ClearLocation event) {
         searchRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            setResult(ON_BACK_PRESSED);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Subscribe

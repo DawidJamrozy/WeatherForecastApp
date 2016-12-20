@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.view;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -83,6 +85,12 @@ public class CityFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         Timber.i("onRefresh(): ");
         swipeRefreshLayout.setRefreshing(true);
         cityViewModel.refreshData();
+    }
+
+    @OnClick(R.id.startMyCities)
+    public void startMyCities(View view) {
+        startActivity(new Intent(getActivity(), MyCitiesActivity.class));
+        getActivity().finish();
     }
 
     public void setRecyclerView() {

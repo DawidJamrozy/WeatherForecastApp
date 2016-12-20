@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.dawidj.weatherforecastapp.R;
+import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityModelBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.utils.ItemTouchHelperAdapter;
@@ -13,7 +14,9 @@ import com.dawidj.weatherforecastapp.utils.ItemTouchHelperAdapter;
 import java.util.Collections;
 import java.util.List;
 
-import timber.log.Timber;
+import javax.inject.Inject;
+
+import io.realm.Realm;
 
 /**
  * Created by Dawidj on 18.12.2016.
@@ -25,9 +28,13 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
 
     private DeleteItem deleteItem;
 
+    @Inject
+    Realm realm;
+
     public CitiesRecyclerViewAdapter(List<City> cityList, DeleteItem deleteItem) {
         this.cityList = cityList;
         this.deleteItem = deleteItem;
+        App.getApplication().getWeatherComponent().inject(this);
     }
 
     @Override
@@ -60,9 +67,14 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
                 Collections.swap(cityList, i, i - 1);
             }
         }
-        Timber.i("onItemMove(): from " + fromPosition);
-        Timber.i("onItemMove(): to " + toPosition);
         notifyItemMoved(fromPosition, toPosition);
+
+        realm.executeTransaction(realm1 -> {
+            for(City city : cityList) {
+                city.setSortPosition(cityList.indexOf(city));
+            }
+            realm1.copyToRealmOrUpdate(cityList);
+        });
     }
 
     @Override

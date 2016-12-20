@@ -3,15 +3,16 @@ package com.dawidj.weatherforecastapp.view;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
@@ -40,13 +41,14 @@ public class MyCitiesActivity extends AppCompatActivity implements NotifyAdapter
     private MyCitiesActivityBinding binding;
     private MyCitiesViewModel myCitiesViewModel;
     private CitiesRecyclerViewAdapter citiesRecyclerViewAdapter;
+    private boolean doubleBackToExitPressedOnce;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.startSearchActivity)
-    Button button;
+    @BindView(R.id.add_city)
+    FloatingActionButton floatingActionButton;
 
     @Inject
     Realm realm;
@@ -61,6 +63,9 @@ public class MyCitiesActivity extends AppCompatActivity implements NotifyAdapter
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
         myCitiesViewModel.setNotifyAdapter(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         if(savedInstanceState == null) {
             realm.beginTransaction();
             RealmResults<City> cities = realm.where(City.class).findAll();
@@ -69,6 +74,8 @@ public class MyCitiesActivity extends AppCompatActivity implements NotifyAdapter
         }
         setSupportActionBar(toolbar);
         setRecycler();
+        myCitiesViewModel.checkListSize();
+        // TODO: 20.12.2016 remove butterknife project 
         // TODO: 19.12.2016 Fix drag & drop - position of cities in fragments
     }
 
@@ -82,28 +89,9 @@ public class MyCitiesActivity extends AppCompatActivity implements NotifyAdapter
         touchHelper.attachToRecyclerView(recyclerView);
     }
 
-    @OnClick(R.id.startSearchActivity)
+    @OnClick(R.id.add_city)
     public void startMainActivity(View view) {
-        startActivity(new Intent(this, MainActivity.class));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_settings:
-                Intent i = new Intent(this, SearchActivity.class);
-                startActivityForResult(i, ADD_NEW_CITY);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+        startActivityForResult(new Intent(this, SearchActivity.class), ADD_NEW_CITY);
     }
 
     @Override
@@ -117,6 +105,7 @@ public class MyCitiesActivity extends AppCompatActivity implements NotifyAdapter
                 realm.cancelTransaction();
                 myCitiesViewModel.getCityList().add(city);
                 citiesRecyclerViewAdapter.notifyItemInserted(position);
+                myCitiesViewModel.checkListSize();
             } else if (requestCode == ON_BACK_PRESSED) {
                 //do nothing
             }
@@ -124,7 +113,33 @@ public class MyCitiesActivity extends AppCompatActivity implements NotifyAdapter
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+           if(myCitiesViewModel.getCityList().isEmpty()) {
+               Toast.makeText(this, "Dodaj miasto", Toast.LENGTH_SHORT).show();
+           } else {
+               startActivity(new Intent(this, MainActivity.class));
+               finish();
+           }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void notifyAdapter(int position) {
         citiesRecyclerViewAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 }

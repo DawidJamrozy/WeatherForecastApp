@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeatherForecastApp</string>
+    <string name="app_name">Pogoda</string>
     <string name="empty_city_name">Empty city name</string>
     <string name="space">&#160;</string>
     <string name="windSpeed">&#160;km/h</string>
