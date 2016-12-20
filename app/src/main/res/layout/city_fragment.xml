@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-
     <data>
-
         <variable
             name="CityViewModel"
             type="com.dawidj.weatherforecastapp.viewModel.CityViewModel" />
@@ -29,64 +27,55 @@
                 app:elevation="4dp">
 
                 <RelativeLayout
-                    android:id="@+id/imageLayout"
+                    android:id="@+id/image_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/startMyCities"
+                        android:id="@+id/start_my_cities"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:adjustViewBounds="true"
-                        android:onClick="startMyCities"
                         android:src="@drawable/main_background" />
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="15dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="15dp"
+                        android:onClick="@{CityViewModel::startMyCitiesActivity}"
                         android:src="@drawable/more_icon" />
-
-                    <TextView
-                        android:id="@+id/cityText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="5dp"
-                        android:text="@{CityViewModel.cityName}"
-                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/temp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/cityEditText"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="30dp"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="10dp"
                         android:text="@{String.valueOf(CityViewModel.city.currently.temperature.intValue()) + @string/degree}"
                         android:textSize="40sp" />
 
                     <TextView
-                        android:id="@+id/condition"
+                        android:id="@+id/city_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/temp"
                         android:layout_marginStart="10dp"
-                        android:text="@{CityViewModel.city.currently.summary}"
-                        android:textSize="16sp" />
+                        android:textColor="@color/white"
+                        android:layout_below="@+id/temp"
+                        android:text="@{CityViewModel.cityName + @string/vertical_line + CityViewModel.city.currently.summary}"
+                        android:textSize="12sp" />
 
                 </RelativeLayout>
 
 
                 <RelativeLayout
-                    android:id="@+id/dayListLayout"
+                    android:id="@+id/day_list_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imageLayout"
+                    android:layout_below="@id/image_layout"
                     android:background="@android:color/white">
 
                     <TextView
@@ -106,7 +95,7 @@
                         android:layout_marginBottom="0dp" />
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/dayrecyclerview"
+                        android:id="@+id/day_recycler_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/separator_day_list" />
@@ -114,28 +103,58 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/chartsLayout"
+                    android:id="@+id/chart_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/dayListLayout"
+                    android:layout_below="@+id/day_list_layout"
                     android:layout_marginTop="10dp"
                     android:background="@android:color/white">
 
-                    <include
-                        android:id="@+id/chart"
-                        layout="@layout/city_chart" />
+                    <TextView
+                        android:id="@+id/chart_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/hours" />
+
+                    <View
+                        android:id="@+id/chart_separator"
+                        style="@style/HorizontalDivider"
+                        android:layout_below="@id/chart_description" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/line_chart_horizontal_scroll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/chart_description"
+                        android:scrollbars="none">
+
+                        <RelativeLayout
+                            android:id="@+id/line_chart_relative_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <com.github.mikephil.charting.charts.LineChart
+                                android:id="@+id/line_chart"
+                                android:layout_width="1000dp"
+                                android:layout_height="150dp"
+                                android:layout_marginBottom="5dp" />
+                        </RelativeLayout>
+                    </HorizontalScrollView>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/chartsLayout"
+                    android:layout_below="@id/chart_layout"
                     android:layout_marginTop="10dp"
                     android:background="@android:color/white">
 
                     <TextView
-                        android:id="@+id/detailHeader"
+                        android:id="@+id/detail_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -143,11 +162,11 @@
                         android:text="Szczegóły" />
 
                     <View
-                        android:id="@+id/verticalDivider"
+                        android:id="@+id/vertical_divider"
                         style="@style/VerticalDivider"
                         android:layout_width="1dp"
                         android:layout_height="117dp"
-                        android:layout_below="@id/detailHeader"
+                        android:layout_below="@id/detail_header"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="6dp" />
 
@@ -156,11 +175,11 @@
                         style="@style/HorizontalDivider"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_below="@id/detailHeader" />
+                        android:layout_below="@id/detail_header" />
 
 
                     <include
-                        android:id="@+id/includelayout"
+                        android:id="@+id/include_layout"
                         layout="@layout/details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

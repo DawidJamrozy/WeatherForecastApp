@@ -1,13 +1,14 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
 import android.databinding.BaseObservable;
+import android.view.View;
 
 import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
 import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
+import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesViewDataListener;
 import com.dawidj.weatherforecastapp.view.adapters.DeleteItem;
-import com.dawidj.weatherforecastapp.view.adapters.NotifyAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,9 @@ import io.realm.Realm;
 
 public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
 
-    private NotifyAdapter notifyAdapter;
     private boolean textVisible;
     private List<City> cityList = new ArrayList<>();
+    private MyCitiesViewDataListener myCitiesViewDataListener;
 
     public boolean isTextVisible() {
         return textVisible;
@@ -39,14 +40,11 @@ public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
         return cityList;
     }
 
-    public void setNotifyAdapter(NotifyAdapter notifyAdapter) {
-        this.notifyAdapter = notifyAdapter;
-    }
-
     @Inject
     Realm realm;
 
-    public MyCitiesViewModel() {
+    public MyCitiesViewModel(MyCitiesViewDataListener myCitiesViewDataListener) {
+        this.myCitiesViewDataListener = myCitiesViewDataListener;
     }
 
     @Override
@@ -69,18 +67,22 @@ public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
             city.deleteFromRealm();
         });
         // TODO: 19.12.2016 Realm is not deleting inside class data
-        if (notifyAdapter != null) {
-            notifyAdapter.notifyAdapter(position);
-            cityList.remove(position);
-        }
+
+        myCitiesViewDataListener.removeCity(position);
+        cityList.remove(position);
         checkListSize();
+
     }
 
     public void checkListSize() {
-        if(cityList.isEmpty()) {
+        if (cityList.isEmpty()) {
             setTextVisible(true);
         } else {
             setTextVisible(false);
         }
+    }
+
+    public void fabClicked(View view) {
+        myCitiesViewDataListener.onClickFab();
     }
 }

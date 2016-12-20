@@ -13,11 +13,7 @@ import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
 import com.dawidj.weatherforecastapp.models.dbtest.Hourly;
 import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
-import com.dawidj.weatherforecastapp.utils.eventbus.AddLocation;
-import com.dawidj.weatherforecastapp.utils.eventbus.ClearLocation;
-import com.dawidj.weatherforecastapp.utils.eventbus.NewCity;
-
-import org.greenrobot.eventbus.EventBus;
+import com.dawidj.weatherforecastapp.utils.listeners.SearchViewDataListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +56,7 @@ public class SearchViewModel {
     private final PublishSubject<String> textWatcherObservable = PublishSubject.create();
     private final PublishSubject<CityLatLng> cityWeatherDataObservable = PublishSubject.create();
     private int position;
+    private SearchViewDataListener searchViewDataListener;
 
     public int getPosition() {
         return position;
@@ -81,9 +78,6 @@ public class SearchViewModel {
     Realm realm;
 
     @Inject
-    EventBus eventBus;
-
-    @Inject
     @Named("darksky")
     Retrofit retrofitDarksky;
 
@@ -95,7 +89,8 @@ public class SearchViewModel {
     @Named("details")
     Retrofit retrofitDetails;
 
-    public SearchViewModel() {
+    public SearchViewModel(SearchViewDataListener searchViewDataListener) {
+        this.searchViewDataListener = searchViewDataListener;
     }
 
     public void addCity(final int position) {
@@ -104,41 +99,9 @@ public class SearchViewModel {
     }
 
     public void insertCityToDatabase(City value) {
-        realm.executeTransaction(realm -> {
-            String name = cityLatLngList.get(getPosition()).getResult().getName();
-            value.setName(name);
-
-            value.setId(getKey(City.class));
-
-            value.setSortPosition(getLastSortedPosition());
-            value.getCurrently().setName(name);
-            value.getCurrently().setId(getKey(Currently.class));
-            value.getDaily().setName(name);
-            value.getDaily().setId(getKey(Daily.class));
-            value.getHourly().setName(name);
-            value.getHourly().setId(getKey(Hourly.class));
-
-            int idDailyData = getKey(DailyData.class);
-            int idHourlyData = getKey(HourlyData.class);
-
-            for (DailyData data : value.getDaily().getData()) {
-                data.setId(idDailyData);
-                data.setName(name);
-                data.setMainId(getKey(City.class));
-                idDailyData++;
-            }
-
-            for (HourlyData data : value.getHourly().getData()) {
-                data.setId(idHourlyData);
-                data.setName(name);
-                data.setMainId(getKey(City.class));
-                idHourlyData++;
-            }
-
-            realm.copyToRealmOrUpdate(value);
-        });
-
-        eventBus.post(new NewCity(value.getId()));
+        setCityData(value);
+        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(value));
+        searchViewDataListener.newCityAdded(value.getId());
     }
 
     public void rxQueryBuilder() {
@@ -212,7 +175,7 @@ public class SearchViewModel {
                     @Override
                     public void onNext(List<CityLatLng> value) {
                         cityLatLngList = value;
-                        eventBus.post(new AddLocation(value));
+                        searchViewDataListener.notifyAdapter(value);
                     }
 
                     @Override
@@ -247,8 +210,8 @@ public class SearchViewModel {
     public void clearCityList() {
         if (!cityLatLngList.isEmpty()) {
             cityLatLngList.clear();
-            eventBus.post(new ClearLocation());
-            Timber.i("onNext(): clear list");
+            Timber.i("clearCityList(): ");
+            searchViewDataListener.notifyAdapter(cityLatLngList);
         }
     }
 
@@ -278,11 +241,43 @@ public class SearchViewModel {
 
     public Integer getLastSortedPosition() {
         RealmResults<City> cityList = realm.where(City.class).findAll();
-        if(cityList.isEmpty()) {
+
+        if (cityList.isEmpty()) {
             return 0;
         } else {
             City city = Collections.max(cityList, (city1, city2) -> city1.getSortPosition() - city2.getSortPosition());
-            return city.getSortPosition();
+            return city.getSortPosition() + 1;
+        }
+    }
+
+    public void setCityData(City city) {
+        String name = cityLatLngList.get(getPosition()).getResult().getName();
+
+        city.setName(name);
+        city.setId(getKey(City.class));
+        city.setSortPosition(getLastSortedPosition());
+        city.getCurrently().setName(name);
+        city.getCurrently().setId(getKey(Currently.class));
+        city.getDaily().setName(name);
+        city.getDaily().setId(getKey(Daily.class));
+        city.getHourly().setName(name);
+        city.getHourly().setId(getKey(Hourly.class));
+
+        int idDailyData = getKey(DailyData.class);
+        int idHourlyData = getKey(HourlyData.class);
+
+        for (DailyData data : city.getDaily().getData()) {
+            data.setId(idDailyData);
+            data.setName(name);
+            data.setMainId(getKey(City.class));
+            idDailyData++;
+        }
+
+        for (HourlyData data : city.getHourly().getData()) {
+            data.setId(idHourlyData);
+            data.setName(name);
+            data.setMainId(getKey(City.class));
+            idHourlyData++;
         }
     }
 }

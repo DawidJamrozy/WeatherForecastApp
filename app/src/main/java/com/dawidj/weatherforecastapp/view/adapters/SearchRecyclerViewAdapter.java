@@ -1,6 +1,5 @@
 package com.dawidj.weatherforecastapp.view.adapters;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,19 +19,13 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
 
     private List<CityLatLng> locationList;
 
-    private LayoutInflater inflater;
-
-    private Context context;
-
-    public SearchRecyclerViewAdapter(Context context, List<CityLatLng> locationList) {
-        this.context = context;
+    public SearchRecyclerViewAdapter(List<CityLatLng> locationList) {
         this.locationList = locationList;
-        inflater = LayoutInflater.from(context);
     }
 
     @Override
     public SearchRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LocationModelBinding binder = DataBindingUtil.inflate(inflater, R.layout.location_model, parent, false);
+        LocationModelBinding binder = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.location_model, parent, false);
         return new SearchRecyclerViewHolder(binder);
     }
 
@@ -48,7 +41,8 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     }
 
     public void setList(List<CityLatLng> list) {
-        this.locationList = list;
+        locationList = list;
         notifyDataSetChanged();
     }
+
 }

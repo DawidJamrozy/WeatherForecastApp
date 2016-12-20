@@ -13,4 +13,5 @@
     <string name="humidity">Wilgotność</string>
     <string name="pressure">Ciśnienie</string>
     <string name="add_location">Dodaj lokalizacje</string>
+    <string name="vertical_line">&#160;|&#160;</string>
 </resources>

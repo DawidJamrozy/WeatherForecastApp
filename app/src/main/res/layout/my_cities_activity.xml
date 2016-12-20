@@ -2,7 +2,6 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.view.View" />
 
         <variable
@@ -16,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/coordinator"
-        tools:context="com.dawidj.weatherforecastapp.view.MyCitiesActivity">
+        tools:context="com.dawidj.weatherforecastapp.view.MyCitiesViewActivity">
 
         <RelativeLayout
             android:id="@+id/appBarLayout"
@@ -36,7 +35,6 @@
                     android:background="?attr/colorPrimary" />
 
             </android.support.design.widget.AppBarLayout>
-
 
             <TextView
                 android:id="@+id/add_city_txt"
@@ -64,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
+            android:onClick="@{viewModel::fabClicked}"
             android:src="@drawable/ic_add_white_24dp"
             app:fabSize="normal"
             app:layout_anchor="@id/recyclerView"

@@ -19,5 +19,6 @@ public class Const {
     public static final String KEY_EXCLUDE = "flags,alerts,minutely";
     public static final String KEY_UNITS = "ca";
     public static final String KEY_CITIES = "(cities)";
+    public static final String KEY_SORT = "sortPosition";
 
 }

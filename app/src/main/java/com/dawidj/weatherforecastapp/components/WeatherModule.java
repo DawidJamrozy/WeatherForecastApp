@@ -2,8 +2,6 @@ package com.dawidj.weatherforecastapp.components;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
@@ -27,7 +25,6 @@ public class WeatherModule {
     OkHttpClient okHttpClient() {
         return new OkHttpClient.Builder().connectTimeout(8000, TimeUnit.MILLISECONDS).build();
     }
-
 
     @Provides
     @Singleton
@@ -63,13 +60,6 @@ public class WeatherModule {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build();
-    }
-
-
-    @Provides
-    @Singleton
-    EventBus eventBus() {
-        return new EventBus().getDefault();
     }
 
     @Provides

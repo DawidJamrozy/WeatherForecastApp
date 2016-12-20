@@ -23,7 +23,7 @@
             android:name=".view.SearchActivity"
             android:label=""
             android:theme="@style/AppTheme"></activity>
-        <activity android:name=".view.MyCitiesActivity"/>
+        <activity android:name=".view.MyCitiesViewActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBIoHevjG2pbdb4Pz2MVYkMf0rIRUtd-d4" />

@@ -7,55 +7,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.SearchActivityBinding;
+import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 import com.dawidj.weatherforecastapp.utils.ItemClickSupport;
-import com.dawidj.weatherforecastapp.utils.eventbus.AddLocation;
-import com.dawidj.weatherforecastapp.utils.eventbus.ClearLocation;
-import com.dawidj.weatherforecastapp.utils.eventbus.NewCity;
+import com.dawidj.weatherforecastapp.utils.listeners.SearchViewDataListener;
 import com.dawidj.weatherforecastapp.view.adapters.SearchRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.SearchViewModel;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import java.util.List;
 
-import javax.inject.Inject;
+import static com.dawidj.weatherforecastapp.utils.Const.CITY_INSERTED;
+import static com.dawidj.weatherforecastapp.utils.Const.ON_BACK_PRESSED;
+import static com.dawidj.weatherforecastapp.utils.Const.POSITION;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import timber.log.Timber;
-
-import static com.dawidj.weatherforecastapp.utils.Const.*;
-
-public class SearchActivity extends AppCompatActivity {
-
-    @BindView(R.id.locationList)
-    RecyclerView recyclerView;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+public class SearchActivity extends AppCompatActivity implements SearchViewDataListener {
 
     private SearchRecyclerViewAdapter searchRecyclerViewAdapter;
     private SearchViewModel searchViewModel;
     private SearchActivityBinding binding;
 
-    @Inject
-    EventBus eventBus;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.search_activity);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        searchViewModel = new SearchViewModel();
+        searchViewModel = new SearchViewModel(this);
         binding.setSearchViewModel(searchViewModel);
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(searchViewModel);
@@ -64,24 +47,13 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setRecycler() {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        searchRecyclerViewAdapter = new SearchRecyclerViewAdapter(this, searchViewModel.getCityLatLngList());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(searchRecyclerViewAdapter);
-        ItemClickSupport.addTo(recyclerView)
+        searchRecyclerViewAdapter = new SearchRecyclerViewAdapter(searchViewModel.getCityLatLngList());
+        binding.autocompleteRecyclerView.setHasFixedSize(true);
+        binding.autocompleteRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        binding.autocompleteRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        binding.autocompleteRecyclerView.setAdapter(searchRecyclerViewAdapter);
+        ItemClickSupport.addTo(binding.autocompleteRecyclerView)
                 .setOnItemClickListener((RecyclerView r, int position, View v) -> searchViewModel.addCity(position));
-    }
-
-    @Subscribe
-    public void notifyAdapterToAdd(AddLocation event) {
-        Timber.i("notifyAdapterToAdd(): ");
-        searchRecyclerViewAdapter.setList(event.getCityLatLngs());
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void notifyAdapterToClear(ClearLocation event) {
-        searchRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -91,27 +63,6 @@ public class SearchActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Subscribe
-    public void finishActivity(NewCity event) {
-        Intent intent = new Intent();
-        intent.putExtra(POSITION, event.getPosition());
-        setResult(CITY_INSERTED, intent);
-        finish();
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        eventBus.register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        eventBus.unregister(this);
     }
 
     @Override
@@ -124,5 +75,18 @@ public class SearchActivity extends AppCompatActivity {
     public void onBackPressed() {
         setResult(ON_BACK_PRESSED);
         super.onBackPressed();
+    }
+
+    @Override
+    public void newCityAdded(int position) {
+        Intent intent = new Intent();
+        intent.putExtra(POSITION, position);
+        setResult(CITY_INSERTED, intent);
+        finish();
+    }
+
+    @Override
+    public void notifyAdapter(List<CityLatLng> list) {
+        searchRecyclerViewAdapter.setList(list);
     }
 }
