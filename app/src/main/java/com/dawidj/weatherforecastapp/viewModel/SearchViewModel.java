@@ -41,6 +41,7 @@ import timber.log.Timber;
 import static com.dawidj.weatherforecastapp.utils.Const.GOOGLE_PLACES_KEY;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_CITIES;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_ID;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_PL_LNG;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
 
@@ -94,6 +95,8 @@ public class SearchViewModel {
     }
 
     public void addCity(final int position) {
+        if (cityLatLngList.get(position).isExistInDb())
+            return;
         setPosition(position);
         cityWeatherDataObservable.onNext(cityLatLngList.get(position));
     }
@@ -222,7 +225,7 @@ public class SearchViewModel {
     public int getKey(Class data) {
         int key;
         try {
-            key = realm.where(data).max("id").intValue() + 1;
+            key = realm.where(data).max(KEY_ID).intValue() + 1;
         } catch (ArrayIndexOutOfBoundsException ex) {
             key = 0;
         } catch (NullPointerException ex) {
@@ -254,6 +257,7 @@ public class SearchViewModel {
         String name = cityLatLngList.get(getPosition()).getResult().getName();
 
         city.setName(name);
+        city.setPlaceId(cityLatLngList.get(getPosition()).getResult().getPlaceId());
         city.setId(getKey(City.class));
         city.setSortPosition(getLastSortedPosition());
         city.getCurrently().setName(name);

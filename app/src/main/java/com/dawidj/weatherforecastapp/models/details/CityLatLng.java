@@ -1,5 +1,7 @@
 package com.dawidj.weatherforecastapp.models.details;
 
+import android.databinding.BaseObservable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +11,8 @@ import java.util.List;
  * Created by Dawidj on 10.12.2016.
  */
 
-public class CityLatLng {
+public class CityLatLng extends BaseObservable {
+
     @SerializedName("html_attributions")
     @Expose
     private List<Object> htmlAttributions = null;
@@ -19,6 +22,18 @@ public class CityLatLng {
     @SerializedName("status")
     @Expose
     private String status;
+
+    private boolean existInDb;
+
+
+    public boolean isExistInDb() {
+        return existInDb;
+    }
+
+    public void setExistInDb(boolean existInDb) {
+        this.existInDb = existInDb;
+        notifyPropertyChanged(com.dawidj.weatherforecastapp.BR._all);
+    }
 
     /**
      *

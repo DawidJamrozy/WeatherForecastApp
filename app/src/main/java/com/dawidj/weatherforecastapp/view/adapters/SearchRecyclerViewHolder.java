@@ -2,7 +2,7 @@ package com.dawidj.weatherforecastapp.view.adapters;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.dawidj.weatherforecastapp.databinding.LocationModelBinding;
+import com.dawidj.weatherforecastapp.databinding.SearchModelBinding;
 
 /**
  * Created by Dawidj on 04.12.2016.
@@ -10,14 +10,14 @@ import com.dawidj.weatherforecastapp.databinding.LocationModelBinding;
 
 public class SearchRecyclerViewHolder extends RecyclerView.ViewHolder {
 
-    private LocationModelBinding binding;
+    private SearchModelBinding binding;
 
-    public SearchRecyclerViewHolder(final LocationModelBinding binding) {
+    public SearchRecyclerViewHolder(final SearchModelBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
     }
 
-    public LocationModelBinding getBinding() {
+    public SearchModelBinding getBinding() {
         return binding;
     }
 }

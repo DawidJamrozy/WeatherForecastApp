@@ -2,7 +2,7 @@ package com.dawidj.weatherforecastapp.view.adapters;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.dawidj.weatherforecastapp.databinding.CityModelBinding;
+import com.dawidj.weatherforecastapp.databinding.MyCitiesModelBinding;
 
 /**
  * Created by Dawidj on 18.12.2016.
@@ -10,14 +10,14 @@ import com.dawidj.weatherforecastapp.databinding.CityModelBinding;
 
 public class CitiesRecyclerViewHolder extends RecyclerView.ViewHolder {
 
-    private CityModelBinding binding;
+    private MyCitiesModelBinding binding;
 
-    public CitiesRecyclerViewHolder(CityModelBinding binding) {
+    public CitiesRecyclerViewHolder(MyCitiesModelBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
     }
 
-    public CityModelBinding getBinding() {
+    public MyCitiesModelBinding getBinding() {
         return binding;
     }
 }

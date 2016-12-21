@@ -48,6 +48,15 @@ public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
     }
 
     @Override
+    public void checkIfListIsEmpty() {
+        if (cityList.isEmpty()) {
+            setTextVisible(true);
+        } else {
+            setTextVisible(false);
+        }
+    }
+
+    @Override
     public void deleteCityFromList(City city) {
 
         int position = cityList.indexOf(city);
@@ -66,21 +75,12 @@ public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
             city.getCurrently().deleteFromRealm();
             city.deleteFromRealm();
         });
-        // TODO: 19.12.2016 Realm is not deleting inside class data
 
         myCitiesViewDataListener.removeCity(position);
         cityList.remove(position);
-        checkListSize();
-
+        checkIfListIsEmpty();
     }
 
-    public void checkListSize() {
-        if (cityList.isEmpty()) {
-            setTextVisible(true);
-        } else {
-            setTextVisible(false);
-        }
-    }
 
     public void fabClicked(View view) {
         myCitiesViewDataListener.onClickFab();

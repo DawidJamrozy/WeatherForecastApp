@@ -8,4 +8,5 @@ import com.dawidj.weatherforecastapp.models.dbtest.City;
 
 public interface DeleteItem {
     void deleteCityFromList(City city);
+    void checkIfListIsEmpty();
 }

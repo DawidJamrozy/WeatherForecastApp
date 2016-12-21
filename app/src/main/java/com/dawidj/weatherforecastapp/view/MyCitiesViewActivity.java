@@ -14,6 +14,7 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesActivityBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.utils.CustomSingleToast;
 import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesViewDataListener;
 import com.dawidj.weatherforecastapp.utils.RecyclerHelper;
 import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewAdapter;
@@ -55,7 +56,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
             myCitiesViewModel.getCityList().addAll(cities);
         }
         setRecycler();
-        myCitiesViewModel.checkListSize();
+        myCitiesViewModel.checkIfListIsEmpty();
         // TODO: 19.12.2016 Fix drag & drop - position of cities in fragments
     }
 
@@ -76,11 +77,11 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
             if (resultCode == CITY_INSERTED) {
                 int position = data.getIntExtra(POSITION, 0);
                 realm.beginTransaction();
-                City city = realm.where(City.class).equalTo("id", position).findFirst();
+                City city = realm.where(City.class).equalTo(KEY_ID, position).findFirst();
                 realm.cancelTransaction();
                 myCitiesViewModel.getCityList().add(city);
                 citiesRecyclerViewAdapter.notifyItemInserted(position);
-                myCitiesViewModel.checkListSize();
+                myCitiesViewModel.checkIfListIsEmpty();
             } else if (requestCode == ON_BACK_PRESSED) {
                 //do nothing
             }
@@ -91,7 +92,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
            if(myCitiesViewModel.getCityList().isEmpty()) {
-               Toast.makeText(this, "Dodaj miasto", Toast.LENGTH_SHORT).show();
+               CustomSingleToast.show(this, getString(R.string.add_city), Toast.LENGTH_SHORT);
            } else {
                startActivity(new Intent(this, MainActivity.class));
                finish();

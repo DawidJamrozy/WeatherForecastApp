@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
-import com.dawidj.weatherforecastapp.databinding.CityModelBinding;
+import com.dawidj.weatherforecastapp.databinding.MyCitiesModelBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
+import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
 import com.dawidj.weatherforecastapp.utils.ItemTouchHelperAdapter;
 
 import java.util.Collections;
@@ -39,7 +41,7 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
 
     @Override
     public CitiesRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CityModelBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.city_model, parent, false);
+        MyCitiesModelBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.my_cities_model, parent, false);
         return new CitiesRecyclerViewHolder(binding);
     }
 
@@ -79,7 +81,24 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
 
     @Override
     public void onItemDismiss(int position) {
+        City city = cityList.get(position);
+        realm.executeTransaction(realm1 -> {
+            for (DailyData data : realm.where(DailyData.class).equalTo("mainId", city.getId()).findAll()) {
+                data.deleteFromRealm();
+            }
+
+            for (HourlyData data : realm.where(HourlyData.class).equalTo("mainId", city.getId()).findAll()) {
+                data.deleteFromRealm();
+            }
+
+            city.getDaily().deleteFromRealm();
+            city.getHourly().deleteFromRealm();
+            city.getCurrently().deleteFromRealm();
+            city.deleteFromRealm();
+        });
         cityList.remove(position);
         notifyItemRemoved(position);
+        deleteItem.checkIfListIsEmpty();
+
     }
 }

@@ -17,14 +17,15 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 24.10.2016.
  */
-@Parcel(implementations = { CityRealmProxy.class },
+@Parcel(implementations = {CityRealmProxy.class},
         value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = { City.class })
+        analyze = {City.class})
 public class City extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
     private int id;
     private String name;
+    private String placeId;
     private Integer sortPosition;
     private Double latitude;
     private Double longitude;
@@ -52,6 +53,19 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
             notifyPropertyChanged(BR._all);
         }
     }
+
+    @Bindable
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+
     @Bindable
     public Integer getSortPosition() {
         return sortPosition;

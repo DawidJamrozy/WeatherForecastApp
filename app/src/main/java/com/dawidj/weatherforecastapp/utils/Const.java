@@ -20,5 +20,6 @@ public class Const {
     public static final String KEY_UNITS = "ca";
     public static final String KEY_CITIES = "(cities)";
     public static final String KEY_SORT = "sortPosition";
+    public static final String KEY_ID = "id";
 
 }

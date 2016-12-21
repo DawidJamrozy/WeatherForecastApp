@@ -14,4 +14,5 @@
     <string name="pressure">Ciśnienie</string>
     <string name="add_location">Dodaj lokalizacje</string>
     <string name="vertical_line">&#160;|&#160;</string>
+    <string name="add_city">Dodaj Miasto</string>
 </resources>
