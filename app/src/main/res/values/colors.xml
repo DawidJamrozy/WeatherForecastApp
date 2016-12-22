@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="background">#efefef</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="floating_label_color">#63FBD9</color>
+    <color name="text_black">#FF000000</color>
 </resources>

@@ -8,27 +8,41 @@
             type="com.dawidj.weatherforecastapp.models.details.CityLatLng" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
-            android:id="@+id/location"
-            android:layout_marginStart="5dp"
+            android:id="@+id/location_name"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textSize="20sp"
+            android:layout_marginStart="20dp"
+            android:textSize="16sp"
+            android:textColor="@color/text_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{CityLatLng.result.name}" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/location_description"
+            android:layout_below="@id/location_name"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="20dp"
+            android:textSize="10sp"
+            android:text="@{CityLatLng.result.formattedAddress}"/>
+
+        <TextView
             android:id="@+id/exist_in_db"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:textSize="12sp"
             android:text="Miasto dodane"
             android:visibility="@{CityLatLng.existInDb ? View.VISIBLE : View.GONE}" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

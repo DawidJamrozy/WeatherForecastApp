@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
@@ -88,5 +90,11 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
     @Override
     public void notifyAdapter(List<CityLatLng> list) {
         searchRecyclerViewAdapter.setList(list);
+    }
+
+    @Override
+    public void loseFocus() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(binding.cityEditText.getWindowToken(), 0);
     }
 }

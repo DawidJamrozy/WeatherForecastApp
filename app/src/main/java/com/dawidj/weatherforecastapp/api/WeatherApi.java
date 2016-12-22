@@ -26,10 +26,12 @@ public interface WeatherApi {
     @GET("json?")
     Observable<CityID> getCityName(@Query("input") String city,
                                    @Query("types") String types,
+                                   @Query("language") String language,
                                    @Query("key") String key);
 
     @GET("json?")
     Observable<CityLatLng> getCityLatLng(@Query("placeid") String placeID,
+                                         @Query("language") String language,
                                          @Query("key") String key);
 
 

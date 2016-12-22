@@ -3,6 +3,7 @@ package com.dawidj.weatherforecastapp.viewModel;
 import android.databinding.ObservableField;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 
 import com.dawidj.weatherforecastapp.api.WeatherApi;
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
@@ -148,7 +149,7 @@ public class SearchViewModel {
                 .flatMapSingle(new Function<String, SingleSource<List<CityLatLng>>>() {
                     @Override
                     public SingleSource<List<CityLatLng>> apply(String s) throws Exception {
-                        return serviceAutocomplete.getCityName(s, KEY_CITIES, GOOGLE_PLACES_KEY)
+                        return serviceAutocomplete.getCityName(s, KEY_CITIES, KEY_PL_LNG, GOOGLE_PLACES_KEY)
                                 .onErrorResumeNext(new Function<Throwable, ObservableSource<CityID>>() {
                                     @Override
                                     public ObservableSource<CityID> apply(Throwable throwable) throws Exception {
@@ -156,7 +157,7 @@ public class SearchViewModel {
                                     }
                                 })
                                 .flatMapIterable(cityID -> cityID.getPredictions())
-                                .flatMap(prediction -> serviceDetails.getCityLatLng(prediction.getPlaceId(), GOOGLE_PLACES_KEY))
+                                .flatMap(prediction -> serviceDetails.getCityLatLng(prediction.getPlaceId(), KEY_PL_LNG, GOOGLE_PLACES_KEY))
                                 .onErrorResumeNext(new Function<Throwable, ObservableSource<CityLatLng>>() {
                                     @Override
                                     public ObservableSource<CityLatLng> apply(Throwable throwable) throws Exception {
@@ -255,8 +256,12 @@ public class SearchViewModel {
 
     public void setCityData(City city) {
         String name = cityLatLngList.get(getPosition()).getResult().getName();
+        String placeId = cityLatLngList.get(getPosition()).getResult().getPlaceId();
+        Timber.d("setCityData(): " + name);
+        Timber.d("setCityData(): " + placeId);
 
         city.setName(name);
+        city.setAdressDescription(cityLatLngList.get(getPosition()).getResult().getFormattedAddress());
         city.setPlaceId(cityLatLngList.get(getPosition()).getResult().getPlaceId());
         city.setId(getKey(City.class));
         city.setSortPosition(getLastSortedPosition());
@@ -283,5 +288,10 @@ public class SearchViewModel {
             data.setMainId(getKey(City.class));
             idHourlyData++;
         }
+    }
+
+    public void hideKeyboard(View view) {
+        Timber.d("hideKeyboard(): ");
+        searchViewDataListener.loseFocus();
     }
 }

@@ -17,8 +17,9 @@ android {
 
     defaultConfig {
         applicationId "com.dawidj.weatherforecastapp"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 25
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.bottom_specific_data.runner.AndroidJUnitRunner"
@@ -30,7 +31,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

@@ -16,6 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import timber.log.Timber;
 
 /**
  * Created by Dawidj on 10.12.2016.
@@ -60,7 +61,8 @@ public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
     public void deleteCityFromList(City city) {
 
         int position = cityList.indexOf(city);
-
+        Timber.d("deleteCityFromList(): placeID " + city.getPlaceId());
+        Timber.d("deleteCityFromList(): name " + city.getName());
         realm.executeTransaction(realm1 -> {
             for (DailyData data : realm.where(DailyData.class).equalTo("mainId", city.getId()).findAll()) {
                 data.deleteFromRealm();
