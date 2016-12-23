@@ -83,11 +83,11 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
     public void onItemDismiss(int position) {
         City city = cityList.get(position);
         realm.executeTransaction(realm1 -> {
-            for (DailyData data : realm.where(DailyData.class).equalTo("mainId", city.getId()).findAll()) {
+            for (DailyData data : realm.where(DailyData.class).equalTo("placeId", city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
             }
 
-            for (HourlyData data : realm.where(HourlyData.class).equalTo("mainId", city.getId()).findAll()) {
+            for (HourlyData data : realm.where(HourlyData.class).equalTo("placeId", city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
             }
 
