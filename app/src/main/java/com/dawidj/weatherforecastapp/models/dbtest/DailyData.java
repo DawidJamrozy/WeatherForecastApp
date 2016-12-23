@@ -24,11 +24,10 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
 
     @PrimaryKey
     private int id;
-
     private Integer time;
     private String name;
     private String summary;
-    private Integer mainId;
+    private String placeId;
     private String icon;
     @Ignore
     private Double sunriseTime;
@@ -46,33 +45,22 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
     private Double precipProbability;
     @Ignore
     private String precipType;
-
     private Double temperatureMin;
-
     private Double temperatureMinTime;
-
     private Double temperatureMax;
-
     private Double temperatureMaxTime;
-
     private Double apparentTemperatureMin;
-
     private Double apparentTemperatureMinTime;
-
     private Double apparentTemperatureMax;
-
     private Double apparentTemperatureMaxTime;
     @Ignore
     private Double dewPoint;
-
     private Double humidity;
-
     private Double windSpeed;
     @Ignore
     private Double windBearing;
     @Ignore
     private Double cloudCover;
-
     private Double pressure;
     @Ignore
     private Double ozone;
@@ -92,13 +80,14 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
-@Bindable
-    public Integer getMainId() {
-        return mainId;
+
+    @Bindable
+    public String getPlaceId() {
+        return placeId;
     }
 
-    public void setMainId(Integer mainId) {
-        this.mainId = mainId;
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }

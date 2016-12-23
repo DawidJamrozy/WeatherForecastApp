@@ -14,7 +14,7 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesActivityBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
-import com.dawidj.weatherforecastapp.utils.CustomSingleToast;
+import com.dawidj.weatherforecastapp.utils.SingleToast;
 import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesViewDataListener;
 import com.dawidj.weatherforecastapp.utils.RecyclerHelper;
 import com.dawidj.weatherforecastapp.view.adapters.CitiesRecyclerViewAdapter;
@@ -92,7 +92,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
            if(myCitiesViewModel.getCityList().isEmpty()) {
-               CustomSingleToast.show(this, getString(R.string.add_city), Toast.LENGTH_SHORT);
+               SingleToast.show(this, getString(R.string.add_city), Toast.LENGTH_SHORT);
            } else {
                startActivity(new Intent(this, MainActivity.class));
                finish();

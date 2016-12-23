@@ -11,12 +11,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityFragmentBinding;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.utils.Const;
+import com.dawidj.weatherforecastapp.utils.SingleToast;
 import com.dawidj.weatherforecastapp.utils.listeners.CityViewDataListener;
 import com.dawidj.weatherforecastapp.view.adapters.DayRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
@@ -93,7 +95,7 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
         cityViewModel.getWeatherData();
         binding.swipeRefreshLayout.setRefreshing(false);
         dayRecyclerViewAdapter.notifyDataSetChanged();
-        Timber.i("refresh(): ");
+        Timber.d("notifyDataChanged(): ");
     }
 
     @Override
@@ -101,5 +103,14 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
         Timber.i("startMyCitiesActivity(): ");
         getActivity().startActivity(new Intent(getActivity(), MyCitiesViewActivity.class));
         getActivity().finish();
+    }
+
+    @Override
+    public void turnOffSwipeToRefresh() {
+        getActivity().runOnUiThread(() -> {
+            SingleToast.show(getActivity(), "Brak połączenia z internetem", Toast.LENGTH_SHORT);
+            binding.swipeRefreshLayout.setRefreshing(false);
+        });
+        Timber.d("turnOffSwipeToRefresh(): ");
     }
 }

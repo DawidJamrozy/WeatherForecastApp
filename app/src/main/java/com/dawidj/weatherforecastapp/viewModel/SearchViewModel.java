@@ -6,7 +6,6 @@ import android.text.TextWatcher;
 import android.view.View;
 
 import com.dawidj.weatherforecastapp.api.WeatherApi;
-import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
 import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.models.dbtest.Currently;
 import com.dawidj.weatherforecastapp.models.dbtest.Daily;
@@ -25,7 +24,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -118,7 +116,9 @@ public class SearchViewModel {
 
         cityWeatherDataObservable
                 .debounce(100, TimeUnit.MILLISECONDS)
-                .flatMap(cityLatLng -> serviceWeather.getCity(getLat(cityLatLng), getLng(cityLatLng), KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS))
+                .flatMap(cityLatLng -> serviceWeather.getCity(getLat(cityLatLng), getLng(cityLatLng), KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS)
+                        .doOnError(e -> Timber.d("doOnError")))
+                .retry()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<City>() {
@@ -129,7 +129,8 @@ public class SearchViewModel {
 
                     @Override
                     public void onNext(City value) {
-                        insertCityToDatabase(value);
+                        if (value != null)
+                            insertCityToDatabase(value);
                     }
 
                     @Override
@@ -139,7 +140,7 @@ public class SearchViewModel {
 
                     @Override
                     public void onComplete() {
-
+                        Timber.i("onComplete(): ");
                     }
                 });
 
@@ -150,20 +151,13 @@ public class SearchViewModel {
                     @Override
                     public SingleSource<List<CityLatLng>> apply(String s) throws Exception {
                         return serviceAutocomplete.getCityName(s, KEY_CITIES, KEY_PL_LNG, GOOGLE_PLACES_KEY)
-                                .onErrorResumeNext(new Function<Throwable, ObservableSource<CityID>>() {
-                                    @Override
-                                    public ObservableSource<CityID> apply(Throwable throwable) throws Exception {
-                                        return Observable.empty();
-                                    }
+                                .onErrorResumeNext(throwable -> {
+                                    return Observable.empty();
                                 })
                                 .flatMapIterable(cityID -> cityID.getPredictions())
                                 .flatMap(prediction -> serviceDetails.getCityLatLng(prediction.getPlaceId(), KEY_PL_LNG, GOOGLE_PLACES_KEY))
-                                .onErrorResumeNext(new Function<Throwable, ObservableSource<CityLatLng>>() {
-                                    @Override
-                                    public ObservableSource<CityLatLng> apply(Throwable throwable) throws Exception {
-                                        Timber.d("Second onErrorResumeNext");
-                                        return Observable.empty();
-                                    }
+                                .onErrorResumeNext(throwable -> {
+                                    return Observable.empty();
                                 })
                                 .toList();
                     }
@@ -278,14 +272,14 @@ public class SearchViewModel {
         for (DailyData data : city.getDaily().getData()) {
             data.setId(idDailyData);
             data.setName(name);
-            data.setMainId(getKey(City.class));
+            data.setPlaceId(city.getPlaceId());
             idDailyData++;
         }
 
         for (HourlyData data : city.getHourly().getData()) {
             data.setId(idHourlyData);
             data.setName(name);
-            data.setMainId(getKey(City.class));
+            data.setPlaceId(city.getPlaceId());
             idHourlyData++;
         }
     }

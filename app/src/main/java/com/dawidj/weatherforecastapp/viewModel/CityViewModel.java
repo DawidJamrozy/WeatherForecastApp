@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -176,6 +175,7 @@ public class CityViewModel {
         cityDetails.setName(city.getName());
         cityDetails.setLat(city.getLatitude().toString());
         cityDetails.setLng(city.getLongitude().toString());
+//        refreshWeatherData();
         refreshObservable.onNext(cityDetails);
     }
 
@@ -186,16 +186,14 @@ public class CityViewModel {
                 .flatMap(new Function<CityDetails, ObservableSource<City>>() {
                     @Override
                     public ObservableSource<City> apply(CityDetails city) throws Exception {
-                        return serviceWeather.getCity(city.getLat(),
-                                city.getLng(), KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS);
+                        return serviceWeather.getCity(city.getLat(), city.getLng(), KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS)
+                                .doOnError(e -> {
+                                    Timber.d("doOnError");
+                                    cityViewDataListener.turnOffSwipeToRefresh();
+                                });
                     }
                 })
-                .onErrorResumeNext(new Function<Throwable, ObservableSource<City>>() {
-                    @Override
-                    public ObservableSource<City> apply(Throwable throwable) throws Exception {
-                        return Observable.empty();
-                    }
-                })
+                .retry()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<City>() {
@@ -206,7 +204,9 @@ public class CityViewModel {
 
                     @Override
                     public void onNext(City value) {
-                        replaceDataInDatabase(value);
+                        if (value != null) {
+                            replaceDataInDatabase(value);
+                        }
                     }
 
                     @Override
@@ -216,14 +216,23 @@ public class CityViewModel {
 
                     @Override
                     public void onComplete() {
-                        Timber.i("onComplete(): ");
                     }
                 });
     }
 
+
     public void replaceDataInDatabase(City value) {
-        value.setName(city.getName());
+        String name = city.getName();
+
+        value.setName(name);
+        value.setAdressDescription(city.getAdressDescription());
+        value.setPlaceId(city.getPlaceId());
         value.setId(city.getId());
+        value.setSortPosition(city.getSortPosition());
+
+        value.getCurrently().setName(name);
+        value.getDaily().setName(name);
+        value.getHourly().setName(name);
         value.getCurrently().setId(city.getCurrently().getId());
         value.getDaily().setId(city.getDaily().getId());
         value.getHourly().setId(city.getHourly().getId());
@@ -233,11 +242,15 @@ public class CityViewModel {
 
         for (DailyData data : value.getDaily().getData()) {
             data.setId(idDailyData);
+            data.setName(name);
+            data.setPlaceId(city.getPlaceId());
             idDailyData++;
         }
 
         for (HourlyData data : value.getHourly().getData()) {
             data.setId(idHourlyData);
+            data.setName(name);
+            data.setPlaceId(city.getPlaceId());
             idHourlyData++;
         }
 

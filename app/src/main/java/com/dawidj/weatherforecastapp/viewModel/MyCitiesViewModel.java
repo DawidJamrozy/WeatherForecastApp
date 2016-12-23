@@ -8,7 +8,7 @@ import com.dawidj.weatherforecastapp.models.dbtest.City;
 import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
 import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
 import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesViewDataListener;
-import com.dawidj.weatherforecastapp.view.adapters.DeleteItem;
+import com.dawidj.weatherforecastapp.view.adapters.MyCitiesDataListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import timber.log.Timber;
  * Created by Dawidj on 10.12.2016.
  */
 
-public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
+public class MyCitiesViewModel extends BaseObservable implements MyCitiesDataListener {
 
     private boolean textVisible;
     private List<City> cityList = new ArrayList<>();
@@ -63,12 +63,13 @@ public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
         int position = cityList.indexOf(city);
         Timber.d("deleteCityFromList(): placeID " + city.getPlaceId());
         Timber.d("deleteCityFromList(): name " + city.getName());
+
         realm.executeTransaction(realm1 -> {
-            for (DailyData data : realm.where(DailyData.class).equalTo("mainId", city.getId()).findAll()) {
+            for (DailyData data : realm.where(DailyData.class).equalTo("placeId", city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
             }
 
-            for (HourlyData data : realm.where(HourlyData.class).equalTo("mainId", city.getId()).findAll()) {
+            for (HourlyData data : realm.where(HourlyData.class).equalTo("placeId", city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
             }
 
@@ -82,7 +83,6 @@ public class MyCitiesViewModel extends BaseObservable implements DeleteItem {
         cityList.remove(position);
         checkIfListIsEmpty();
     }
-
 
     public void fabClicked(View view) {
         myCitiesViewDataListener.onClickFab();

@@ -28,14 +28,14 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
 
     private List<City> cityList;
 
-    private DeleteItem deleteItem;
+    private MyCitiesDataListener myCitiesDataListener;
 
     @Inject
     Realm realm;
 
-    public CitiesRecyclerViewAdapter(List<City> cityList, DeleteItem deleteItem) {
+    public CitiesRecyclerViewAdapter(List<City> cityList, MyCitiesDataListener myCitiesDataListener) {
         this.cityList = cityList;
-        this.deleteItem = deleteItem;
+        this.myCitiesDataListener = myCitiesDataListener;
         App.getApplication().getWeatherComponent().inject(this);
     }
 
@@ -49,7 +49,7 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
     public void onBindViewHolder(CitiesRecyclerViewHolder citiesRecyclerViewHolder, int position) {
         City city = cityList.get(position);
         citiesRecyclerViewHolder.getBinding().setCity(city);
-        citiesRecyclerViewHolder.getBinding().setDeleteCity(deleteItem);
+        citiesRecyclerViewHolder.getBinding().setDeleteCity(myCitiesDataListener);
         citiesRecyclerViewHolder.getBinding().executePendingBindings();
     }
 
@@ -98,7 +98,7 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
         });
         cityList.remove(position);
         notifyItemRemoved(position);
-        deleteItem.checkIfListIsEmpty();
+        myCitiesDataListener.checkIfListIsEmpty();
 
     }
 }

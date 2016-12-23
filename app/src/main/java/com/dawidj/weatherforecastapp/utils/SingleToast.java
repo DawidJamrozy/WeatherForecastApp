@@ -7,7 +7,7 @@ import android.widget.Toast;
  * Created by djamrozy on 21.12.2016.
  */
 
-public class CustomSingleToast {
+public class SingleToast {
 
     private static Toast toast;
 

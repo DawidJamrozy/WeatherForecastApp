@@ -7,4 +7,5 @@ package com.dawidj.weatherforecastapp.utils.listeners;
 public interface CityViewDataListener {
         void notifyDataChanged();
         void startMyCitiesActivity();
+        void turnOffSwipeToRefresh();
 }
