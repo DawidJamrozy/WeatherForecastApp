@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.models.dbtest;
+package com.dawidj.weatherforecastapp.models.darksky;
 
 import android.databinding.Bindable;
 import android.databinding.Observable;

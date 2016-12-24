@@ -4,9 +4,9 @@ import android.databinding.BaseObservable;
 import android.view.View;
 
 import com.dawidj.weatherforecastapp.BR;
-import com.dawidj.weatherforecastapp.models.dbtest.City;
-import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
-import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
+import com.dawidj.weatherforecastapp.models.darksky.City;
+import com.dawidj.weatherforecastapp.models.darksky.DailyData;
+import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
 import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesViewDataListener;
 import com.dawidj.weatherforecastapp.view.adapters.MyCitiesDataListener;
 
@@ -16,7 +16,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.realm.Realm;
-import timber.log.Timber;
+
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_PLACE_ID;
 
 /**
  * Created by Dawidj on 10.12.2016.
@@ -27,6 +28,7 @@ public class MyCitiesViewModel extends BaseObservable implements MyCitiesDataLis
     private boolean textVisible;
     private List<City> cityList = new ArrayList<>();
     private MyCitiesViewDataListener myCitiesViewDataListener;
+    private long removeItemButtonClicked;
 
     public boolean isTextVisible() {
         return textVisible;
@@ -59,17 +61,21 @@ public class MyCitiesViewModel extends BaseObservable implements MyCitiesDataLis
 
     @Override
     public void deleteCityFromList(City city) {
+        if (System.currentTimeMillis() - removeItemButtonClicked < 1000) return;
+
+        removeItemButtonClicked = System.currentTimeMillis();
 
         int position = cityList.indexOf(city);
-        Timber.d("deleteCityFromList(): placeID " + city.getPlaceId());
-        Timber.d("deleteCityFromList(): name " + city.getName());
+        cityList.remove(position);
+        myCitiesViewDataListener.removeCity(position);
+        checkIfListIsEmpty();
 
         realm.executeTransaction(realm1 -> {
-            for (DailyData data : realm.where(DailyData.class).equalTo("placeId", city.getPlaceId()).findAll()) {
+            for (DailyData data : realm.where(DailyData.class).equalTo(KEY_PLACE_ID, city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
             }
 
-            for (HourlyData data : realm.where(HourlyData.class).equalTo("placeId", city.getPlaceId()).findAll()) {
+            for (HourlyData data : realm.where(HourlyData.class).equalTo(KEY_PLACE_ID, city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
             }
 
@@ -79,9 +85,6 @@ public class MyCitiesViewModel extends BaseObservable implements MyCitiesDataLis
             city.deleteFromRealm();
         });
 
-        myCitiesViewDataListener.removeCity(position);
-        cityList.remove(position);
-        checkIfListIsEmpty();
     }
 
     public void fabClicked(View view) {

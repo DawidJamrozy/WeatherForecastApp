@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MainActivityBinding;
-import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.view.adapters.ViewPagerAdapter;
 
@@ -19,7 +19,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 import io.realm.Sort;
 
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_SORT;
@@ -37,10 +36,8 @@ public class MainActivity extends AppCompatActivity {
         App.getApplication().getWeatherComponent().inject(this);
         checkDatabaseSize();
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
-        realm.executeTransaction(realm -> {
-            RealmResults<City> cities = realm.where(City.class).findAllSorted(KEY_SORT, Sort.ASCENDING);
-            setUpViewPagerAdapter(cities);
-        });
+        realm.executeTransaction(realm ->
+            setUpViewPagerAdapter(realm.where(City.class).findAllSorted(KEY_SORT, Sort.ASCENDING)));
     }
 
     public void setUpViewPagerAdapter(List<City> cities) {

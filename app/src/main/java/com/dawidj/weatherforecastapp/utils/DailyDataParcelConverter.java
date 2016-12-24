@@ -2,7 +2,7 @@ package com.dawidj.weatherforecastapp.utils;
 
 import android.os.Parcel;
 
-import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
+import com.dawidj.weatherforecastapp.models.darksky.DailyData;
 
 import org.parceler.Parcels;
 

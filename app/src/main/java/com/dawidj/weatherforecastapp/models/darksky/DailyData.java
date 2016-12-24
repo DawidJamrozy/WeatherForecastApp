@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.models.dbtest;
+package com.dawidj.weatherforecastapp.models.darksky;
 
 import android.databinding.Bindable;
 import android.databinding.Observable;
@@ -9,7 +9,7 @@ import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
 import org.parceler.Parcel;
 
-import io.realm.HourlyDataRealmProxy;
+import io.realm.DailyDataRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -17,24 +17,42 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 25.10.2016.
  */
-@Parcel(implementations = {HourlyDataRealmProxy.class},
+@Parcel(implementations = {DailyDataRealmProxy.class},
         value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = {HourlyData.class})
-public class HourlyData extends RealmObject implements Observable, RealmDataBinding {
+        analyze = {DailyData.class})
+public class DailyData extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
     private int id;
-    private String name;
-    private String placeId;
     private Integer time;
+    private String name;
     private String summary;
+    private String placeId;
     private String icon;
+    @Ignore
+    private Double sunriseTime;
+    @Ignore
+    private Double sunsetTime;
+    @Ignore
+    private Double moonPhase;
     @Ignore
     private Double precipIntensity;
     @Ignore
+    private Double precipIntensityMax;
+    @Ignore
+    private Double precipIntensityMaxTime;
+    @Ignore
     private Double precipProbability;
-    private Double temperature;
-    private Double apparentTemperature;
+    @Ignore
+    private String precipType;
+    private Double temperatureMin;
+    private Double temperatureMinTime;
+    private Double temperatureMax;
+    private Double temperatureMaxTime;
+    private Double apparentTemperatureMin;
+    private Double apparentTemperatureMinTime;
+    private Double apparentTemperatureMax;
+    private Double apparentTemperatureMaxTime;
     @Ignore
     private Double dewPoint;
     private Double humidity;
@@ -46,15 +64,14 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
     private Double pressure;
     @Ignore
     private Double ozone;
-    @Ignore
-    private String precipType;
 
-    public HourlyData() {
+    public DailyData() {
     }
 
     @Bindable
     public int getId() {
         return id;
+
     }
 
     public void setId(int id) {
@@ -99,7 +116,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
     public String getSummary() {
         return summary;
@@ -111,7 +127,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
     public String getIcon() {
         return icon;
@@ -123,7 +138,39 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
+    @Bindable
+    public Double getSunriseTime() {
+        return sunriseTime;
+    }
 
+    public void setSunriseTime(Double sunriseTime) {
+        this.sunriseTime = sunriseTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getSunsetTime() {
+        return sunsetTime;
+    }
+
+    public void setSunsetTime(Double sunsetTime) {
+        this.sunsetTime = sunsetTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getMoonPhase() {
+        return moonPhase;
+    }
+
+    public void setMoonPhase(Double moonPhase) {
+        this.moonPhase = moonPhase;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
     @Bindable
     public Double getPrecipIntensity() {
         return precipIntensity;
@@ -135,7 +182,28 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
+    @Bindable
+    public Double getPrecipIntensityMax() {
+        return precipIntensityMax;
+    }
 
+    public void setPrecipIntensityMax(Double precipIntensityMax) {
+        this.precipIntensityMax = precipIntensityMax;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getPrecipIntensityMaxTime() {
+        return precipIntensityMaxTime;
+    }
+
+    public void setPrecipIntensityMaxTime(Double precipIntensityMaxTime) {
+        this.precipIntensityMaxTime = precipIntensityMaxTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
     @Bindable
     public Double getPrecipProbability() {
         return precipProbability;
@@ -147,31 +215,105 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
-    public Double getTemperature() {
-        return temperature;
+    public String getPrecipType() {
+        return precipType;
     }
 
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
+    public void setPrecipType(String precipType) {
+        this.precipType = precipType;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
-    public Double getApparentTemperature() {
-        return apparentTemperature;
+    public Double getTemperatureMin() {
+        return temperatureMin;
     }
 
-    public void setApparentTemperature(Double apparentTemperature) {
-        this.apparentTemperature = apparentTemperature;
+    public void setTemperatureMin(Double temperatureMin) {
+        this.temperatureMin = temperatureMin;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }
     }
+    @Bindable
+    public Double getTemperatureMinTime() {
+        return temperatureMinTime;
+    }
 
+    public void setTemperatureMinTime(Double temperatureMinTime) {
+        this.temperatureMinTime = temperatureMinTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getTemperatureMax() {
+        return temperatureMax;
+    }
+
+    public void setTemperatureMax(Double temperatureMax) {
+        this.temperatureMax = temperatureMax;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getTemperatureMaxTime() {
+        return temperatureMaxTime;
+    }
+
+    public void setTemperatureMaxTime(Double temperatureMaxTime) {
+        this.temperatureMaxTime = temperatureMaxTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getApparentTemperatureMin() {
+        return apparentTemperatureMin;
+    }
+
+    public void setApparentTemperatureMin(Double apparentTemperatureMin) {
+        this.apparentTemperatureMin = apparentTemperatureMin;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getApparentTemperatureMinTime() {
+        return apparentTemperatureMinTime;
+    }
+
+    public void setApparentTemperatureMinTime(Double apparentTemperatureMinTime) {
+        this.apparentTemperatureMinTime = apparentTemperatureMinTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getApparentTemperatureMax() {
+        return apparentTemperatureMax;
+    }
+
+    public void setApparentTemperatureMax(Double apparentTemperatureMax) {
+        this.apparentTemperatureMax = apparentTemperatureMax;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+    @Bindable
+    public Double getApparentTemperatureMaxTime() {
+        return apparentTemperatureMaxTime;
+    }
+
+    public void setApparentTemperatureMaxTime(Double apparentTemperatureMaxTime) {
+        this.apparentTemperatureMaxTime = apparentTemperatureMaxTime;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
     @Bindable
     public Double getDewPoint() {
         return dewPoint;
@@ -183,7 +325,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
     public Double getHumidity() {
         return humidity;
@@ -195,7 +336,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
     public Double getWindSpeed() {
         return windSpeed;
@@ -207,7 +347,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
     public Double getWindBearing() {
         return windBearing;
@@ -219,7 +358,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
     public Double getCloudCover() {
         return cloudCover;
@@ -231,7 +369,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
     public Double getPressure() {
         return pressure;
@@ -243,7 +380,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             notifyPropertyChanged(BR._all);
         }
     }
-
     @Bindable
     public Double getOzone() {
         return ozone;
@@ -251,18 +387,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
 
     public void setOzone(Double ozone) {
         this.ozone = ozone;
-        if (!isManaged()) {
-            notifyPropertyChanged(BR._all);
-        }
-    }
-
-    @Bindable
-    public String getPrecipType() {
-        return precipType;
-    }
-
-    public void setPrecipType(String precipType) {
-        this.precipType = precipType;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }
@@ -298,6 +422,4 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
             mCallbacks.notifyCallbacks(this, fieldId, null);
         }
     }
-
-
 }

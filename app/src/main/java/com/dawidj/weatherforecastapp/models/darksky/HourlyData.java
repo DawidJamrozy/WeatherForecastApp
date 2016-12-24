@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.models.dbtest;
+package com.dawidj.weatherforecastapp.models.darksky;
 
 import android.databinding.Bindable;
 import android.databinding.Observable;
@@ -9,23 +9,24 @@ import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
 import org.parceler.Parcel;
 
-import io.realm.CurrentlyRealmProxy;
+import io.realm.HourlyDataRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by Dawidj on 24.10.2016.
+ * Created by Dawidj on 25.10.2016.
  */
-@Parcel(implementations = {CurrentlyRealmProxy.class},
+@Parcel(implementations = {HourlyDataRealmProxy.class},
         value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = {Currently.class})
-public class Currently extends RealmObject implements Observable, RealmDataBinding {
+        analyze = {HourlyData.class})
+public class HourlyData extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
     private int id;
-    private Integer time;
     private String name;
+    private String placeId;
+    private Integer time;
     private String summary;
     private String icon;
     @Ignore
@@ -45,39 +46,10 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
     private Double pressure;
     @Ignore
     private Double ozone;
-
-    public Currently() {
-    }
-
     @Ignore
-    private transient PropertyChangeRegistry mCallbacks;
+    private String precipType;
 
-    @Override
-    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
-        if (mCallbacks == null) {
-            mCallbacks = new PropertyChangeRegistry();
-        }
-        mCallbacks.add(callback);
-    }
-
-    @Override
-    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
-        if (mCallbacks != null) {
-            mCallbacks.remove(callback);
-        }
-    }
-
-    @Override
-    public synchronized void notifyChange() {
-        if (mCallbacks != null) {
-            mCallbacks.notifyCallbacks(this, 0, null);
-        }
-    }
-
-    public void notifyPropertyChanged(int fieldId) {
-        if (mCallbacks != null) {
-            mCallbacks.notifyCallbacks(this, fieldId, null);
-        }
+    public HourlyData() {
     }
 
     @Bindable
@@ -87,6 +59,18 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
 
     public void setId(int id) {
         this.id = id;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+
+    @Bindable
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }
@@ -271,4 +255,49 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
             notifyPropertyChanged(BR._all);
         }
     }
+
+    @Bindable
+    public String getPrecipType() {
+        return precipType;
+    }
+
+    public void setPrecipType(String precipType) {
+        this.precipType = precipType;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+
+    @Ignore
+    private transient PropertyChangeRegistry mCallbacks;
+
+    @Override
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        if (mCallbacks == null) {
+            mCallbacks = new PropertyChangeRegistry();
+        }
+        mCallbacks.add(callback);
+    }
+
+    @Override
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        if (mCallbacks != null) {
+            mCallbacks.remove(callback);
+        }
+    }
+
+    @Override
+    public synchronized void notifyChange() {
+        if (mCallbacks != null) {
+            mCallbacks.notifyCallbacks(this, 0, null);
+        }
+    }
+
+    public void notifyPropertyChanged(int fieldId) {
+        if (mCallbacks != null) {
+            mCallbacks.notifyCallbacks(this, fieldId, null);
+        }
+    }
+
+
 }

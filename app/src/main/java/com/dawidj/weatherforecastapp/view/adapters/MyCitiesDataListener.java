@@ -1,6 +1,6 @@
 package com.dawidj.weatherforecastapp.view.adapters;
 
-import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.darksky.City;
 
 /**
  * Created by Dawidj on 18.12.2016.

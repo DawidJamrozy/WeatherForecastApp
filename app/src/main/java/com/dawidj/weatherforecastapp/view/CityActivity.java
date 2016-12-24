@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.CityFragmentBinding;
-import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.SingleToast;
 import com.dawidj.weatherforecastapp.utils.listeners.CityViewDataListener;
@@ -56,21 +56,21 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
         cityViewModel = new CityViewModel(city, this);
         binding.setCityViewModel(cityViewModel);
         binding.includeLayout.setCityViewModel(cityViewModel);
-        App.getApplication().getWeatherComponent().inject(cityViewModel);
+        injectDagger();
         setRecyclerView();
         cityViewModel.setCityName(city.getName());
         cityViewModel.setDayChart(binding.lineChart);
         cityViewModel.getWeatherData();
-        cityViewModel.refreshWeatherData();
+        cityViewModel.startRxStream();
         dayRecyclerViewAdapter.notifyDataSetChanged();
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-        Timber.i("onCreateView(): ");
+        Timber.d("onCreateView(): ");
         return view;
     }
 
     @Override
     public void onRefresh() {
-        Timber.i("onRefresh(): ");
+        Timber.d("onRefresh(): ");
         binding.swipeRefreshLayout.setRefreshing(true);
         cityViewModel.refreshData();
     }
@@ -100,7 +100,6 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void startMyCitiesActivity() {
-        Timber.i("startMyCitiesActivity(): ");
         getActivity().startActivity(new Intent(getActivity(), MyCitiesViewActivity.class));
         getActivity().finish();
     }
@@ -108,9 +107,13 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void turnOffSwipeToRefresh() {
         getActivity().runOnUiThread(() -> {
-            SingleToast.show(getActivity(), "Brak połączenia z internetem", Toast.LENGTH_SHORT);
+            SingleToast.show(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT);
             binding.swipeRefreshLayout.setRefreshing(false);
         });
         Timber.d("turnOffSwipeToRefresh(): ");
+    }
+
+    public void injectDagger() {
+        App.getApplication().getWeatherComponent().inject(cityViewModel);
     }
 }

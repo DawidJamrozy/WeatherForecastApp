@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.databinding.DayModelBinding;
-import com.dawidj.weatherforecastapp.models.dbtest.DayData;
+import com.dawidj.weatherforecastapp.models.darksky.DayData;
 
 import java.util.ArrayList;
 import java.util.List;

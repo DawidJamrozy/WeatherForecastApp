@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="SearchViewModel"
             type="com.dawidj.weatherforecastapp.viewModel.SearchViewModel" />
@@ -37,9 +37,10 @@
                     android:id="@+id/city_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:addTextChangedListener="@{SearchViewModel.textWatcher}"
+                    android:inputType="textNoSuggestions"
+                    android:onTextChanged="@{SearchViewModel.onTextChanged}"
                     android:background="@android:color/transparent"
-                    android:hint="City name"
+                    android:hint="@string/city_name"
                     android:text="@={SearchViewModel.cityName}" />
 
             </android.support.v7.widget.Toolbar>
@@ -51,6 +52,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/app_bar_layout">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="25dp"
+                android:visibility="@{SearchViewModel.progressBarVisibility ? View.VISIBLE : View.GONE}"/>
 
 
             <android.support.v7.widget.RecyclerView

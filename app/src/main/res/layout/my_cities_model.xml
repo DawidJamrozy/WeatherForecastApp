@@ -9,7 +9,7 @@
 
         <variable
             name="city"
-            type="com.dawidj.weatherforecastapp.models.dbtest.City" />
+            type="com.dawidj.weatherforecastapp.models.darksky.City" />
     </data>
 
 

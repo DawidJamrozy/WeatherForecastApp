@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.models.dbtest;
+package com.dawidj.weatherforecastapp.models.darksky;
 
 import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;
@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.R;
+import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.squareup.picasso.Picasso;
 
@@ -71,34 +72,34 @@ public class DayData extends BaseObservable {
         String summary = null;
         switch (getIcon()) {
             case "rain":
-                summary = "Deszcz";
+                summary = App.getApplication().getString(R.string.rain);
                 break;
             case "fog":
-                summary = "Mgła";
+                summary = App.getApplication().getString(R.string.mist);
                 break;
             case "partly-cloudy-day":
-                summary = "Częściowe zachmurzenie w ciągu dnia";
+                summary = App.getApplication().getString(R.string.partly_cloudy_day);
                 break;
             case "partly-cloudy-night":
-                summary = "Częściowe zachmurzenie w ciągu nocy";
+                summary = App.getApplication().getString(R.string.partly_cloudy_night);
                 break;
             case "snow":
-                summary = "Śnieg";
+                summary = App.getApplication().getString(R.string.snow);
                 break;
             case "sleet":
-                summary = "Śnieg z deszczem";
+                summary = App.getApplication().getString(R.string.sleet);
                 break;
             case "clear-day":
-                summary = "Pogodnie";
+                summary = App.getApplication().getString(R.string.clear);
                 break;
             case "clear-night":
-                summary = "Pogodnie";
+                summary = App.getApplication().getString(R.string.clear);
                 break;
             case "wind":
-                summary = "Wiatr";
+                summary = App.getApplication().getString(R.string.wind);
                 break;
             case "cloudy":
-                summary = "Pochmurnie";
+                summary = App.getApplication().getString(R.string.cloudy);
                 break;
             default:
                 break;

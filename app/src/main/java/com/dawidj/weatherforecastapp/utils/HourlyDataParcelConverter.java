@@ -1,6 +1,6 @@
 package com.dawidj.weatherforecastapp.utils;
 
-import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
+import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
 
 import org.parceler.Parcels;
 

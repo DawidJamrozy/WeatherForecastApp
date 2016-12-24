@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesModelBinding;
-import com.dawidj.weatherforecastapp.models.dbtest.City;
-import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
-import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
+import com.dawidj.weatherforecastapp.models.darksky.City;
+import com.dawidj.weatherforecastapp.models.darksky.DailyData;
+import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
 import com.dawidj.weatherforecastapp.utils.ItemTouchHelperAdapter;
 
 import java.util.Collections;

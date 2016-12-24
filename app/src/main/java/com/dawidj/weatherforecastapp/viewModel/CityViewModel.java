@@ -1,14 +1,16 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
+import android.databinding.BaseObservable;
 import android.view.View;
 
+import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.api.WeatherApi;
 import com.dawidj.weatherforecastapp.models.CityDetails;
-import com.dawidj.weatherforecastapp.models.dbtest.City;
-import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
-import com.dawidj.weatherforecastapp.models.dbtest.DayData;
-import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
+import com.dawidj.weatherforecastapp.models.darksky.City;
+import com.dawidj.weatherforecastapp.models.darksky.DailyData;
+import com.dawidj.weatherforecastapp.models.darksky.DayData;
+import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
 import com.dawidj.weatherforecastapp.utils.AxisValueFormatter;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ValueFormatter;
@@ -42,17 +44,16 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import retrofit2.Retrofit;
-import timber.log.Timber;
 
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_PL_LNG;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_LNG;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
 
 /**
  * Created by Dawidj on 30.11.2016.
  */
 
-public class CityViewModel {
+public class CityViewModel extends BaseObservable {
 
     private City city;
     public final static String[] hours = new String[25];
@@ -69,6 +70,7 @@ public class CityViewModel {
 
     public void setCity(City city) {
         this.city = city;
+        notifyPropertyChanged(BR._all);
     }
 
     public String getCityName() {
@@ -175,22 +177,18 @@ public class CityViewModel {
         cityDetails.setName(city.getName());
         cityDetails.setLat(city.getLatitude().toString());
         cityDetails.setLng(city.getLongitude().toString());
-//        refreshWeatherData();
         refreshObservable.onNext(cityDetails);
     }
 
-    public void refreshWeatherData() {
+    public void startRxStream() {
         WeatherApi serviceWeather = retrofitDarksky.create(WeatherApi.class);
 
         refreshObservable.debounce(100, TimeUnit.MILLISECONDS)
                 .flatMap(new Function<CityDetails, ObservableSource<City>>() {
                     @Override
                     public ObservableSource<City> apply(CityDetails city) throws Exception {
-                        return serviceWeather.getCity(city.getLat(), city.getLng(), KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS)
-                                .doOnError(e -> {
-                                    Timber.d("doOnError");
-                                    cityViewDataListener.turnOffSwipeToRefresh();
-                                });
+                        return serviceWeather.getCity(city.getLat(), city.getLng(), KEY_LNG, KEY_EXCLUDE, KEY_UNITS)
+                                .doOnError(e -> cityViewDataListener.turnOffSwipeToRefresh());
                     }
                 })
                 .retry()
@@ -204,9 +202,7 @@ public class CityViewModel {
 
                     @Override
                     public void onNext(City value) {
-                        if (value != null) {
-                            replaceDataInDatabase(value);
-                        }
+                        if (value != null) replaceDataInDatabase(value);
                     }
 
                     @Override
@@ -222,6 +218,7 @@ public class CityViewModel {
 
 
     public void replaceDataInDatabase(City value) {
+
         String name = city.getName();
 
         value.setName(name);

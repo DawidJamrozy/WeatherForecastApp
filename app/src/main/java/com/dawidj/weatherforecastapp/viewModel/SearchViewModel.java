@@ -1,17 +1,17 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
+import android.databinding.BaseObservable;
 import android.databinding.ObservableField;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 
+import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.api.WeatherApi;
-import com.dawidj.weatherforecastapp.models.dbtest.City;
-import com.dawidj.weatherforecastapp.models.dbtest.Currently;
-import com.dawidj.weatherforecastapp.models.dbtest.Daily;
-import com.dawidj.weatherforecastapp.models.dbtest.DailyData;
-import com.dawidj.weatherforecastapp.models.dbtest.Hourly;
-import com.dawidj.weatherforecastapp.models.dbtest.HourlyData;
+import com.dawidj.weatherforecastapp.models.darksky.City;
+import com.dawidj.weatherforecastapp.models.darksky.Currently;
+import com.dawidj.weatherforecastapp.models.darksky.Daily;
+import com.dawidj.weatherforecastapp.models.darksky.DailyData;
+import com.dawidj.weatherforecastapp.models.darksky.Hourly;
+import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 import com.dawidj.weatherforecastapp.utils.listeners.SearchViewDataListener;
 
@@ -41,20 +41,22 @@ import static com.dawidj.weatherforecastapp.utils.Const.GOOGLE_PLACES_KEY;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_CITIES;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_ID;
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_PL_LNG;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_LNG;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
+
 
 /**
  * Created by Dawidj on 04.12.2016.
  */
 
-public class SearchViewModel {
+public class SearchViewModel extends BaseObservable {
 
     private List<CityLatLng> cityLatLngList = new ArrayList<>();
     private ObservableField<String> cityName = new ObservableField<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final PublishSubject<String> textWatcherObservable = PublishSubject.create();
     private final PublishSubject<CityLatLng> cityWeatherDataObservable = PublishSubject.create();
+    private boolean progressBarVisibility;
     private int position;
     private SearchViewDataListener searchViewDataListener;
 
@@ -72,6 +74,15 @@ public class SearchViewModel {
 
     public List<CityLatLng> getCityLatLngList() {
         return cityLatLngList;
+    }
+
+    public boolean isProgressBarVisibility() {
+        return progressBarVisibility;
+    }
+
+    public void setProgressBarVisibility(boolean progressBarVisibility) {
+        this.progressBarVisibility = progressBarVisibility;
+        notifyPropertyChanged(BR._all);
     }
 
     @Inject
@@ -106,7 +117,7 @@ public class SearchViewModel {
         searchViewDataListener.newCityAdded(value.getId());
     }
 
-    public void rxQueryBuilder() {
+    public void startRxStream() {
 
         final WeatherApi serviceAutocomplete = retrofitAutocomplete.create(WeatherApi.class);
 
@@ -116,7 +127,7 @@ public class SearchViewModel {
 
         cityWeatherDataObservable
                 .debounce(100, TimeUnit.MILLISECONDS)
-                .flatMap(cityLatLng -> serviceWeather.getCity(getLat(cityLatLng), getLng(cityLatLng), KEY_PL_LNG, KEY_EXCLUDE, KEY_UNITS)
+                .flatMap(cityLatLng -> serviceWeather.getCity(getLat(cityLatLng), getLng(cityLatLng), KEY_LNG, KEY_EXCLUDE, KEY_UNITS)
                         .doOnError(e -> Timber.d("doOnError")))
                 .retry()
                 .subscribeOn(Schedulers.io())
@@ -129,8 +140,7 @@ public class SearchViewModel {
 
                     @Override
                     public void onNext(City value) {
-                        if (value != null)
-                            insertCityToDatabase(value);
+                        if (value != null) insertCityToDatabase(value);
                     }
 
                     @Override
@@ -150,15 +160,11 @@ public class SearchViewModel {
                 .flatMapSingle(new Function<String, SingleSource<List<CityLatLng>>>() {
                     @Override
                     public SingleSource<List<CityLatLng>> apply(String s) throws Exception {
-                        return serviceAutocomplete.getCityName(s, KEY_CITIES, KEY_PL_LNG, GOOGLE_PLACES_KEY)
-                                .onErrorResumeNext(throwable -> {
-                                    return Observable.empty();
-                                })
+                        return serviceAutocomplete.getCityName(s, KEY_CITIES, KEY_LNG, GOOGLE_PLACES_KEY)
+                                .onErrorResumeNext(throwable -> {return Observable.empty();})
                                 .flatMapIterable(cityID -> cityID.getPredictions())
-                                .flatMap(prediction -> serviceDetails.getCityLatLng(prediction.getPlaceId(), KEY_PL_LNG, GOOGLE_PLACES_KEY))
-                                .onErrorResumeNext(throwable -> {
-                                    return Observable.empty();
-                                })
+                                .flatMap(prediction -> serviceDetails.getCityLatLng(prediction.getPlaceId(), KEY_LNG, GOOGLE_PLACES_KEY))
+                                .onErrorResumeNext(throwable -> {return Observable.empty();})
                                 .toList();
                     }
                 })
@@ -174,6 +180,7 @@ public class SearchViewModel {
                     public void onNext(List<CityLatLng> value) {
                         cityLatLngList = value;
                         searchViewDataListener.notifyAdapter(value);
+                        setProgressBarVisibility(false);
                     }
 
                     @Override
@@ -187,37 +194,11 @@ public class SearchViewModel {
                 });
     }
 
-    public TextWatcher getTextWatcher() {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                clearCityList();
-                textWatcherObservable.onNext(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        };
-    }
-
-    public void clearCityList() {
-        if (!cityLatLngList.isEmpty()) {
-            cityLatLngList.clear();
-            Timber.i("clearCityList(): ");
-            searchViewDataListener.notifyAdapter(cityLatLngList);
-        }
-    }
-
     public void onDestroy() {
         compositeDisposable.clear();
     }
 
-    public int getKey(Class data) {
+    public int getPrimaryKeyId(Class data) {
         int key;
         try {
             key = realm.where(data).max(KEY_ID).intValue() + 1;
@@ -250,24 +231,21 @@ public class SearchViewModel {
 
     public void setCityData(City city) {
         String name = cityLatLngList.get(getPosition()).getResult().getName();
-        String placeId = cityLatLngList.get(getPosition()).getResult().getPlaceId();
-        Timber.d("setCityData(): " + name);
-        Timber.d("setCityData(): " + placeId);
 
         city.setName(name);
         city.setAdressDescription(cityLatLngList.get(getPosition()).getResult().getFormattedAddress());
         city.setPlaceId(cityLatLngList.get(getPosition()).getResult().getPlaceId());
-        city.setId(getKey(City.class));
+        city.setId(getPrimaryKeyId(City.class));
         city.setSortPosition(getLastSortedPosition());
         city.getCurrently().setName(name);
-        city.getCurrently().setId(getKey(Currently.class));
+        city.getCurrently().setId(getPrimaryKeyId(Currently.class));
         city.getDaily().setName(name);
-        city.getDaily().setId(getKey(Daily.class));
+        city.getDaily().setId(getPrimaryKeyId(Daily.class));
         city.getHourly().setName(name);
-        city.getHourly().setId(getKey(Hourly.class));
+        city.getHourly().setId(getPrimaryKeyId(Hourly.class));
 
-        int idDailyData = getKey(DailyData.class);
-        int idHourlyData = getKey(HourlyData.class);
+        int idDailyData = getPrimaryKeyId(DailyData.class);
+        int idHourlyData = getPrimaryKeyId(HourlyData.class);
 
         for (DailyData data : city.getDaily().getData()) {
             data.setId(idDailyData);
@@ -285,7 +263,21 @@ public class SearchViewModel {
     }
 
     public void hideKeyboard(View view) {
-        Timber.d("hideKeyboard(): ");
         searchViewDataListener.loseFocus();
+        Timber.d("hideKeyboard(): ");
     }
+
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        String text = charSequence.toString();
+        cityLatLngList.clear();
+        searchViewDataListener.notifyAdapter(cityLatLngList);
+
+        if(text.equals("")) {
+            setProgressBarVisibility(false);
+        } else {
+            setProgressBarVisibility(true);
+        }
+        textWatcherObservable.onNext(charSequence.toString());
+    }
+
 }

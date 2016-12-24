@@ -1,5 +1,8 @@
 package com.dawidj.weatherforecastapp.utils;
 
+import com.dawidj.weatherforecastapp.R;
+import com.dawidj.weatherforecastapp.app.App;
+
 /**
  * Created by Dawidj on 30.11.2016.
  */
@@ -15,11 +18,12 @@ public class Const {
     public static final String POSITION = "position";
     public static final int ON_BACK_PRESSED = 2001;
     public static final String KEY_CITY = "keyCity";
-    public static final String KEY_PL_LNG = "pl";
+    public static final String KEY_LNG = App.getApplication().getString(R.string.language);
     public static final String KEY_EXCLUDE = "flags,alerts,minutely";
     public static final String KEY_UNITS = "ca";
     public static final String KEY_CITIES = "(cities)";
     public static final String KEY_SORT = "sortPosition";
     public static final String KEY_ID = "id";
+    public static final String KEY_PLACE_ID = "placeId";
 
 }

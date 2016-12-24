@@ -5,7 +5,7 @@
 
         <variable
             name="day"
-            type="com.dawidj.weatherforecastapp.models.dbtest.DayData" />
+            type="com.dawidj.weatherforecastapp.models.darksky.DayData" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,6 +25,7 @@
             android:id="@+id/dayOne"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_black"
             android:layout_marginStart="60dp"
             android:layout_marginTop="10dp"
             android:text="@{day.dayName}" />

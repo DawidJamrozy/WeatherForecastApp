@@ -37,15 +37,12 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.search_activity);
-        setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setActionBar();
         searchViewModel = new SearchViewModel(this);
         binding.setSearchViewModel(searchViewModel);
-        App.getApplication().getWeatherComponent().inject(this);
-        App.getApplication().getWeatherComponent().inject(searchViewModel);
+        injectDagger();
         setRecycler();
-        searchViewModel.rxQueryBuilder();
+        searchViewModel.startRxStream();
     }
 
     public void setRecycler() {
@@ -96,5 +93,16 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
     public void loseFocus() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(binding.cityEditText.getWindowToken(), 0);
+    }
+
+    public void setActionBar() {
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    public void injectDagger() {
+        App.getApplication().getWeatherComponent().inject(this);
+        App.getApplication().getWeatherComponent().inject(searchViewModel);
     }
 }

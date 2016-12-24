@@ -1,7 +1,7 @@
 package com.dawidj.weatherforecastapp.api;
 
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
-import com.dawidj.weatherforecastapp.models.dbtest.City;
+import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 
 import io.reactivex.Observable;
