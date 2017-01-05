@@ -64,6 +64,18 @@ public class WeatherModule {
 
     @Provides
     @Singleton
+    @Named("geocode")
+    Retrofit geocodeRetrofit(OkHttpClient okHttpClient) {
+        return new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/maps/api/geocode/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(okHttpClient)
+                .build();
+    }
+
+    @Provides
+    @Singleton
     Realm realm() {
         return Realm.getDefaultInstance();
     }

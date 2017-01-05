@@ -38,7 +38,7 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.search_activity);
         setActionBar();
-        searchViewModel = new SearchViewModel(this);
+        searchViewModel = new SearchViewModel(this, this);
         binding.setSearchViewModel(searchViewModel);
         injectDagger();
         setRecycler();

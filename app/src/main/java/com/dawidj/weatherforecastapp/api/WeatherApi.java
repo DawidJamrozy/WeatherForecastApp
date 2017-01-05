@@ -3,6 +3,7 @@ package com.dawidj.weatherforecastapp.api;
 import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
 import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
+import com.dawidj.weatherforecastapp.models.geocode.GeocodeCity;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -33,6 +34,13 @@ public interface WeatherApi {
     Observable<CityLatLng> getCityLatLng(@Query("placeid") String placeID,
                                          @Query("language") String language,
                                          @Query("key") String key);
+
+    @GET("json?")
+    Observable<GeocodeCity> getCityFromLatLng(@Query("latlng") String latlng,
+                                              @Query("location_type") String locationType,
+                                              @Query("result_type") String resultType,
+                                              @Query("language") String lang,
+                                              @Query("key") String key);
 
 
 }
