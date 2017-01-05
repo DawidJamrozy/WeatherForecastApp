@@ -29,4 +29,9 @@
     <string name="details">Szczegóły</string>
     <string name="your_cities">Twoje miasta</string>
     <string name="language">pl</string>
+    <string name="less_than_min">Następne odświeżenie za mniej niż minute</string>
+    <string name="more_than_min">Następne odświeżenie za %1$d min</string>
+    <string name="precip_unit">mm/h</string>
+    <string name="precip">Opady</string>
+    <string name="intensity">Intensywność</string>
 </resources>

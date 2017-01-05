@@ -6,6 +6,7 @@ import android.view.View;
 import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.api.WeatherApi;
+import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.models.CityDetails;
 import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.models.darksky.DailyData;
@@ -45,6 +46,8 @@ import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import retrofit2.Retrofit;
 
+import static com.dawidj.weatherforecastapp.utils.Const.DATE_FORMAT;
+import static com.dawidj.weatherforecastapp.utils.Const.HALF_HOUR;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_LNG;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
@@ -56,13 +59,12 @@ import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
 public class CityViewModel extends BaseObservable {
 
     private City city;
-    public final static String[] hours = new String[25];
     private String cityName;
     private List<DayData> dayDatasList = new ArrayList<>();
     private PublishSubject<CityDetails> refreshObservable = PublishSubject.create();
     private CompositeDisposable compositDisposable = new CompositeDisposable();
     private CityViewDataListener cityViewDataListener;
-
+    public final static String[] hours = new String[25];
 
     public City getCity() {
         return city;
@@ -211,8 +213,7 @@ public class CityViewModel extends BaseObservable {
                     }
 
                     @Override
-                    public void onComplete() {
-                    }
+                    public void onComplete() {}
                 });
     }
 
@@ -225,8 +226,8 @@ public class CityViewModel extends BaseObservable {
         value.setAdressDescription(city.getAdressDescription());
         value.setPlaceId(city.getPlaceId());
         value.setId(city.getId());
+        value.setRefreshDate(new SimpleDateFormat(DATE_FORMAT).format(System.currentTimeMillis()));
         value.setSortPosition(city.getSortPosition());
-
         value.getCurrently().setName(name);
         value.getDaily().setName(name);
         value.getHourly().setName(name);
@@ -266,4 +267,26 @@ public class CityViewModel extends BaseObservable {
         cityViewDataListener.startMyCitiesActivity();
     }
 
+    public void startDarkSky(View view) {
+        cityViewDataListener.openDarkSkyWebSite();
+    }
+
+    public boolean checkIfLastRefreshTimeIsMoreThan30Minute() {
+        if (getCurrentTime() - city.getCurrently().getTime() < HALF_HOUR) {
+            String info;
+            long remaningTime = (((city.getCurrently().getTime() + HALF_HOUR) - getCurrentTime()) / 60);
+            if (remaningTime > 1) {
+                info = App.getApplication().getString(R.string.more_than_min, remaningTime);
+            } else {
+                info = App.getApplication().getString(R.string.less_than_min);
+            }
+            cityViewDataListener.refreshInterval(info);
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public long getCurrentTime() {
+        return System.currentTimeMillis()/1000;
+    }
 }

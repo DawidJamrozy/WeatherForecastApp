@@ -29,4 +29,9 @@
     <string name="details">Details</string>
     <string name="your_cities">Your Cities</string>
     <string name="language">en</string>
+    <string name="less_than_min">Next refresh in less than minute</string>
+    <string name="more_than_min">Next refresh in %1$d min</string>
+    <string name="precip">Precip</string>
+    <string name="precip_unit">mm/h</string>
+    <string name="intensity">Intensity</string>
 </resources>

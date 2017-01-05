@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textNoSuggestions"
-                    android:onTextChanged="@{SearchViewModel.onTextChanged}"
+                    android:onTextChanged="@{SearchViewModel::onTextChanged}"
                     android:background="@android:color/transparent"
                     android:hint="@string/city_name"
                     android:text="@={SearchViewModel.cityName}" />

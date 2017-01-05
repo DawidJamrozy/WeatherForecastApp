@@ -1,131 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-
         <variable
             name="CityViewModel"
-            type="com.dawidj.weatherforecastapp.viewModel.CityViewModel" />
+            type="com.dawidj.weatherforecastapp.viewModel.CityViewModel"/>
     </data>
 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <View
+        android:id="@+id/shim"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        />
+
     <RelativeLayout
-        android:id="@+id/detail_layout"
+        android:id="@+id/layout_wind"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginEnd="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/shim"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/windDetailName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:text="@string/wind" />
+            android:text="@string/wind"
+            android:textColor="@color/text_black" />
 
         <TextView
             android:id="@+id/windDetailValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@id/windDetailName"
-            android:layout_below="@id/windDetailName"
+            android:layout_below="@+id/windDetailName"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="20dp"
             android:text="@{String.valueOf(CityViewModel.city.currently.windSpeed) + @string/windSpeed}" />
+
+        <ImageView
+            android:id="@+id/windDetailIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/wind" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/layout_temperature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@id/shim"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/tempDetailName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="200dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:text="@string/apparent" />
+            android:text="@string/apparent"
+            android:textColor="@color/text_black" />
 
         <TextView
             android:id="@+id/tempDetailValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/tempDetailName"
             android:layout_below="@+id/tempDetailName"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="20dp"
             android:text="@{String.valueOf(CityViewModel.city.currently.temperature) + @string/degree}" />
 
         <ImageView
             android:id="@+id/tempDetailIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_alignBottom="@+id/tempDetailValue"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="7dp"
-            android:layout_marginEnd="15dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/temperature" />
+    </RelativeLayout>
 
-
-        <View
-            android:id="@+id/horizontalDivider"
-            style="@style/HorizontalDivider"
-            android:layout_below="@+id/windDetailIcon"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" />
-
-
-        <TextView
-            android:id="@+id/humidityDetailName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/windDetailName"
-            android:layout_below="@+id/horizontalDivider"
-            android:text="@string/humidity" />
+    <RelativeLayout
+        android:id="@+id/layout_humidity"
+        android:layout_width="match_parent"
+        android:layout_below="@id/layout_wind"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/shim"
+        android:background="@color/white">
 
         <TextView
-            android:id="@+id/humidityDetailValue"
+            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/humidityDetailName"
-            android:layout_below="@+id/humidityDetailName"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/humidity"
+            android:textColor="@color/text_black" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView6"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="20dp"
             android:text="@{String.valueOf((CityViewModel.city.currently.humidity*100).intValue()) + @string/percent}" />
 
         <ImageView
-            android:id="@+id/humidityDetailIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginBottom="7dp"
-            android:layout_alignBottom="@+id/humidityDetailValue"
-            android:layout_marginStart="140dp"
-            android:src="@drawable/humidity" />
-
-        <ImageView
-            android:id="@+id/pressureDetailIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginBottom="7dp"
-            android:layout_alignBottom="@+id/pressureDetailValue"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/pressure" />
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/humidity" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_pressure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_above="@+id/layout_rain"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@id/shim">
 
         <TextView
             android:id="@+id/pressureDetailName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/tempDetailValue"
-            android:layout_below="@+id/horizontalDivider"
-            android:text="@string/pressure" />
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/pressure"
+            android:textColor="@color/text_black" />
 
         <TextView
             android:id="@+id/pressureDetailValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/pressureDetailName"
             android:layout_below="@+id/pressureDetailName"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="20dp"
             android:text="@{String.valueOf(CityViewModel.city.currently.pressure) + @string/pressure_symbol}" />
 
         <ImageView
-            android:id="@+id/windDetailIcon"
+            android:id="@+id/pressureDetailIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginBottom="7dp"
-            android:layout_alignBottom="@+id/tempDetailValue"
-            android:layout_alignStart="@+id/humidityDetailIcon"
-            android:src="@drawable/wind" />
-
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/pressure" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_szansa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:background="@color/white"
+        android:layout_below="@+id/layout_humidity"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@id/shim">
+
+        <TextView
+            android:id="@+id/rainSzansaName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/intensity"
+            android:textColor="@color/text_black" />
+
+        <TextView
+            android:id="@+id/rainSzansaValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rainSzansaName"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="20dp"
+            android:text='@{String.format("%.2f %s", CityViewModel.city.currently.precipIntensity, @string/precip_unit)}' />
+
+        <ImageView
+            android:id="@+id/rain_szansa_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
+            app:imageSrc="@{CityViewModel.city.hourly.data.first().imageSrc}"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_rain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_below="@+id/layout_humidity"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/shim">
+
+        <TextView
+            android:id="@+id/rainDetailName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/precip"
+            android:textColor="@color/text_black" />
+
+        <TextView
+            android:id="@+id/rainDetailValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rainDetailName"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="20dp"
+            android:text="@{String.valueOf((CityViewModel.city.currently.precipProbability*100).intValue()) + @string/percent}" />
+
+        <ImageView
+            android:id="@+id/rainDetailIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
+            app:imageSrc="@{CityViewModel.city.hourly.data.first().imageSrc}" />
+    </RelativeLayout>
+
+
+</RelativeLayout>
 </layout>

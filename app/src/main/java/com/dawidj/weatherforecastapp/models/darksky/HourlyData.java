@@ -1,11 +1,15 @@
 package com.dawidj.weatherforecastapp.models.darksky;
 
 import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
+import android.widget.ImageView;
 
 import com.dawidj.weatherforecastapp.BR;
+import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcel;
 
@@ -46,7 +50,6 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
     private Double pressure;
     @Ignore
     private Double ozone;
-    @Ignore
     private String precipType;
 
     public HourlyData() {
@@ -299,5 +302,30 @@ public class HourlyData extends RealmObject implements Observable, RealmDataBind
         }
     }
 
+    public int getImageSrc() {
+        int iconCode = 0;
 
+        if (getPrecipType() == null) {
+            iconCode = R.drawable.drop;
+        } else {
+            switch (getPrecipType()) {
+                case "rain":
+                    iconCode = R.drawable.drop;
+                    break;
+                case "snow":
+                    iconCode = R.drawable.snowflakes;
+                    break;
+                case "sleet":
+                    iconCode = R.drawable.sleet_icon;
+                    break;
+            }
+        }
+        return iconCode;
+
+    }
+
+    @BindingAdapter({"imageSrc"})
+    public static void loadImage(ImageView imageView, int imageSrc) {
+        Picasso.with(imageView.getContext()).load(imageSrc).into(imageView);
+    }
 }

@@ -3,7 +3,9 @@ package com.dawidj.weatherforecastapp.view;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
@@ -25,7 +27,8 @@ import static com.dawidj.weatherforecastapp.utils.Const.KEY_SORT;
 
 public class MainActivity extends AppCompatActivity {
 
-    MainActivityBinding binding;
+    private MainActivityBinding binding;
+    private boolean doubleBackToExitPressedOnce;
 
     @Inject
     Realm realm;
@@ -61,5 +64,18 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, MyCitiesViewActivity.class));
             finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, R.string.double_back, Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 }

@@ -27,6 +27,7 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
     private String name;
     private String placeId;
     private String adressDescription;
+    private String refreshDate;
     private Integer sortPosition;
     private Double latitude;
     private Double longitude;
@@ -85,6 +86,18 @@ public class City extends RealmObject implements Observable, RealmDataBinding {
 
     public void setAdressDescription(String adressDescription) {
         this.adressDescription = adressDescription;
+        if (!isManaged()) {
+            notifyPropertyChanged(BR._all);
+        }
+    }
+
+    @Bindable
+    public String getRefreshDate() {
+        return refreshDate;
+    }
+
+    public void setRefreshDate(String refreshDate) {
+        this.refreshDate = refreshDate;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }

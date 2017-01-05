@@ -3,7 +3,6 @@ package com.dawidj.weatherforecastapp.view;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +37,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
     private MyCitiesActivityBinding binding;
     private MyCitiesViewModel myCitiesViewModel;
     private CitiesRecyclerViewAdapter citiesRecyclerViewAdapter;
-    private boolean doubleBackToExitPressedOnce;
+    private SingleToast singleToast = new SingleToast();
 
     @Inject
     Realm realm;
@@ -88,7 +87,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (myCitiesViewModel.getCityList().isEmpty()) {
-                SingleToast.show(this, getString(R.string.add_city), Toast.LENGTH_SHORT);
+                singleToast.show(this, getString(R.string.add_city), Toast.LENGTH_SHORT);
             } else {
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
@@ -99,16 +98,12 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
+        if(myCitiesViewModel.getCityList().isEmpty()) {
             super.onBackPressed();
-            return;
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, R.string.double_back, Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
-
     }
 
     @Override

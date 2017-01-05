@@ -41,9 +41,7 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
     private Double precipIntensityMax;
     @Ignore
     private Double precipIntensityMaxTime;
-    @Ignore
     private Double precipProbability;
-    @Ignore
     private String precipType;
     private Double temperatureMin;
     private Double temperatureMinTime;

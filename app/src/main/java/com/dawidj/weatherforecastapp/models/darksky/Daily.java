@@ -27,11 +27,9 @@ public class Daily extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
     private int id;
-
     private String summary;
     private String name;
     private String icon;
-
     private RealmList<DailyData> data;
 
     public Daily() {

@@ -2,6 +2,7 @@ package com.dawidj.weatherforecastapp.view;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,8 @@ import org.parceler.Parcels;
 
 import timber.log.Timber;
 
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_DARKSKY_WWW;
+
 /**
  * Created by Dawidj on 30.11.2016.
  */
@@ -37,6 +40,7 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
     private CityFragmentBinding binding;
     private CityViewModel cityViewModel;
     private City city;
+    private SingleToast singleToast = new SingleToast();
 
     public CityActivity() {
     }
@@ -70,9 +74,10 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        Timber.d("onRefresh(): ");
+        if(cityViewModel.checkIfLastRefreshTimeIsMoreThan30Minute()) {
         binding.swipeRefreshLayout.setRefreshing(true);
         cityViewModel.refreshData();
+        }
     }
 
     public void setRecyclerView() {
@@ -107,7 +112,7 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void turnOffSwipeToRefresh() {
         getActivity().runOnUiThread(() -> {
-            SingleToast.show(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT);
+            singleToast.show(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT);
             binding.swipeRefreshLayout.setRefreshing(false);
         });
         Timber.d("turnOffSwipeToRefresh(): ");
@@ -115,5 +120,16 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public void injectDagger() {
         App.getApplication().getWeatherComponent().inject(cityViewModel);
+    }
+
+    @Override
+    public void openDarkSkyWebSite() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(KEY_DARKSKY_WWW)));
+    }
+
+    @Override
+    public void refreshInterval(String info) {
+        binding.swipeRefreshLayout.setRefreshing(false);
+        singleToast.show(getActivity(), info , Toast.LENGTH_SHORT);
     }
 }

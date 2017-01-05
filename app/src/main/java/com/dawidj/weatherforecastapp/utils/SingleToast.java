@@ -9,9 +9,9 @@ import android.widget.Toast;
 
 public class SingleToast {
 
-    private static Toast toast;
+    private Toast toast;
 
-    public static void show(Context context, String text, int duration) {
+    public void show(Context context, String text, int duration) {
         if(toast != null)
             toast.cancel();
         toast = Toast.makeText(context, text , duration);

@@ -15,6 +15,7 @@ import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
 import com.dawidj.weatherforecastapp.utils.listeners.SearchViewDataListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +38,7 @@ import io.realm.RealmResults;
 import retrofit2.Retrofit;
 import timber.log.Timber;
 
+import static com.dawidj.weatherforecastapp.utils.Const.DATE_FORMAT;
 import static com.dawidj.weatherforecastapp.utils.Const.GOOGLE_PLACES_KEY;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_CITIES;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
@@ -234,6 +236,7 @@ public class SearchViewModel extends BaseObservable {
 
         city.setName(name);
         city.setAdressDescription(cityLatLngList.get(getPosition()).getResult().getFormattedAddress());
+        city.setRefreshDate(new SimpleDateFormat(DATE_FORMAT).format(System.currentTimeMillis()));
         city.setPlaceId(cityLatLngList.get(getPosition()).getResult().getPlaceId());
         city.setId(getPrimaryKeyId(City.class));
         city.setSortPosition(getLastSortedPosition());
@@ -279,5 +282,4 @@ public class SearchViewModel extends BaseObservable {
         }
         textWatcherObservable.onNext(charSequence.toString());
     }
-
 }

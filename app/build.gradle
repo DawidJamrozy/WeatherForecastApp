@@ -5,7 +5,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion '25.0.2'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -44,6 +44,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     compile 'com.google.android.gms:play-services-places:10.0.1'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -62,6 +63,6 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.4.1'
     compile 'com.uphyca:stetho_realm:2.0.0'
     apt 'com.google.guava:guava:19.0'
-    compile "org.parceler:parceler-api:1.1.6"
+    compile 'org.parceler:parceler-api:1.1.6'
     apt "org.parceler:parceler:1.1.6"
 }

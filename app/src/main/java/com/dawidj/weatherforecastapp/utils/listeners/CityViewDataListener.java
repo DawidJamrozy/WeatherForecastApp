@@ -8,4 +8,6 @@ public interface CityViewDataListener {
         void notifyDataChanged();
         void startMyCitiesActivity();
         void turnOffSwipeToRefresh();
+        void openDarkSkyWebSite();
+        void refreshInterval(String info);
 }

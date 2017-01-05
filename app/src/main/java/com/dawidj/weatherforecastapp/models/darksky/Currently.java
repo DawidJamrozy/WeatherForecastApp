@@ -28,9 +28,7 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
     private String name;
     private String summary;
     private String icon;
-    @Ignore
     private Double precipIntensity;
-    @Ignore
     private Double precipProbability;
     private Double temperature;
     private Double apparentTemperature;
