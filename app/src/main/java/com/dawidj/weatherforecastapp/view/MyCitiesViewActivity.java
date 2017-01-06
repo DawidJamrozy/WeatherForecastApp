@@ -126,4 +126,9 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
     }
+
+    @Override
+    public void toManyClick() {
+        singleToast.show(this, getString(R.string.to_many_clicks), Toast.LENGTH_SHORT);
+    }
 }

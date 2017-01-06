@@ -16,6 +16,7 @@
     <string name="add_city">Add City</string>
     <string name="double_back">Please click BACK again to exit</string>
     <string name="no_internet_connection">Internet connection is unavailable</string>
+    <string name="no_server_connection">Server connection is unavailable</string>
     <string name="city_name">City name</string>
     <string name="rain">Rain</string>
     <string name="mist">Mist</string>
@@ -34,4 +35,8 @@
     <string name="precip">Precip</string>
     <string name="precip_unit">mm/h</string>
     <string name="intensity">Intensity</string>
+    <string name="city_not_found">City not found</string>
+    <string name="city_already_added">City added</string>
+    <string name="city_exists_in_db">City already exists in Database</string>
+    <string name="to_many_clicks">To many clicks</string>
 </resources>

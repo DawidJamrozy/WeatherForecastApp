@@ -19,6 +19,7 @@ public class Const {
     public static final String KEY_RESULT_TYPE = "locality";
     public static final int ADD_NEW_CITY = 1000;
     public static final int CITY_INSERTED = 2000;
+    public static final long CLICK_TIME_INTERVAL = 2000;
     public static final String POSITION = "position";
     public static final int ON_BACK_PRESSED = 2001;
     public static final String KEY_CITY = "keyCity";

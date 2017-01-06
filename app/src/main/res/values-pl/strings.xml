@@ -16,6 +16,7 @@
     <string name="double_back">Naciśnij ponownie by wyjść</string>
     <string name="add_city">Dodaj Miasto</string>
     <string name="no_internet_connection">Brak połączenia z internetem</string>
+    <string name="no_server_connection">Brak połączenia z serwerem</string>
     <string name="city_name">Nazwa Miasta</string>
     <string name="rain">Deszcz</string>
     <string name="mist">Mgła</string>
@@ -34,4 +35,8 @@
     <string name="precip_unit">mm/h</string>
     <string name="precip">Opady</string>
     <string name="intensity">Intensywność</string>
+    <string name="city_not_found">Nie znaleziono miasta</string>
+    <string name="city_already_added">Miasto dodane</string>
+    <string name="city_exists_in_db">Miasto znajduje się już w bazie danych</string>
+    <string name="to_many_clicks">Za dużo kliknięc na raz</string>
 </resources>

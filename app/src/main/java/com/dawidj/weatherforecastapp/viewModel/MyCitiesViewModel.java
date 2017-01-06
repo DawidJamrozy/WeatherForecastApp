@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 
+import static com.dawidj.weatherforecastapp.utils.Const.CLICK_TIME_INTERVAL;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_PLACE_ID;
 
 /**
@@ -61,9 +62,13 @@ public class MyCitiesViewModel extends BaseObservable implements MyCitiesDataLis
 
     @Override
     public void deleteCityFromList(City city) {
-        if (System.currentTimeMillis() - removeItemButtonClicked < 1000) return;
+        long now = System.currentTimeMillis();
 
-        removeItemButtonClicked = System.currentTimeMillis();
+        if (now - removeItemButtonClicked < CLICK_TIME_INTERVAL) {
+            myCitiesViewDataListener.toManyClick();
+            return;
+        }
+        removeItemButtonClicked = now;
 
         int position = cityList.indexOf(city);
         cityList.remove(position);

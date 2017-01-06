@@ -8,4 +8,5 @@ public interface MyCitiesViewDataListener {
 
     void onClickFab();
     void removeCity(int position);
+    void toManyClick();
 }
