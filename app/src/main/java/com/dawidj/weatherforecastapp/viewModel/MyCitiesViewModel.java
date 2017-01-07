@@ -8,7 +8,7 @@ import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.models.darksky.DailyData;
 import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
 import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesViewDataListener;
-import com.dawidj.weatherforecastapp.view.adapters.MyCitiesDataListener;
+import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesDataListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 
+import static com.dawidj.weatherforecastapp.utils.Const.CLICK_TIME_INTERVAL;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_PLACE_ID;
 
 /**
@@ -34,7 +35,7 @@ public class MyCitiesViewModel extends BaseObservable implements MyCitiesDataLis
         return textVisible;
     }
 
-    public void setTextVisible(boolean textVisible) {
+    private void setTextVisible(boolean textVisible) {
         this.textVisible = textVisible;
         notifyPropertyChanged(BR._all);
     }
@@ -61,15 +62,26 @@ public class MyCitiesViewModel extends BaseObservable implements MyCitiesDataLis
 
     @Override
     public void deleteCityFromList(City city) {
-        if (System.currentTimeMillis() - removeItemButtonClicked < 1000) return;
+        long now = System.currentTimeMillis();
 
-        removeItemButtonClicked = System.currentTimeMillis();
+        if (now - removeItemButtonClicked < CLICK_TIME_INTERVAL) {
+            myCitiesViewDataListener.toManyClick();
+            return;
+        }
+        removeItemButtonClicked = now;
 
         int position = cityList.indexOf(city);
+
         cityList.remove(position);
         myCitiesViewDataListener.removeCity(position);
+
         checkIfListIsEmpty();
 
+        removeCityFromDatabase(city);
+
+    }
+
+    private void removeCityFromDatabase(City city) {
         realm.executeTransaction(realm1 -> {
             for (DailyData data : realm.where(DailyData.class).equalTo(KEY_PLACE_ID, city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
@@ -84,7 +96,6 @@ public class MyCitiesViewModel extends BaseObservable implements MyCitiesDataLis
             city.getCurrently().deleteFromRealm();
             city.deleteFromRealm();
         });
-
     }
 
     public void fabClicked(View view) {

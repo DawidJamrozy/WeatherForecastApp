@@ -65,6 +65,24 @@
                 android:id="@+id/autocomplete_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="56dp">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Locate me"
+                    android:onClick="checkPermission"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"/>
+
+
+
+            </RelativeLayout>
         </RelativeLayout>
 
     </RelativeLayout>

@@ -1,11 +1,23 @@
 package com.dawidj.weatherforecastapp.viewModel;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.ObservableField;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.dawidj.weatherforecastapp.BR;
+import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.api.WeatherApi;
+import com.dawidj.weatherforecastapp.models.autocomplete.CityID;
 import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.models.darksky.Currently;
 import com.dawidj.weatherforecastapp.models.darksky.Daily;
@@ -19,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -38,12 +51,17 @@ import io.realm.RealmResults;
 import retrofit2.Retrofit;
 import timber.log.Timber;
 
+import static com.dawidj.weatherforecastapp.utils.Const.CLICK_TIME_INTERVAL;
 import static com.dawidj.weatherforecastapp.utils.Const.DATE_FORMAT;
+import static com.dawidj.weatherforecastapp.utils.Const.GOOGLE_GEOCODING_KEY;
 import static com.dawidj.weatherforecastapp.utils.Const.GOOGLE_PLACES_KEY;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_CITIES;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_ID;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_LNG;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_LOCATION_TYPE;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_PLACE_ID;
+import static com.dawidj.weatherforecastapp.utils.Const.KEY_RESULT_TYPE;
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
 
 
@@ -58,9 +76,41 @@ public class SearchViewModel extends BaseObservable {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final PublishSubject<String> textWatcherObservable = PublishSubject.create();
     private final PublishSubject<CityLatLng> cityWeatherDataObservable = PublishSubject.create();
+    private final PublishSubject<String> cityDetailsDataObservable = PublishSubject.create();
     private boolean progressBarVisibility;
     private int position;
     private SearchViewDataListener searchViewDataListener;
+    private Context context;
+    private CityLatLng locateMeCityLatLng;
+    private boolean internetConnectionError;
+    private boolean streamInterrupted;
+    private long lastClickTime;
+    private boolean locatingInProgress;
+    private LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            String lat = Double.toString(location.getLatitude());
+            String lng = Double.toString(location.getLongitude());
+            cityDetailsDataObservable.onNext(lat + "," + lng);
+            stopListeningForLocationChange(locationManager, locationListener);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            searchViewDataListener.showToast(context.getString(R.string.localization_disabled));
+            stopListeningForLocationChange(locationManager, locationListener);
+            setProgressBarVisibility(false);
+        }
+    };
+    private LocationManager locationManager;
 
     public int getPosition() {
         return position;
@@ -82,7 +132,7 @@ public class SearchViewModel extends BaseObservable {
         return progressBarVisibility;
     }
 
-    public void setProgressBarVisibility(boolean progressBarVisibility) {
+    private void setProgressBarVisibility(boolean progressBarVisibility) {
         this.progressBarVisibility = progressBarVisibility;
         notifyPropertyChanged(BR._all);
     }
@@ -102,21 +152,29 @@ public class SearchViewModel extends BaseObservable {
     @Named("details")
     Retrofit retrofitDetails;
 
-    public SearchViewModel(SearchViewDataListener searchViewDataListener) {
+    @Inject
+    @Named("geocode")
+    Retrofit retrofitGeocode;
+
+    public SearchViewModel(SearchViewDataListener searchViewDataListener, Context context) {
         this.searchViewDataListener = searchViewDataListener;
+        this.context = context;
     }
 
     public void addCity(final int position) {
-        if (cityLatLngList.get(position).isExistInDb())
+        long now = System.currentTimeMillis();
+        if (cityLatLngList.get(position).isExistInDb() || now - lastClickTime < CLICK_TIME_INTERVAL) {
             return;
-        setPosition(position);
-        cityWeatherDataObservable.onNext(cityLatLngList.get(position));
+        }
+        lastClickTime = now;
+        locateMeCityLatLng = cityLatLngList.get(position);
+        cityWeatherDataObservable.onNext(locateMeCityLatLng);
     }
 
-    public void insertCityToDatabase(City value) {
-        setCityData(value);
-        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(value));
-        searchViewDataListener.newCityAdded(value.getId());
+    private void addCityToDatabase(City city) {
+        setCityDataFromLocateMe(city);
+        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(city));
+        searchViewDataListener.newCityAdded(city.getId());
     }
 
     public void startRxStream() {
@@ -127,10 +185,45 @@ public class SearchViewModel extends BaseObservable {
 
         final WeatherApi serviceWeather = retrofitDarksky.create(WeatherApi.class);
 
+        final WeatherApi serviceGeocode = retrofitGeocode.create(WeatherApi.class);
+
+        cityDetailsDataObservable
+                .debounce(100, TimeUnit.MILLISECONDS)
+                .flatMap(s -> serviceGeocode.getCityFromLatLng(s, KEY_LOCATION_TYPE, KEY_RESULT_TYPE, KEY_LNG, GOOGLE_GEOCODING_KEY)
+                        .doOnError(e -> showNoInternetError()))
+                .flatMap(geocodeCity -> serviceDetails.getCityLatLng(geocodeCity.getResults().get(0).getPlaceId(), KEY_LNG, GOOGLE_PLACES_KEY)
+                        .doOnError(e -> showNoInternetError()))
+                .retry()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<CityLatLng>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(CityLatLng value) {
+                        if (value != null) {
+                            checkIfCityIsInDatabase(value);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Timber.d("onComplete(): ");
+                    }
+                });
+
         cityWeatherDataObservable
                 .debounce(100, TimeUnit.MILLISECONDS)
                 .flatMap(cityLatLng -> serviceWeather.getCity(getLat(cityLatLng), getLng(cityLatLng), KEY_LNG, KEY_EXCLUDE, KEY_UNITS)
-                        .doOnError(e -> Timber.d("doOnError")))
+                        .doOnError(e -> showNoInternetError()))
                 .retry()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -142,7 +235,7 @@ public class SearchViewModel extends BaseObservable {
 
                     @Override
                     public void onNext(City value) {
-                        if (value != null) insertCityToDatabase(value);
+                        if (value != null) addCityToDatabase(value);
                     }
 
                     @Override
@@ -163,10 +256,16 @@ public class SearchViewModel extends BaseObservable {
                     @Override
                     public SingleSource<List<CityLatLng>> apply(String s) throws Exception {
                         return serviceAutocomplete.getCityName(s, KEY_CITIES, KEY_LNG, GOOGLE_PLACES_KEY)
-                                .onErrorResumeNext(throwable -> {return Observable.empty();})
-                                .flatMapIterable(cityID -> cityID.getPredictions())
+                                .onErrorResumeNext(throwable -> {
+                                    checkErrorType();
+                                    return Observable.empty();
+                                })
+                                .flatMapIterable(CityID::getPredictions)
                                 .flatMap(prediction -> serviceDetails.getCityLatLng(prediction.getPlaceId(), KEY_LNG, GOOGLE_PLACES_KEY))
-                                .onErrorResumeNext(throwable -> {return Observable.empty();})
+                                .onErrorResumeNext(throwable -> {
+                                    checkErrorType();
+                                    return Observable.empty();
+                                })
                                 .toList();
                     }
                 })
@@ -179,10 +278,11 @@ public class SearchViewModel extends BaseObservable {
                     }
 
                     @Override
-                    public void onNext(List<CityLatLng> value) {
-                        cityLatLngList = value;
-                        searchViewDataListener.notifyAdapter(value);
+                    public void onNext(List<CityLatLng> list) {
                         setProgressBarVisibility(false);
+                        checkIfErrorOccured(list);
+                        cityLatLngList = list;
+                        searchViewDataListener.notifyAdapter(list);
                     }
 
                     @Override
@@ -200,27 +300,25 @@ public class SearchViewModel extends BaseObservable {
         compositeDisposable.clear();
     }
 
-    public int getPrimaryKeyId(Class data) {
+    private int getPrimaryKeyId(Class data) {
         int key;
         try {
             key = realm.where(data).max(KEY_ID).intValue() + 1;
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            key = 0;
-        } catch (NullPointerException ex) {
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException ex) {
             key = 0;
         }
         return key;
     }
 
-    public String getLat(CityLatLng cityLatLng) {
+    private String getLat(CityLatLng cityLatLng) {
         return cityLatLng.getResult().getGeometry().getLocation().getLat().toString();
     }
 
-    public String getLng(CityLatLng cityLatLng) {
+    private String getLng(CityLatLng cityLatLng) {
         return cityLatLng.getResult().getGeometry().getLocation().getLng().toString();
     }
 
-    public Integer getLastSortedPosition() {
+    private Integer getLastSortedPosition() {
         RealmResults<City> cityList = realm.where(City.class).findAll();
 
         if (cityList.isEmpty()) {
@@ -231,13 +329,13 @@ public class SearchViewModel extends BaseObservable {
         }
     }
 
-    public void setCityData(City city) {
-        String name = cityLatLngList.get(getPosition()).getResult().getName();
+    private void setCityDataFromLocateMe(City city) {
+        String name = locateMeCityLatLng.getResult().getName();
 
         city.setName(name);
-        city.setAdressDescription(cityLatLngList.get(getPosition()).getResult().getFormattedAddress());
-        city.setRefreshDate(new SimpleDateFormat(DATE_FORMAT).format(System.currentTimeMillis()));
-        city.setPlaceId(cityLatLngList.get(getPosition()).getResult().getPlaceId());
+        city.setAdressDescription(locateMeCityLatLng.getResult().getFormattedAddress());
+        city.setRefreshDate(new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(System.currentTimeMillis()));
+        city.setPlaceId(locateMeCityLatLng.getResult().getPlaceId());
         city.setId(getPrimaryKeyId(City.class));
         city.setSortPosition(getLastSortedPosition());
         city.getCurrently().setName(name);
@@ -267,19 +365,116 @@ public class SearchViewModel extends BaseObservable {
 
     public void hideKeyboard(View view) {
         searchViewDataListener.loseFocus();
-        Timber.d("hideKeyboard(): ");
     }
 
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         String text = charSequence.toString();
-        cityLatLngList.clear();
-        searchViewDataListener.notifyAdapter(cityLatLngList);
+        deleteDataFromList();
 
-        if(text.equals("")) {
+        if (text.equals("")) {
             setProgressBarVisibility(false);
         } else {
             setProgressBarVisibility(true);
+            textWatcherObservable.onNext(charSequence.toString());
         }
-        textWatcherObservable.onNext(charSequence.toString());
+    }
+
+    public void locateMe() {
+        if (locatingInProgress)
+            return;
+
+        searchViewDataListener.showToast(context.getString(R.string.locating_in_progress));
+        locatingInProgress = true;
+        deleteDataFromList();
+        setProgressBarVisibility(true);
+
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        startLocationListener(locationManager);
+
+    }
+
+    private void showNoInternetError() {
+        searchViewDataListener.showToast(context.getString(R.string.no_server_connection));
+        resetErrorsState();
+    }
+
+    private void showNoCityFoundError() {
+        searchViewDataListener.showToast(context.getString(R.string.city_not_found));
+        resetErrorsState();
+    }
+
+    private void checkIfCityIsInDatabase(CityLatLng cityLatLng) {
+        realm.executeTransaction(realm -> {
+            City city = realm.where(City.class).equalTo(KEY_PLACE_ID, cityLatLng.getResult().getPlaceId()).findFirst();
+            if (city != null) {
+                searchViewDataListener.showToast(context.getString(R.string.city_exists_in_db));
+                setProgressBarVisibility(false);
+            } else {
+                locateMeCityLatLng = cityLatLng;
+                cityWeatherDataObservable.onNext(cityLatLng);
+            }
+        });
+    }
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null) {
+            if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
+                if (netInfo.isConnected())
+                    haveConnectedWifi = true;
+            if (netInfo.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (netInfo.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    private void checkErrorType() {
+        if (!haveNetworkConnection())
+            internetConnectionError = true;
+        else
+            streamInterrupted = true;
+    }
+
+    private void checkIfErrorOccured(List<CityLatLng> value) {
+        if (value.isEmpty() && internetConnectionError) {
+            showNoInternetError();
+            return;
+        } else if (value.isEmpty() && !streamInterrupted) {
+            showNoCityFoundError();
+            return;
+        }
+    }
+
+    private void stopListeningForLocationChange(LocationManager locationManager, LocationListener locationListener) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(locationListener);
+        }
+        locatingInProgress = false;
+    }
+
+    private void resetErrorsState() {
+        setProgressBarVisibility(false);
+        internetConnectionError = false;
+        streamInterrupted = false;
+    }
+
+    private void deleteDataFromList() {
+        cityLatLngList.clear();
+        searchViewDataListener.notifyAdapter(cityLatLngList);
+    }
+
+    private void startLocationListener(LocationManager locationManager) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        }
     }
 }

@@ -78,7 +78,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
                 citiesRecyclerViewAdapter.notifyItemInserted(position);
                 myCitiesViewModel.checkIfListIsEmpty();
             } else if (requestCode == ON_BACK_PRESSED) {
-                //do nothing
+                //Do nothing
             }
         }
     }
@@ -125,5 +125,10 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
     public void injectDagger() {
         App.getApplication().getWeatherComponent().inject(this);
         App.getApplication().getWeatherComponent().inject(myCitiesViewModel);
+    }
+
+    @Override
+    public void toManyClick() {
+        singleToast.show(this, getString(R.string.to_many_clicks), Toast.LENGTH_SHORT);
     }
 }

@@ -12,6 +12,7 @@ import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.models.darksky.DailyData;
 import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
 import com.dawidj.weatherforecastapp.utils.ItemTouchHelperAdapter;
+import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesDataListener;
 
 import java.util.Collections;
 import java.util.List;

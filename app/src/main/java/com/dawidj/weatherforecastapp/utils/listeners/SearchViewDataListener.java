@@ -10,6 +10,11 @@ import java.util.List;
 
 public interface SearchViewDataListener {
     void newCityAdded(int position);
+
     void notifyAdapter(List<CityLatLng> list);
+
     void loseFocus();
+
+    void showToast(String info);
+
 }

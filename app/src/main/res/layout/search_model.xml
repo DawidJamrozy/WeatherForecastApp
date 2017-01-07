@@ -41,7 +41,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             android:textSize="12sp"
-            android:text="Miasto dodane"
+            android:text="@string/city_already_added"
             android:visibility="@{CityLatLng.existInDb ? View.VISIBLE : View.GONE}" />
 
     </RelativeLayout>
