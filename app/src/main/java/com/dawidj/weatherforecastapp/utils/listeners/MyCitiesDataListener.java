@@ -1,4 +1,4 @@
-package com.dawidj.weatherforecastapp.view.adapters;
+package com.dawidj.weatherforecastapp.utils.listeners;
 
 import com.dawidj.weatherforecastapp.models.darksky.City;
 

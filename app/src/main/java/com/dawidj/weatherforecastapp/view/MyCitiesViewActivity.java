@@ -78,7 +78,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
                 citiesRecyclerViewAdapter.notifyItemInserted(position);
                 myCitiesViewModel.checkIfListIsEmpty();
             } else if (requestCode == ON_BACK_PRESSED) {
-                //do nothing
+                //Do nothing
             }
         }
     }

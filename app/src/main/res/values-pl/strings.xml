@@ -39,4 +39,6 @@
     <string name="city_already_added">Miasto dodane</string>
     <string name="city_exists_in_db">Miasto znajduje się już w bazie danych</string>
     <string name="to_many_clicks">Za dużo kliknięc na raz</string>
+    <string name="locating_in_progress">Lokalizowanie w toku</string>
+    <string name="localization_disabled">Lokalizowanie jest wyłączone</string>
 </resources>

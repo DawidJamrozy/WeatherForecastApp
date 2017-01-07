@@ -116,7 +116,7 @@ public class CityViewModel extends BaseObservable {
     public void setDayChart(LineChart lineChart) {
 
         List<Entry> entries = new ArrayList<>();
-        ArrayList<Integer> temp = new ArrayList<>();
+        ArrayList<Integer> temperatureList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat(Const.HOUR_MINUTE);
         sdf.setTimeZone(TimeZone.getTimeZone(city.getTimezone()));
 
@@ -124,43 +124,47 @@ public class CityViewModel extends BaseObservable {
         //entries - add data to display temp for every hour
         //hours - add data to display time in chart
         for (int i = 0; i < 25; i++) {
-            temp.add(city.getHourly().getData().get(i).getTemperature().intValue());
+            temperatureList.add(city.getHourly().getData().get(i).getTemperature().intValue());
             entries.add(new Entry(i, city.getHourly().getData().get(i).getTemperature().intValue()));
             hours[i] = sdf.format(new Date(city.getHourly().getData().get(i).getTime() * 1000L));
         }
 
-        int minTemp = Collections.min(temp) - 2;
-        int maxTemp = Collections.max(temp) + 2;
-
         LineDataSet lineDataSet = new LineDataSet(entries, "Label");
+        customizeLineDataSet(lineDataSet);
+
+        YAxis leftAxis = lineChart.getAxisLeft();
+        setYAxis(leftAxis, temperatureList);
+
+        YAxis rightAxis = lineChart.getAxisRight();
+        setYAxis(rightAxis, temperatureList);
+
+        XAxis downAxis = lineChart.getXAxis();
+        setXAxis(downAxis);
+
+        LineData lineData = new LineData(lineDataSet);
+
+        customizeLineChart(lineChart, lineData);
+    }
+
+    private void setXAxis(XAxis xAxis) {
+        xAxis.setLabelCount(25);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new AxisValueFormatter());
+    }
+
+    private void customizeLineDataSet(LineDataSet lineDataSet) {
         lineDataSet.setValueTextSize(12f);
         lineDataSet.setCircleHoleRadius(2.5f);
         lineDataSet.setCircleRadius(4f);
         lineDataSet.setValueFormatter(new ValueFormatter());
         lineDataSet.setColor(R.color.colorAccent);
         lineDataSet.setValueTextColor(R.color.colorPrimary);
+    }
 
-        YAxis leftAxis = lineChart.getAxisLeft();
-        leftAxis.setDrawLabels(false);
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(minTemp);
-        leftAxis.setAxisMaximum(maxTemp);
-
-        YAxis rightAxis = lineChart.getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setDrawLabels(false);
-        rightAxis.setAxisMinimum(minTemp);
-        rightAxis.setAxisMaximum(maxTemp);
-
-        XAxis downAxis = lineChart.getXAxis();
-        downAxis.setLabelCount(25);
-        downAxis.setDrawGridLines(false);
-        downAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        downAxis.setValueFormatter(new AxisValueFormatter());
-
+    private void customizeLineChart(LineChart lineChart, LineData lineData) {
         Description description = new Description();
         description.setText("");
-        LineData lineData = new LineData(lineDataSet);
         lineChart.setData(lineData);
         lineChart.getLegend().setEnabled(false);
         lineChart.setTouchEnabled(false);
@@ -170,7 +174,14 @@ public class CityViewModel extends BaseObservable {
         lineChart.notifyDataSetChanged();
     }
 
-    public DailyData getDataToRecycelerView(int i) {
+    private void setYAxis(YAxis axis, ArrayList<Integer> temp) {
+        axis.setDrawGridLines(false);
+        axis.setDrawLabels(false);
+        axis.setAxisMinimum(Collections.min(temp) - 2);
+        axis.setAxisMaximum(Collections.max(temp) + 2);
+    }
+
+    private DailyData getDataToRecycelerView(int i) {
         return city.getDaily().getData().get(i);
     }
 
@@ -213,12 +224,12 @@ public class CityViewModel extends BaseObservable {
                     }
 
                     @Override
-                    public void onComplete() {}
+                    public void onComplete() {
+                    }
                 });
     }
 
-
-    public void replaceDataInDatabase(City value) {
+    private void replaceDataInDatabase(City value) {
 
         String name = city.getName();
 
@@ -271,7 +282,7 @@ public class CityViewModel extends BaseObservable {
         cityViewDataListener.openDarkSkyWebSite();
     }
 
-    public boolean checkIfLastRefreshTimeIsMoreThan30Minute() {
+    public boolean checkIfLastRefreshTimeIsMoreThanHalfHour() {
         if (getCurrentTime() - city.getCurrently().getTime() < HALF_HOUR) {
             String info;
             long remaningTime = (((city.getCurrently().getTime() + HALF_HOUR) - getCurrentTime()) / 60);
@@ -286,7 +297,8 @@ public class CityViewModel extends BaseObservable {
             return true;
         }
     }
-    public long getCurrentTime() {
-        return System.currentTimeMillis()/1000;
+
+    private long getCurrentTime() {
+        return System.currentTimeMillis() / 1000;
     }
 }

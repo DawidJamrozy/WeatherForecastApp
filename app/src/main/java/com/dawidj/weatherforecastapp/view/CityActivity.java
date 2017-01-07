@@ -26,8 +26,6 @@ import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 
 import org.parceler.Parcels;
 
-import timber.log.Timber;
-
 import static com.dawidj.weatherforecastapp.utils.Const.KEY_DARKSKY_WWW;
 
 /**
@@ -68,15 +66,15 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
         cityViewModel.startRxStream();
         dayRecyclerViewAdapter.notifyDataSetChanged();
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-        Timber.d("onCreateView(): ");
+        
         return view;
     }
 
     @Override
     public void onRefresh() {
-        if(cityViewModel.checkIfLastRefreshTimeIsMoreThan30Minute()) {
-        binding.swipeRefreshLayout.setRefreshing(true);
-        cityViewModel.refreshData();
+        if (cityViewModel.checkIfLastRefreshTimeIsMoreThanHalfHour()) {
+            binding.swipeRefreshLayout.setRefreshing(true);
+            cityViewModel.refreshData();
         }
     }
 
@@ -98,9 +96,8 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
     public void notifyDataChanged() {
         cityViewModel.setDayChart(binding.lineChart);
         cityViewModel.getWeatherData();
-        binding.swipeRefreshLayout.setRefreshing(false);
         dayRecyclerViewAdapter.notifyDataSetChanged();
-        Timber.d("notifyDataChanged(): ");
+        binding.swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -115,7 +112,6 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
             singleToast.show(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT);
             binding.swipeRefreshLayout.setRefreshing(false);
         });
-        Timber.d("turnOffSwipeToRefresh(): ");
     }
 
     public void injectDagger() {
@@ -130,6 +126,6 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void refreshInterval(String info) {
         binding.swipeRefreshLayout.setRefreshing(false);
-        singleToast.show(getActivity(), info , Toast.LENGTH_SHORT);
+        singleToast.show(getActivity(), info, Toast.LENGTH_SHORT);
     }
 }

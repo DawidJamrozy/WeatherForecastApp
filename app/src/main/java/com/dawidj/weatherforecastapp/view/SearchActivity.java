@@ -30,8 +30,6 @@ import com.dawidj.weatherforecastapp.viewModel.SearchViewModel;
 
 import java.util.List;
 
-import timber.log.Timber;
-
 import static com.dawidj.weatherforecastapp.utils.Const.CITY_INSERTED;
 import static com.dawidj.weatherforecastapp.utils.Const.ON_BACK_PRESSED;
 import static com.dawidj.weatherforecastapp.utils.Const.POSITION;
@@ -122,12 +120,13 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
     }
 
     public void checkPermission(View view) {
-        Timber.d("checkPermission(): ");
-        String[] Permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-        if (!hasPermissions(this, Permissions)) {
-            ActivityCompat.requestPermissions(this, Permissions, 1);
-        } else {
+        String[] Permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_NETWORK_STATE};
+        if (hasPermissions(this, Permissions)) {
             searchViewModel.locateMe();
+        } else {
+            ActivityCompat.requestPermissions(this, Permissions, 1);
         }
     }
 
@@ -142,13 +141,12 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
         return true;
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode) {
             case 1:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     searchViewModel.locateMe();
                 }
         }
