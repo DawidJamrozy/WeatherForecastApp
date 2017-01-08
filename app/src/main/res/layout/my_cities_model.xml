@@ -5,7 +5,7 @@
 
         <variable
             name="deleteCity"
-            type="com.dawidj.weatherforecastapp.view.adapters.MyCitiesDataListener" />
+            type="com.dawidj.weatherforecastapp.utils.listeners.MyCitiesDataListener" />
 
         <variable
             name="city"

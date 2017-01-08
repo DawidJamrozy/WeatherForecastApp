@@ -25,7 +25,6 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
     @PrimaryKey
     private int id;
     private Integer time;
-    private String name;
     private String summary;
     private String placeId;
     private String icon;
@@ -91,17 +90,7 @@ public class DailyData extends RealmObject implements Observable, RealmDataBindi
         }
     }
 
-    @Bindable
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-        if (!isManaged()) {
-            notifyPropertyChanged(BR._all);
-        }
-    }
 
     @Bindable
     public Integer getTime() {

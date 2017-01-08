@@ -26,8 +26,6 @@ import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 
 import org.parceler.Parcels;
 
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_DARKSKY_WWW;
-
 /**
  * Created by Dawidj on 30.11.2016.
  */
@@ -120,7 +118,7 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void openDarkSkyWebSite() {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(KEY_DARKSKY_WWW)));
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Const.KEY_DARKSKY_WWW)));
     }
 
     @Override

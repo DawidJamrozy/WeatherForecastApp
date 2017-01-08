@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,7 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.SearchActivityBinding;
 import com.dawidj.weatherforecastapp.models.details.CityLatLng;
+import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ItemClickSupport;
 import com.dawidj.weatherforecastapp.utils.SingleToast;
 import com.dawidj.weatherforecastapp.utils.listeners.SearchViewDataListener;
@@ -30,9 +32,6 @@ import com.dawidj.weatherforecastapp.viewModel.SearchViewModel;
 
 import java.util.List;
 
-import static com.dawidj.weatherforecastapp.utils.Const.CITY_INSERTED;
-import static com.dawidj.weatherforecastapp.utils.Const.ON_BACK_PRESSED;
-import static com.dawidj.weatherforecastapp.utils.Const.POSITION;
 
 public class SearchActivity extends AppCompatActivity implements SearchViewDataListener {
 
@@ -61,14 +60,28 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
         ItemClickSupport.addTo(binding.autocompleteRecyclerView)
                 .setOnItemClickListener((RecyclerView r, int position, View v) -> searchViewModel.addCity(position));
     }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return true;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            setResult(ON_BACK_PRESSED);
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            setResult(Const.ON_BACK_PRESSED);
             finish();
+        } else if(id == R.id.locate_me) {
+            checkPermission();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        searchViewModel.stopListeningForLocationChange();
     }
 
     @Override
@@ -79,15 +92,15 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
 
     @Override
     public void onBackPressed() {
-        setResult(ON_BACK_PRESSED);
+        setResult(Const.ON_BACK_PRESSED);
         super.onBackPressed();
     }
 
     @Override
     public void newCityAdded(int position) {
         Intent intent = new Intent();
-        intent.putExtra(POSITION, position);
-        setResult(CITY_INSERTED, intent);
+        intent.putExtra(Const.POSITION, position);
+        setResult(Const.CITY_INSERTED, intent);
         finish();
     }
 
@@ -119,7 +132,7 @@ public class SearchActivity extends AppCompatActivity implements SearchViewDataL
         this.runOnUiThread(() -> singleToast.show(this, info, Toast.LENGTH_SHORT));
     }
 
-    public void checkPermission(View view) {
+    public void checkPermission() {
         String[] Permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_NETWORK_STATE};

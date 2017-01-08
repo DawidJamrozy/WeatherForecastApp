@@ -192,9 +192,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_below="@+id/temp"
+                        android:paddingBottom="10dp"
+                        android:layout_alignParentBottom="true"
                         android:textSize="12sp"
-                        android:text="@{CityViewModel.city.refreshDate}"
+                        android:text="@{@string/data_time + CityViewModel.city.refreshDate}"
                         android:textColor="@color/white" />
 
                     <TextView

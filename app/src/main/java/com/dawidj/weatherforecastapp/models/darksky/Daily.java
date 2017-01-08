@@ -28,7 +28,6 @@ public class Daily extends RealmObject implements Observable, RealmDataBinding {
     @PrimaryKey
     private int id;
     private String summary;
-    private String name;
     private String icon;
     private RealmList<DailyData> data;
 
@@ -47,17 +46,7 @@ public class Daily extends RealmObject implements Observable, RealmDataBinding {
         }
     }
 
-    @Bindable
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-        if (!isManaged()) {
-            notifyPropertyChanged(BR._all);
-        }
-    }
 
     @Bindable
     public String getSummary() {

@@ -46,11 +46,6 @@ import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import retrofit2.Retrofit;
 
-import static com.dawidj.weatherforecastapp.utils.Const.DATE_FORMAT;
-import static com.dawidj.weatherforecastapp.utils.Const.HALF_HOUR;
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_EXCLUDE;
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_LNG;
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_UNITS;
 
 /**
  * Created by Dawidj on 30.11.2016.
@@ -200,7 +195,7 @@ public class CityViewModel extends BaseObservable {
                 .flatMap(new Function<CityDetails, ObservableSource<City>>() {
                     @Override
                     public ObservableSource<City> apply(CityDetails city) throws Exception {
-                        return serviceWeather.getCity(city.getLat(), city.getLng(), KEY_LNG, KEY_EXCLUDE, KEY_UNITS)
+                        return serviceWeather.getCity(city.getLat(), city.getLng(), Const.KEY_LNG, Const.KEY_EXCLUDE, Const.KEY_UNITS)
                                 .doOnError(e -> cityViewDataListener.turnOffSwipeToRefresh());
                     }
                 })
@@ -230,18 +225,12 @@ public class CityViewModel extends BaseObservable {
     }
 
     private void replaceDataInDatabase(City value) {
-
-        String name = city.getName();
-
-        value.setName(name);
+        value.setName(city.getName());
         value.setAdressDescription(city.getAdressDescription());
         value.setPlaceId(city.getPlaceId());
         value.setId(city.getId());
-        value.setRefreshDate(new SimpleDateFormat(DATE_FORMAT).format(System.currentTimeMillis()));
+        value.setRefreshDate(new SimpleDateFormat(Const.DATE_FORMAT).format(System.currentTimeMillis()));
         value.setSortPosition(city.getSortPosition());
-        value.getCurrently().setName(name);
-        value.getDaily().setName(name);
-        value.getHourly().setName(name);
         value.getCurrently().setId(city.getCurrently().getId());
         value.getDaily().setId(city.getDaily().getId());
         value.getHourly().setId(city.getHourly().getId());
@@ -251,14 +240,12 @@ public class CityViewModel extends BaseObservable {
 
         for (DailyData data : value.getDaily().getData()) {
             data.setId(idDailyData);
-            data.setName(name);
             data.setPlaceId(city.getPlaceId());
             idDailyData++;
         }
 
         for (HourlyData data : value.getHourly().getData()) {
             data.setId(idHourlyData);
-            data.setName(name);
             data.setPlaceId(city.getPlaceId());
             idHourlyData++;
         }
@@ -283,9 +270,9 @@ public class CityViewModel extends BaseObservable {
     }
 
     public boolean checkIfLastRefreshTimeIsMoreThanHalfHour() {
-        if (getCurrentTime() - city.getCurrently().getTime() < HALF_HOUR) {
+        if (getCurrentTime() - city.getCurrently().getTime() < Const.HALF_HOUR) {
             String info;
-            long remaningTime = (((city.getCurrently().getTime() + HALF_HOUR) - getCurrentTime()) / 60);
+            long remaningTime = (((city.getCurrently().getTime() + Const.HALF_HOUR) - getCurrentTime()) / 60);
             if (remaningTime > 1) {
                 info = App.getApplication().getString(R.string.more_than_min, remaningTime);
             } else {

@@ -2,6 +2,7 @@ package com.dawidj.weatherforecastapp.app;
 
 import android.app.Application;
 
+import com.dawidj.weatherforecastapp.BuildConfig;
 import com.dawidj.weatherforecastapp.components.DaggerWeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherModule;
@@ -32,19 +33,22 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
+        if(BuildConfig.DEBUG) {
+            if (LeakCanary.isInAnalyzerProcess(this)) {
+                return;
+            }
+            LeakCanary.install(this);
+
+            Timber.plant(new Timber.DebugTree());
+
+            Stetho.initialize(
+                    Stetho.newInitializerBuilder(this)
+                            .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                            .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                            .build());
         }
-        LeakCanary.install(this);
 
-        Timber.plant(new Timber.DebugTree());
         Realm.init(this);
-
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
-                        .build());
 
         instance = this;
 

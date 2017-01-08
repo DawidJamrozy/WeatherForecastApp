@@ -41,4 +41,5 @@
     <string name="to_many_clicks">To many clicks</string>
     <string name="locating_in_progress">Locating in progress</string>
     <string name="localization_disabled">Localization is disabled in System</string>
+    <string name="data_time">Last actualisation:&#160;</string>
 </resources>

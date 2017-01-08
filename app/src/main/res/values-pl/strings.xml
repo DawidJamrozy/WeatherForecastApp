@@ -41,4 +41,6 @@
     <string name="to_many_clicks">Za dużo kliknięc na raz</string>
     <string name="locating_in_progress">Lokalizowanie w toku</string>
     <string name="localization_disabled">Lokalizowanie jest wyłączone</string>
+    <string name="data_time">Ostatnia aktualizacja:&#160;</string>
+
 </resources>

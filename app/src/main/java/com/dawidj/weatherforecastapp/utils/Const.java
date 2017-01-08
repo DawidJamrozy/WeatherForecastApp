@@ -32,5 +32,7 @@ public class Const {
     public static final String KEY_PLACE_ID = "placeId";
     public static final String KEY_DARKSKY_WWW = "https://darksky.net/poweredby/";
     public static final int HALF_HOUR = 1800;
+    public static final String KEY_WIFI = "WIFI";
+    public static final String KEY_MOBILE = "MOBILE";
 
 }

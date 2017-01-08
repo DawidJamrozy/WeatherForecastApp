@@ -23,8 +23,6 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import io.realm.Sort;
 
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_SORT;
-
 public class MainActivity extends AppCompatActivity {
 
     private MainActivityBinding binding;
@@ -40,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         checkDatabaseSize();
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
         realm.executeTransaction(realm ->
-            setUpViewPagerAdapter(realm.where(City.class).findAllSorted(KEY_SORT, Sort.ASCENDING)));
+            setUpViewPagerAdapter(realm.where(City.class).findAllSorted(Const.KEY_SORT, Sort.ASCENDING)));
     }
 
     public void setUpViewPagerAdapter(List<City> cities) {

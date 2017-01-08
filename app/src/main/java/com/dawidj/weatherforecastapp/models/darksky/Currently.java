@@ -25,7 +25,6 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
     @PrimaryKey
     private int id;
     private Integer time;
-    private String name;
     private String summary;
     private String icon;
     private Double precipIntensity;
@@ -85,18 +84,6 @@ public class Currently extends RealmObject implements Observable, RealmDataBindi
 
     public void setId(int id) {
         this.id = id;
-        if (!isManaged()) {
-            notifyPropertyChanged(BR._all);
-        }
-    }
-
-    @Bindable
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
         if (!isManaged()) {
             notifyPropertyChanged(BR._all);
         }

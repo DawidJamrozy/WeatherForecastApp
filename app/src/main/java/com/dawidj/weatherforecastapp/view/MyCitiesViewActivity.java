@@ -14,6 +14,7 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.app.App;
 import com.dawidj.weatherforecastapp.databinding.MyCitiesActivityBinding;
 import com.dawidj.weatherforecastapp.models.darksky.City;
+import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.RecyclerViewTouchHelper;
 import com.dawidj.weatherforecastapp.utils.SingleToast;
 import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesViewDataListener;
@@ -24,13 +25,6 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.Sort;
-
-import static com.dawidj.weatherforecastapp.utils.Const.ADD_NEW_CITY;
-import static com.dawidj.weatherforecastapp.utils.Const.CITY_INSERTED;
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_ID;
-import static com.dawidj.weatherforecastapp.utils.Const.KEY_SORT;
-import static com.dawidj.weatherforecastapp.utils.Const.ON_BACK_PRESSED;
-import static com.dawidj.weatherforecastapp.utils.Const.POSITION;
 
 public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesViewDataListener {
 
@@ -51,7 +45,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
         injectDagger();
         setActionBar();
         realm.executeTransaction(realm ->
-                myCitiesViewModel.getCityList().addAll(realm.where(City.class).findAllSorted(KEY_SORT, Sort.ASCENDING)));
+                myCitiesViewModel.getCityList().addAll(realm.where(City.class).findAllSorted(Const.KEY_SORT, Sort.ASCENDING)));
         setRecycler();
         myCitiesViewModel.checkIfListIsEmpty();
     }
@@ -70,14 +64,14 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_NEW_CITY) {
-            if (resultCode == CITY_INSERTED) {
-                int position = data.getIntExtra(POSITION, 0);
+        if (requestCode == Const.ADD_NEW_CITY) {
+            if (resultCode == Const.CITY_INSERTED) {
+                int position = data.getIntExtra(Const.POSITION, 0);
                 realm.executeTransaction(realm ->
-                    myCitiesViewModel.getCityList().add(realm.where(City.class).equalTo(KEY_ID, position).findFirst()));
+                    myCitiesViewModel.getCityList().add(realm.where(City.class).equalTo(Const.KEY_ID, position).findFirst()));
                 citiesRecyclerViewAdapter.notifyItemInserted(position);
                 myCitiesViewModel.checkIfListIsEmpty();
-            } else if (requestCode == ON_BACK_PRESSED) {
+            } else if (resultCode == Const.ON_BACK_PRESSED) {
                 //Do nothing
             }
         }
@@ -108,7 +102,7 @@ public class MyCitiesViewActivity extends AppCompatActivity implements MyCitiesV
 
     @Override
     public void onClickFab() {
-        startActivityForResult(new Intent(this, SearchActivity.class), ADD_NEW_CITY);
+        startActivityForResult(new Intent(this, SearchActivity.class), Const.ADD_NEW_CITY);
     }
 
     @Override

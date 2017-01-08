@@ -11,6 +11,7 @@ import com.dawidj.weatherforecastapp.databinding.MyCitiesModelBinding;
 import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.models.darksky.DailyData;
 import com.dawidj.weatherforecastapp.models.darksky.HourlyData;
+import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.utils.ItemTouchHelperAdapter;
 import com.dawidj.weatherforecastapp.utils.listeners.MyCitiesDataListener;
 
@@ -84,11 +85,11 @@ public class CitiesRecyclerViewAdapter extends RecyclerView.Adapter<CitiesRecycl
     public void onItemDismiss(int position) {
         City city = cityList.get(position);
         realm.executeTransaction(realm1 -> {
-            for (DailyData data : realm.where(DailyData.class).equalTo("placeId", city.getPlaceId()).findAll()) {
+            for (DailyData data : realm.where(DailyData.class).equalTo(Const.KEY_PLACE_ID, city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
             }
 
-            for (HourlyData data : realm.where(HourlyData.class).equalTo("placeId", city.getPlaceId()).findAll()) {
+            for (HourlyData data : realm.where(HourlyData.class).equalTo(Const.KEY_PLACE_ID, city.getPlaceId()).findAll()) {
                 data.deleteFromRealm();
             }
 

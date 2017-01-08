@@ -30,8 +30,7 @@
         <activity
             android:name=".view.SearchActivity"
             android:screenOrientation="portrait"
-            android:label=""
-            android:theme="@style/AppTheme"/>
+            android:label="" />
         <activity android:name=".view.MyCitiesViewActivity"
             android:screenOrientation="portrait"
             android:label="@string/your_cities"/>
