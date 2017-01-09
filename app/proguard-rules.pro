@@ -17,3 +17,20 @@
 #}
 -keepattributes EnclosingMethod
 -keepattributes InnerClasses
+-keepclassmembers class * implements android.os.Parcelable {
+    static ** CREATOR;
+}
+-dontoptimize
+-keep class com.github.mikephil.charting.** { *; }
+-dontwarn io.realm.**
+-dontwarn android.support.**
+-dontwarn com.github.**
+-dontwarn com.squareup.**
+-dontwarn com.dawidj.weatherforecastapp.**
+-dontwarn com.google.common.**
+-dontwarn dagger.internal.**
+-dontwarn retrofit2.**
+-dontwarn okio.**
+-dontwarn org.eclipse.**
+-dontwarn dagger.shaded.autocommon.**
+

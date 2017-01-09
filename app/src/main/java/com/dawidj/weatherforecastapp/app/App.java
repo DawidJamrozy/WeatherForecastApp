@@ -7,7 +7,6 @@ import com.dawidj.weatherforecastapp.components.DaggerWeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherComponent;
 import com.dawidj.weatherforecastapp.components.WeatherModule;
 import com.facebook.stetho.Stetho;
-import com.squareup.leakcanary.LeakCanary;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import io.realm.Realm;
@@ -33,11 +32,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         if(BuildConfig.DEBUG) {
-            if (LeakCanary.isInAnalyzerProcess(this)) {
-                return;
-            }
-            LeakCanary.install(this);
+
 
             Timber.plant(new Timber.DebugTree());
 
@@ -56,6 +53,5 @@ public class App extends Application {
                 .weatherModule(new WeatherModule())
                 .build();
 
-        Realm.init(this);
     }
 }
