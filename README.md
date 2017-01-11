@@ -38,6 +38,10 @@ Funkcjonalność:
 - Wyszukiwanie miasta poprzez wpisanie jego nazwy (Google Autocomplete oraz Google Details),
 - Pobieranie danych pogodowych (DarkSky API),
 - Przechowywanie danych pogodowych w bazie lokalnej na urządzeniu mobilnym (Realm),
-- Wyświetlanie danych pogodowych, szczegółowa prognoza pogodowa (obecna) oraz prognoza tygodniowa.
+- Usuwanie miast (danych z bazy danych) poprzez gest przesunięcia lub naciśnięcie X,
+- Możliwośc zmiany kolejności wyświetlanych miast,
+- Wyświetlanie danych pogodowych, szczegółowa prognoza pogodowa (obecna) oraz prognoza tygodniowa,
+- Odświeżanie danych na temat pogody danego misata poprzez "swipe to refresh",
+- Inne.
 
 Aplikacja obsługuje język Polski oraz Angielski w zależności od ustawień systemowych urządzenia mobilnego.
