@@ -24,7 +24,9 @@ import com.dawidj.weatherforecastapp.utils.listeners.CityViewDataListener;
 import com.dawidj.weatherforecastapp.view.adapters.DayRecyclerViewAdapter;
 import com.dawidj.weatherforecastapp.viewModel.CityViewModel;
 
-import org.parceler.Parcels;
+import javax.inject.Inject;
+
+import io.realm.Realm;
 
 /**
  * Created by Dawidj on 30.11.2016.
@@ -37,6 +39,9 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
     private CityViewModel cityViewModel;
     private City city;
     private SingleToast singleToast = new SingleToast();
+
+    @Inject
+    Realm realm;
 
     public CityActivity() {
     }
@@ -51,20 +56,19 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.city_fragment, container, false);
         View view = binding.getRoot();
-        Bundle args = getArguments();
-        city = Parcels.unwrap(args.getParcelable(Const.KEY_CITY));
+        App.getApplication().getWeatherComponent().inject(this);
+        selectCityFromDatabase();
         cityViewModel = new CityViewModel(city, this);
         binding.setCityViewModel(cityViewModel);
         binding.includeLayout.setCityViewModel(cityViewModel);
         injectDagger();
         setRecyclerView();
-        cityViewModel.setCityName(city.getName());
         cityViewModel.setDayChart(binding.lineChart);
         cityViewModel.getWeatherData();
         cityViewModel.startRxStream();
         dayRecyclerViewAdapter.notifyDataSetChanged();
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-        
+
         return view;
     }
 
@@ -125,5 +129,11 @@ public class CityActivity extends Fragment implements SwipeRefreshLayout.OnRefre
     public void refreshInterval(String info) {
         binding.swipeRefreshLayout.setRefreshing(false);
         singleToast.show(getActivity(), info, Toast.LENGTH_SHORT);
+    }
+
+    public void selectCityFromDatabase() {
+        Bundle args = getArguments();
+        String cityPlaceId = args.getString(Const.KEY_CITY);
+        realm.executeTransaction(realm -> city = realm.where(City.class).equalTo("placeId", cityPlaceId).findFirst());
     }
 }

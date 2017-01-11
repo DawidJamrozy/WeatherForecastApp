@@ -7,9 +7,6 @@ import android.databinding.PropertyChangeRegistry;
 import com.dawidj.weatherforecastapp.BR;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
-import org.parceler.Parcel;
-
-import io.realm.CurrentlyRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -17,9 +14,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 24.10.2016.
  */
-@Parcel(implementations = {CurrentlyRealmProxy.class},
-        value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = {Currently.class})
+
 public class Currently extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey

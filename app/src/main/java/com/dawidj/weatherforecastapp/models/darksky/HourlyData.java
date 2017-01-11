@@ -11,9 +11,6 @@ import com.dawidj.weatherforecastapp.R;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 import com.squareup.picasso.Picasso;
 
-import org.parceler.Parcel;
-
-import io.realm.HourlyDataRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -21,9 +18,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 25.10.2016.
  */
-@Parcel(implementations = {HourlyDataRealmProxy.class},
-        value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = {HourlyData.class})
+
 public class HourlyData extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey

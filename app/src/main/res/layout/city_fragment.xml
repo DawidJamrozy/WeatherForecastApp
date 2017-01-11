@@ -205,7 +205,7 @@
                         android:layout_below="@+id/temp"
                         android:layout_marginStart="20dp"
                         android:textStyle="bold"
-                        android:text="@{CityViewModel.cityName + @string/vertical_line + CityViewModel.city.currently.summary}"
+                        android:text="@{CityViewModel.city.name + @string/vertical_line + CityViewModel.city.currently.summary}"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 

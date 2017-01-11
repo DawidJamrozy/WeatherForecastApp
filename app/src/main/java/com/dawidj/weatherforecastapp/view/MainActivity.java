@@ -14,8 +14,6 @@ import com.dawidj.weatherforecastapp.models.darksky.City;
 import com.dawidj.weatherforecastapp.utils.Const;
 import com.dawidj.weatherforecastapp.view.adapters.ViewPagerAdapter;
 
-import org.parceler.Parcels;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
     public CityActivity cityViewFragment(City city) {
         CityActivity fragment = new CityActivity();
         Bundle args = new Bundle();
-        args.putParcelable(Const.KEY_CITY, Parcels.wrap(city));
+        args.putString(Const.KEY_CITY, city.getPlaceId());
+        //args.putParcelable(Const.KEY_CITY, Parcels.wrap(city));
         fragment.setArguments(args);
         return fragment;
     }

@@ -15,22 +15,133 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keepattributes EnclosingMethod
--keepattributes InnerClasses
--keepclassmembers class * implements android.os.Parcelable {
-    static ** CREATOR;
-}
--dontoptimize
--keep class com.github.mikephil.charting.** { *; }
--dontwarn io.realm.**
--dontwarn android.support.**
--dontwarn com.github.**
--dontwarn com.squareup.**
--dontwarn com.dawidj.weatherforecastapp.**
--dontwarn com.google.common.**
--dontwarn dagger.internal.**
--dontwarn retrofit2.**
+
+
+
+
+
+-keepattributes Signature
+-keepattributes Exceptions
+-keepattributes *Annotation*
+
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
+
+
+
 -dontwarn okio.**
+-keep class okio.* { *; }
+-dontwarn retrofit2.Platform$Java8
+-keep class retrofit2.* { *; }
+
+
 -dontwarn org.eclipse.**
--dontwarn dagger.shaded.autocommon.**
+-keep class org.eclipse.* { *; }
+
+
+-dontwarn com.squareup.**
+-keep class com.squareup.* { *; }
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keep class com.google.common.* { *; }
+-dontwarn com.google.common.**
+
+-keep class com.dawidj.weatherforecastapp.* { *; }
+-dontwarn com.dawidj.weatherforecastapp.**
+
+-dontwarn dagger.**
+-keep class dagger.* { *;}
+
+
+#-renamesourcefileattribute SourceFile
+#-keepattributes SourceFile,LineNumberTable
+#
+#-dontwarn dagger.**
+
+-keepclassmembers,allowobfuscation class * {
+    @javax.inject.* *;
+    @dagger.* *;
+    <init>();
+}
+#
+## For using GSON @Expose annotation
+#-keepattributes *Annotation*
+#-keepattributes InnerClasses
+#-keepattributes EnclosingMethod
+#
+## Gson specific classes
+#-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+#
+#-keep class dagger.* { *; }
+#-keep class javax.inject.* { *; }
+#-keep class * extends dagger.internal.Binding
+#-keep class * extends dagger.internal.ModuleAdapter
+#-keep class * extends dagger.internal.StaticInjection
+#
+#-dontwarn com.dawidj.weatherforecastapp.**
+#
+#-dontwarn com.google.common.**
+#
+#
+#-dontwarn com.squareup.javapoet.**
+#
+#-dontwarn org.eclipse.**
+#
+#-dontwarn okio.**
+#
+#-dontwarn retrofit2.**
+#-keep class retrofit2.** { *; }
+
+#-keepattributes EnclosingMethod
+#-keepattributes InnerClasses
+#
+#-dontoptimize
+#
+#-keep class retrofit.** { *; }
+#-keepclasseswithmembers class * {
+#    @retrofit.http.* <methods>;
+#}
+#-dontwarn io.realm.**
+#-keep class io.realm.** { *; }
+#
+#-dontwarn android.support.**
+#-dontwarn com.github.**
+#-dontwarn com.squareup.**
+#-dontwarn com.dawidj.weatherforecastapp.**
+#-dontwarn com.google.common.**
+#-dontwarn dagger.internal.**
+#-dontwarn retrofit2.**
+#-dontwarn okio.**
+#-dontwarn org.eclipse.**
+#
+#-keep interface com.squareup.okhttp.** { *; }
+#
+#-keep class com.github.mikephil.charting.** { *; }
+#-keep class com.squareup.okhttp.** { *; }
+#-keep class retrofit2.** { *; }
+#-keep class **$$ModuleAdapter
+#-keep class **$$InjectAdapter
+#-keep class **$$StaticInjection
+#-keep class javax.inject.** { *; }
+#-keep class com.google.gson.** { *; }
+#
+#-dontwarn dagger.internal.codegen.**
+#-keepclassmembers,allowobfuscation class * {
+#    @retrofit.http.* <methods>;
+#    @javax.inject.* *;
+#    @dagger.* *;
+#    <init>();
+#}
+#
+#-keep class dagger.* { *; }
+#-keep class javax.inject.* { *; }
+#-keep class * extends dagger.internal.Binding
+#-keep class * extends dagger.internal.ModuleAdapter
+#-keep class * extends dagger.internal.StaticInjection
+
 

@@ -1,5 +1,6 @@
 package com.dawidj.weatherforecastapp.components;
 
+import com.dawidj.weatherforecastapp.view.CityActivity;
 import com.dawidj.weatherforecastapp.view.MainActivity;
 import com.dawidj.weatherforecastapp.view.MyCitiesViewActivity;
 import com.dawidj.weatherforecastapp.view.SearchActivity;
@@ -37,4 +38,6 @@ public interface WeatherComponent {
     void inject(MyCitiesViewActivity myCitiesActivity);
 
     void inject(CitiesRecyclerViewHolder citiesRecyclerViewHolder);
+
+    void inject(CityActivity cityActivity);
 }

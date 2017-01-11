@@ -5,13 +5,8 @@ import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
 import com.dawidj.weatherforecastapp.BR;
-import com.dawidj.weatherforecastapp.utils.DailyDataParcelConverter;
 import com.dawidj.weatherforecastapp.utils.RealmDataBinding;
 
-import org.parceler.Parcel;
-import org.parceler.ParcelPropertyConverter;
-
-import io.realm.DailyRealmProxy;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -20,9 +15,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Dawidj on 24.10.2016.
  */
-@Parcel(implementations = {DailyRealmProxy.class},
-        value = org.parceler.Parcel.Serialization.BEAN,
-        analyze = {Daily.class})
+
 public class Daily extends RealmObject implements Observable, RealmDataBinding {
 
     @PrimaryKey
@@ -77,7 +70,6 @@ public class Daily extends RealmObject implements Observable, RealmDataBinding {
         return data;
     }
 
-    @ParcelPropertyConverter(DailyDataParcelConverter.class)
     public void setData(RealmList<DailyData> data) {
         this.data = data;
         if (!isManaged()) {

@@ -54,7 +54,6 @@ import retrofit2.Retrofit;
 public class CityViewModel extends BaseObservable {
 
     private City city;
-    private String cityName;
     private List<DayData> dayDatasList = new ArrayList<>();
     private PublishSubject<CityDetails> refreshObservable = PublishSubject.create();
     private CompositeDisposable compositDisposable = new CompositeDisposable();
@@ -68,14 +67,6 @@ public class CityViewModel extends BaseObservable {
     public void setCity(City city) {
         this.city = city;
         notifyPropertyChanged(BR._all);
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
     }
 
     public List<DayData> getDayDatasList() {
