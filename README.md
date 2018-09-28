@@ -1,4 +1,4 @@
-# WeatherForecastApp - Depracated
+# WeatherForecastApp - Deprecated
 
 Aplikacja umożliwiająca pobieranie oraz prezentacje aktualnych danych pogodowych. Stworzona z wykorzystaniem wzorca projektowego MVVM oraz Databinding.
 
